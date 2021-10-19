@@ -30,12 +30,10 @@ jobs:
     - name: Lint
       run: |
         npm run lint
-    - name: Build
-      run: |
-        npm run prestart
+
 
   build:
-    if: github.event.pull_request.merged == 'true'
+    # if: github.event.pull_request.merged == 'true'
     runs-on: ubuntu-latest
 
     strategy:
