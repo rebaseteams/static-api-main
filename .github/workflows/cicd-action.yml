@@ -7,7 +7,7 @@ on:
     
   pull_request:
     branches:
-      - main
+      - master
     types: 
       - closed
   
@@ -34,7 +34,8 @@ jobs:
 
 
   build:
-    if: github.event.push.main == 'true'
+    only:
+      - main
     runs-on: ubuntu-latest
 
     strategy:
