@@ -34,8 +34,7 @@ jobs:
 
 
   build:
-    only:
-      - main
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
     strategy:
