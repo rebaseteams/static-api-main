@@ -24,4 +24,7 @@ jobs:
         npm install
     - name: Lint
       run: |
-        npm run prebuild
+        npm run lint
+    - name: Build
+      run: |
+        npm run prestart

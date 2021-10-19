@@ -1,6 +1,5 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable linebreak-style */
-import express, { json } from 'express';
+import express from 'express';
 import YAML from 'yamljs';
 import bodyParser from 'body-parser';
 import swaggerUi from 'swagger-ui-express';
