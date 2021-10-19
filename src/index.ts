@@ -87,6 +87,32 @@ const data = [{
       summary: 'Prateek is well known bollywod singer with lot of hits',
     },
   ],
+}, {
+  artists_data: [
+    {
+      artist_name: 'Neha Kakkar',
+      artist_id: '1546',
+      match_percentage: 70,
+      match_attributes: {
+        venues: [
+          {
+            name: 'SaReGaMa',
+            match_percentage: 40,
+          },
+        ],
+        gender: 'Female',
+        genre: 'Bollywood',
+        associated_brands: [
+          {
+            name: 'Vh1',
+            contact: 'vh1.contact@vh1.com',
+            website: 'vh1.com',
+          },
+        ],
+      },
+      summary: 'Neha is well known bollywod singer with lot of hits',
+    },
+  ],
 }];
 app.use(bodyParser.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
