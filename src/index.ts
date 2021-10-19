@@ -89,7 +89,7 @@ const data = [{
 }, {
   artists_data: [
     {
-      artist_name: 'Neha Kakkar',
+      artist_name: 'Neha Chakkar',
       artist_id: '6666',
       match_percentage: 70,
       match_attributes: {
