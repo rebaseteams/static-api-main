@@ -3,7 +3,12 @@ name: NodeJS CI
 on:
   push:
     branches:
-      - main
+      - "**"
+  pull_request:
+    branches:
+      - master
+    types: 
+      - closed
   
 jobs:
   lint:
