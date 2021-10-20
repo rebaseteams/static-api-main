@@ -49,6 +49,7 @@ jobs:
         npm run prestart
 
   docker:
+    if: github.ref == 'refs/heads/main'
     name: Publish - Docker Hub
     runs-on: ubuntu-18.04
     env:
