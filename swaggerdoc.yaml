@@ -5,7 +5,7 @@ info:
   description: Service for Artist Recommendation
 
 servers:
-  - url: http://localhost:3000
+  - url: http://52.66.164.23:3000
 
 paths:
   /recommender/api/getMatchData/:
