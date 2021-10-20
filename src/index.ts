@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 import express from 'express';
 import YAML from 'yamljs';
 import bodyParser from 'body-parser';
@@ -10,18 +11,18 @@ const swaggerDocument = YAML.load('./swaggerdoc.yaml');
 const data = [{
   artists_data: [
     {
-      artist_name: 'Arjit Singh',
-          artist_id: '1234',
+      artist_name: 'Arjit',
+      artist_id: '1234',
       match_percentage: 48,
-        match_attributes: {
+      match_attributes: {
         venues: [
           {
             name: 'Sunburn',
-              match_percentage: 20,
+            match_percentage: 20,
           },
         ],
         gender: 'Male',
-          genre: 'Bollywood',
+        genre: 'Bollywood',
         associated_brands: [
           {
             name: 'Coke Studio',
