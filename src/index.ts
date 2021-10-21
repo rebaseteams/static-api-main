@@ -5,12 +5,18 @@ import bodyParser from 'body-parser';
 import swaggerUi from 'swagger-ui-express';
 import cors from 'cors';
 
+const corsOptions = {
+  origin: '*',
+  credentials: true, // access-control-allow-credentials:true
+  optionSuccessStatus: 200,
+};
+
 const app = express();
-app.use(cors());
+app.use(cors(corsOptions));
 
 const swaggerDocument = YAML.load('./swaggerdoc.yaml');
 
-const data = [{
+const data = {
   artists_data: [
     {
       artist_name: 'Arjit',
@@ -19,12 +25,17 @@ const data = [{
       match_attributes: {
         venues: [
           {
+            name: 'Samsung',
+            match_percentage: 60,
+          },
+          {
             name: 'Sunburn',
             match_percentage: 20,
           },
         ],
         gender: 'Male',
         genre: 'Bollywood',
+        age: '18-25',
         associated_brands: [
           {
             name: 'Coke Studio',
@@ -35,9 +46,6 @@ const data = [{
       },
       summary: 'Arjit is well known bollywod singer with lot of hits',
     },
-  ],
-}, {
-  artists_data: [
     {
       artist_name: 'Atif',
       artist_id: '1254',
@@ -51,6 +59,7 @@ const data = [{
         ],
         gender: 'Male',
         genre: 'Bollywood',
+        age: '18-25',
         associated_brands: [
           {
             name: 'MTV Radio',
@@ -61,9 +70,6 @@ const data = [{
       },
       summary: 'Atif is well known bollywod singer with lot of hits',
     },
-  ],
-}, {
-  artists_data: [
     {
       artist_name: 'Prateek Kullhad',
       artist_id: '1546',
@@ -77,6 +83,7 @@ const data = [{
         ],
         gender: 'Male',
         genre: 'Bollywood',
+        age: '18-25',
         associated_brands: [
           {
             name: 'VH1 India',
@@ -87,12 +94,9 @@ const data = [{
       },
       summary: 'Prateek is well known bollywod singer with lot of hits',
     },
-  ],
-}, {
-  artists_data: [
     {
-      artist_name: 'Neha Chakkar',
-      artist_id: '6666',
+      artist_name: 'Neha Kakkar',
+      artist_id: '1546',
       match_percentage: 70,
       match_attributes: {
         venues: [
@@ -103,6 +107,7 @@ const data = [{
         ],
         gender: 'Female',
         genre: 'Bollywood',
+        age: '26-35',
         associated_brands: [
           {
             name: 'Vh1',
@@ -114,7 +119,8 @@ const data = [{
       summary: 'Neha is well known bollywod singer with lot of hits',
     },
   ],
-}];
+};
+
 app.use(bodyParser.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.get('/', (req, res) => {
