@@ -3,8 +3,10 @@ import express from 'express';
 import YAML from 'yamljs';
 import bodyParser from 'body-parser';
 import swaggerUi from 'swagger-ui-express';
+import cors from 'cors';
 
 const app = express();
+app.use(cors());
 
 const swaggerDocument = YAML.load('./swaggerdoc.yaml');
 
@@ -119,6 +121,7 @@ app.get('/', (req, res) => {
   res.send('HELLO!');
 });
 app.post('/recommender/api/getMatchData/', (req, res) => {
+  // eslint-disable-next-line no-unused-vars
   const body = JSON.stringify(req.body);
   res.send(data);
 });
