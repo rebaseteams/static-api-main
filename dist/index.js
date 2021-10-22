@@ -5,10 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 /* eslint-disable linebreak-style */
 const express_1 = __importDefault(require("express"));
-const yamljs_1 = __importDefault(require("yamljs"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const cors_1 = __importDefault(require("cors"));
+// eslint-disable-next-line no-unused-vars
+const swagger_json_1 = __importDefault(require("./swagger/swagger.json"));
 const corsOptions = {
     origin: '*',
     credentials: true,
@@ -16,7 +17,6 @@ const corsOptions = {
 };
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)(corsOptions));
-const swaggerDocument = yamljs_1.default.load('./swaggerdoc.yaml');
 const data = {
     artists_data: [
         {
@@ -119,10 +119,34 @@ const data = {
             },
             summary: 'Neha is well known bollywod singer with lot of hits',
         },
+        {
+            artist_name: 'Akon',
+            artist_id: '1546',
+            match_percentage: 70,
+            match_attributes: {
+                venues: [
+                    {
+                        name: 'SaReGaMa',
+                        match_percentage: 40,
+                    },
+                ],
+                gender: 'Female',
+                genre: 'Bollywood',
+                age: '26-35',
+                associated_brands: [
+                    {
+                        name: 'Vh1',
+                        contact: 'vh1.contact@vh1.com',
+                        website: 'vh1.com',
+                    },
+                ],
+            },
+            summary: 'Neha is well known bollywod singer with lot of hits',
+        },
     ],
 };
 app.use(body_parser_1.default.json());
-app.use('/api-docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerDocument));
+app.use('/api-docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swagger_json_1.default));
 app.get('/', (req, res) => {
     res.send('HELLO!');
 });

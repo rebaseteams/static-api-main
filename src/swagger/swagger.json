@@ -1,0 +1,117 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "Recommender",
+      "description": "Service for Artist Recommendation"
+    },
+    "servers": [
+      {
+        "url": "http://52.66.164.23:3000"
+      }
+    ],
+    "paths": {
+      "/recommender/api/getMatchData/": {
+        "post": {
+          "description": "get the match data based on the given questions",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuestionData"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "A list of users",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/matchData"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "QuestionData": {
+          "type": "object"
+        },
+        "matchData": {
+          "type": "object",
+          "properties": {
+            "artists_data": {
+              "type": "array",
+              "description": "Array of artists.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "artist_name": {
+                    "type": "string"
+                  },
+                  "artist_id": {
+                    "type": "string"
+                  },
+                  "match_percentage": {
+                    "type": "number"
+                  },
+                  "match_attributes": {
+                    "type": "object",
+                    "properties": {
+                      "venues": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "match_percentage": {
+                              "type": "number"
+                            }
+                          }
+                        }
+                      },
+                      "gender": {
+                        "type": "string"
+                      },
+                      "genre": {
+                        "type": "string"
+                      },
+                      "associated_brands": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "contact": {
+                              "type": "string"
+                            },
+                            "website": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "summary": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }

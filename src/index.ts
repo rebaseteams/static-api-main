@@ -4,6 +4,8 @@ import YAML from 'yamljs';
 import bodyParser from 'body-parser';
 import swaggerUi from 'swagger-ui-express';
 import cors from 'cors';
+// eslint-disable-next-line no-unused-vars
+import swaggerDoc from './swagger/swagger.json';
 
 const corsOptions = {
   origin: '*',
@@ -13,8 +15,6 @@ const corsOptions = {
 
 const app = express();
 app.use(cors(corsOptions));
-
-const swaggerDocument = YAML.load('./swaggerdoc.yaml');
 
 const data = {
   artists_data: [
@@ -118,11 +118,35 @@ const data = {
       },
       summary: 'Neha is well known bollywod singer with lot of hits',
     },
+    {
+      artist_name: 'Akon',
+      artist_id: '1546',
+      match_percentage: 70,
+      match_attributes: {
+        venues: [
+          {
+            name: 'SaReGaMa',
+            match_percentage: 40,
+          },
+        ],
+        gender: 'Female',
+        genre: 'Bollywood',
+        age: '26-35',
+        associated_brands: [
+          {
+            name: 'Vh1',
+            contact: 'vh1.contact@vh1.com',
+            website: 'vh1.com',
+          },
+        ],
+      },
+      summary: 'Neha is well known bollywod singer with lot of hits',
+    },
   ],
 };
 
 app.use(bodyParser.json());
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 app.get('/', (req, res) => {
   res.send('HELLO!');
 });
