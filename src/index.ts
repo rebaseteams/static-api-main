@@ -19,7 +19,7 @@ app.use(cors(corsOptions));
 const data = {
   artists_data: [
     {
-      artist_name: 'Arjit',
+      artist_name: 'Adele',
       artist_id: '1234',
       match_percentage: 48,
       match_attributes: {
@@ -44,7 +44,7 @@ const data = {
           },
         ],
       },
-      summary: 'Arjit is well known bollywod singer with lot of hits',
+      summary: 'adele is well known bollywod singer with lot of hits',
     },
     {
       artist_name: 'Atif',
