@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "lint": "tslint -c src/tslint.json -p tsconfig.json ",
+    "lint": "tslint -c src/tslint.json -p src/tsconfig.json ",
     "build": "tsc -b src",
     "prestart": "npm run build",
     "start": "node .",
