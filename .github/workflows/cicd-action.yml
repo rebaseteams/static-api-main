@@ -75,7 +75,7 @@ jobs:
       run: |
         npm install
         npm run build
-        docker build -t $REPO:latest -t $REPO:${GITHUB_SHA::8} .
+        docker build -t $REPO:latest $REPO:${GITHUB_SHA::8} .
     - name: Publish Docker image
       run: docker push $REPO
 
