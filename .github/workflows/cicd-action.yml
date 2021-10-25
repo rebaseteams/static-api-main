@@ -52,7 +52,7 @@ jobs:
       run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
     - name: Build Docker image
       run: |
-        docker build $REPO .
+        docker build $REPO:latest $REPO:${GITHUB_SHA::8} .
     - name: Publish Docker image
       run: docker push $REPO
 
@@ -75,7 +75,7 @@ jobs:
       run: |
         npm install
         npm run build
-        docker build $REPO .
+        docker build $REPO:latest $REPO:${GITHUB_SHA::8} .
     - name: Publishh Docker image
       run: docker push $REPO
 
