@@ -53,8 +53,9 @@ jobs:
     - name: Build Docker image
       run: |
         docker build $REPO .
+        docker image ls
     - name: Publish Docker image
-      run: docker push $REPO
+      run: docker push $REPO:latest
 
   docker:
     if: github.ref == 'refs/heads/master'
