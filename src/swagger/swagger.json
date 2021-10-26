@@ -2,7 +2,7 @@
     "openapi": "3.0.0",
     "info": {
       "version": "1.0.0",
-      "title": "Recommender",
+      "title": "Artist Recommender",
       "description": "Service for Artist Recommendation for Concert"
     },
     "servers": [
