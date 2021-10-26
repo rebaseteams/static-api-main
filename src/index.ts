@@ -39,7 +39,7 @@ const data = {
         age: '18-25',
         associated_brands: [
           {
-            name: 'Coke Studio',
+            name: 'Coke Studio Pakistan',
             contact: 'cokestudio.contact@coke.com',
             website: 'coke.com',
           },
