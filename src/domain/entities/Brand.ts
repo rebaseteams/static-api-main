@@ -1,9 +1,10 @@
-export class Brand {
-    private brand_name;
-    private brand_id;
-    
-    constructor(brand_name : string, brand_id : string) {
-        this.brand_name = brand_name;
-        this.brand_id = brand_id;
+export default class Brand {
+    private brandName;
+
+    private brandId;
+
+    constructor(brandName : string, brandId : string) {
+      this.brandName = brandName;
+      this.brandId = brandId;
     }
 }
