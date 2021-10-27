@@ -151,7 +151,7 @@ app.get('/', (req, res) => {
 });
 app.post('/recommender/api/getMatchData/', (req, res) => {
   // eslint-disable-next-line no-unused-vars
-  const body = JSON.stringify(req.body);
+  // const body = JSON.stringify(req.body);
   res.send(data);
 });
 app.listen(3000, () => {
