@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "mocha",
-    "lint": "eslint ./src/** -c .eslintrc.json --ext ts,tsx ",
+    "lint": "eslint ./src -c .eslintrc.json --ext ts,tsx ",
     "lint-fix": "eslint ./src/** -c .eslintrc.json --fix --ext ts,tsx ",
     "build": "tsc -b src",
     "start": "node ."
