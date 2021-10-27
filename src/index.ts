@@ -5,7 +5,6 @@ import YAML from 'yamljs';
 import bodyParser from 'body-parser';
 import swaggerUi from 'swagger-ui-express';
 import cors from 'cors';
-// eslint-disable-next-line no-unused-vars
 import swaggerDoc from './swagger/swagger.json';
 
 const corsOptions = {
@@ -157,7 +156,7 @@ app.post('/recommender/api/getMatchData/', (req, res) => {
   res.send(data);
 });
 app.listen(3000, () => {
-  console.log('Server running on port 3000');
+  // console.log('Server running on port 3000');
 });
 
-module.exports=app
+module.exports = app;
