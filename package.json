@@ -4,19 +4,22 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
+    "test": "mocha src/**/*.test.js",
     "lint": "tslint -c src/tslint.json -p src/tsconfig.json ",
     "build": "tsc -b src",
     "prestart": "npm run build",
-    "start": "node .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "chai": "^4.3.4",
+    "chai-http": "^4.3.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "mocha": "^9.1.3",
     "swagger-jsdoc": "^6.1.0",
     "swagger-ui-express": "^4.1.6",
     "tslint": "^6.1.3",
