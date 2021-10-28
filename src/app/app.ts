@@ -1,10 +1,10 @@
 export default class Application {
-    private db : any;
+  private db;
 
-    private server : any;
+  private server;
 
-    constructor({ db, server }) {
-      this.db = db;
-      this.server = server;
-    }
+  constructor({ db, server } : {db : any, server : any}) {
+    this.db = db;
+    this.server = server;
+  }
 }
