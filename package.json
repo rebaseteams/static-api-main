@@ -8,7 +8,7 @@
     "build": "tsc",
     "test": "jest --detectOpenHandles",
     "build-and-test": "npm run build && npm run test",
-    "lint": "eslint ./src/** -c .eslintrc.json --ext ts,tsx ",
+    "lint": "eslint ./src -c .eslintrc.json --ext ts,tsx ",
     "lint-fix": "eslint ./src/** -c .eslintrc.json --fix --ext ts,tsx ",
     "presubmit": "npm run lint && npm run build-and-test"
   },
