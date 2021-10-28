@@ -1,7 +1,8 @@
 {
     "env": {
         "browser": true,
-        "es2021": true
+        "es2021": true,
+        "jest": true
     },
     "extends": [
         "airbnb-base",
@@ -16,7 +17,7 @@
         "@typescript-eslint"
     ],
     "rules": {
-        "max-len" :"off",
+        "max-len": "off",
         "import/extensions": [
             "error",
             "ignorePackages",
@@ -24,10 +25,20 @@
                 "ts": "never"
             }
         ],
-        "no-console" :"off",
-        "no-restricted-syntax" :"error",
-        "no-await-in-loop" : "off",
-        "guard-for-in" :"error",
-        "no-implicit-coercion":"error"
+        "import/no-extraneous-dependencies": [
+            "error",
+            {
+                "devDependencies": [
+                    "**/*.spec.ts",
+                    "**/*.spec.tsx"
+                ]
+            }
+        ],
+        "no-console": "off",
+        "no-restricted-syntax": "error",
+        "no-await-in-loop": "off",
+        "guard-for-in": "error",
+        "no-implicit-coercion": "error",
+        "camelcase": "off"
     }
 }
