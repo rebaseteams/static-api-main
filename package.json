@@ -4,7 +4,6 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "test": "mocha --exit",
     "lint": "eslint ./src/** -c .eslintrc.json --ext ts,tsx ",
     "lint-fix": "eslint ./src/** -c .eslintrc.json --fix --ext ts,tsx ",
     "build": "tsc -b src",
@@ -28,14 +27,10 @@
     "@types/swagger-ui-express": "^4.1.3",
     "@typescript-eslint/eslint-plugin": "^4.32.0",
     "@typescript-eslint/parser": "^4.32.0",
-    "chai": "^4.3.4",
-    "chai-http": "^4.3.0",
-    "chai-json-pattern": "^1.1.0",
     "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-import-resolver-typescript": "^2.5.0",
     "eslint-plugin-import": "^2.24.2",
-    "mocha": "^9.1.3",
     "ts-node": "^10.3.0",
     "tslint": "^6.1.3",
     "typescript": "^4.4.4"
