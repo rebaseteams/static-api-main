@@ -1,7 +1,12 @@
 [
-    {
-      "artist_name": "Adele",
-      "artist_id": "1234",
+  {
+    "artist": {
+      "artistName": "Adele",
+      "artistId": "1234",
+      "brands": [],
+      "venues": []
+    },
+    "match": {
       "match_percentage": 48,
       "match_attributes": {
         "venues": [
@@ -24,12 +29,18 @@
             "website": "coke.com"
           }
         ]
-      },
-      "summary": "adele is well known bollywod singer with lot of hits"
+      }
     },
-    {
-      "artist_name": "Atif",
-      "artist_id": "1254",
+    "summary": "adele is well known bollywod singer with lot of hits"
+  },
+  {
+    "artist": {
+      "artistName": "Atif",
+      "artistId": "1254",
+      "brands": [],
+      "venues": []
+    },
+    "match": {
       "match_percentage": 30,
       "match_attributes": {
         "venues": [
@@ -48,12 +59,18 @@
             "website": "mtv.com"
           }
         ]
-      },
-      "summary": "Atif is well known bollywod singer with lot of hits"
+      }
     },
-    {
-      "artist_name": "Prateek Kullhad",
-      "artist_id": "1546",
+    "summary": "Atif is well known bollywod singer with lot of hits"
+  },
+  {
+    "artist": {
+      "artistName": "Prateek Kullhad",
+      "artistId": "1546",
+      "brands": [],
+      "venues": []
+    },
+    "match": {
       "match_percentage": 70,
       "match_attributes": {
         "venues": [
@@ -72,12 +89,18 @@
             "website": "vh1.com"
           }
         ]
-      },
-      "summary": "Prateek is well known bollywod singer with lot of hits"
+      }
     },
-    {
-      "artist_name": "Neha Kakkar",
-      "artist_id": "1546",
+    "summary": "Prateek is well known bollywod singer with lot of hits"
+  },
+  {
+    "artist": {
+      "artistName": "Neha Kakkar",
+      "artistId": "1546",
+      "brands": [],
+      "venues": []
+    },
+    "match": {
       "match_percentage": 70,
       "match_attributes": {
         "venues": [
@@ -96,12 +119,18 @@
             "website": "vh1.com"
           }
         ]
-      },
-      "summary": "Neha is well known bollywod singer with lot of hits"
+      }
     },
-    {
-      "artist_name": "Akon",
-      "artist_id": "1546",
+    "summary": "Neha is well known bollywod singer with lot of hits"
+  },
+  {
+    "artist": {
+      "artistName": "Akon",
+      "artistId": "1546",
+      "brands": [],
+      "venues": []
+    },
+    "match": {
       "match_percentage": 70,
       "match_attributes": {
         "venues": [
@@ -120,7 +149,8 @@
             "website": "vh1.com"
           }
         ]
-      },
-      "summary": "Neha is well known bollywod singer with lot of hits"
-    }
-  ]
+      }
+    },
+    "summary": "Neha is well known bollywod singer with lot of hits"
+  }
+]
