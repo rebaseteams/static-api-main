@@ -1,8 +1,7 @@
-const chai = require('chai');
-const chaiHttp = require('chai-http');
+// eslint-disable-next-line import/no-extraneous-dependencies
+import chai from 'chai';
 
-const main = require('../dist/index');
+import main from '../src/index';
 
-exports.chai=chai;
-exports.chaiHttp=chaiHttp;
-exports.main=main;
+export default chai;
+exports.main = main;

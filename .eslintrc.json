@@ -27,6 +27,7 @@
         "no-console" :"off",
         "no-restricted-syntax" :"error",
         "no-await-in-loop" : "off",
-        "guard-for-in" :"error"
+        "guard-for-in" :"error",
+        "no-implicit-coercion":"error"
     }
 }

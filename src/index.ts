@@ -149,13 +149,17 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 app.get('/', (req, res) => {
   res.send('HELLO!');
 });
-app.post('/recommender/api/getMatchData/', (req, res) => {
+app.post('/Recommendation', (req, res) => {
   // eslint-disable-next-line no-unused-vars
   // const body = JSON.stringify(req.body);
   res.send(data);
+});
+app.get('/recommender/api/getArtist/:id', (req, res) => {
+  const { id } = req.params;
+  res.send(id);
 });
 app.listen(3000, () => {
   // console.log('Server running on port 3000');
 });
 
-module.exports = app;
+export default app;

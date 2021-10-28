@@ -1,10 +1,11 @@
 /* eslint-disable no-undef */
 /* eslint-disable linebreak-style */
-const common = require('./common')
-common.chai.use(common.chaiHttp)
-const expect = common.chai.expect
+// eslint-disable-next-line import/no-extraneous-dependencies
+import chaiHttp from 'chai-http';
+
+chai.use(chaiHttp);
 
 describe('API test', () => {
     require('./GET/getAPI.test')
-  require('./POST/postAPI.test')
+    require('./POST/postAPI.test')
 });
