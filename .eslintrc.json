@@ -34,7 +34,7 @@
                 ]
             }
         ],
-        "no-console": "off",
+        "no-console": "error",
         "no-restricted-syntax": "error",
         "no-await-in-loop": "off",
         "guard-for-in": "error",

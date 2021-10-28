@@ -4,7 +4,17 @@ import * as swaggerUi from 'swagger-ui-express';
 import * as cors from 'cors';
 import * as swaggerDoc from './swagger/swagger.json';
 
-import artistRoutes from './artist-routes';
+import InMemoryArtistRepo from './repositories/in-memory/artist';
+import InMemoryArtistRecommendationRepo from './repositories/in-memory/artist-recommendation';
+
+import ArtistRoute from './artist-routes';
+
+import ArtistService from './services/artist';
+
+const inMemoryArtistRepo = new InMemoryArtistRepo();
+const inMemoryArtistRecommendationRepo = new InMemoryArtistRecommendationRepo();
+
+const artistService = new ArtistService(inMemoryArtistRepo, inMemoryArtistRecommendationRepo);
 
 const corsOptions = {
   origin: '*',
@@ -18,6 +28,6 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
-app.use('/artists', artistRoutes);
+app.use('/artists', new ArtistRoute(artistService).router);
 
 export default app;
