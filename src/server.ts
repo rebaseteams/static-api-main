@@ -12,25 +12,31 @@ import NotificationRoute from './notification-routes';
 
 import ArtistService from './services/artist';
 
-const inMemoryArtistRepo = new InMemoryArtistRepo();
-const inMemoryArtistRecommendationRepo = new InMemoryArtistRecommendationRepo();
+export default class MainServer {
+  private inMemoryArtistRepo: InMemoryArtistRepo;
 
-const artistService = new ArtistService(inMemoryArtistRepo, inMemoryArtistRecommendationRepo);
+  private inMemoryArtistRecommendationRepo: InMemoryArtistRecommendationRepo;
 
-const corsOptions = {
-  origin: '*',
-  credentials: true, // access-control-allow-credentials:true
-  optionSuccessStatus: 200,
-};
+  private artistService: ArtistService;
 
-const app = express();
-app.use(cors(corsOptions));
+  app;
 
-app.use(bodyParser.json());
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
+  corsOptions = {
+    origin: '*',
+    credentials: true, // access-control-allow-credentials:true
+    optionSuccessStatus: 200,
+  };
 
-app.use('/artists', new ArtistRoute(artistService).router);
-
-app.use('/notification', new NotificationRoute().router);
-
-export default app;
+  constructor() {
+    this.inMemoryArtistRepo = new InMemoryArtistRepo();
+    this.inMemoryArtistRecommendationRepo = new InMemoryArtistRecommendationRepo();
+    this.artistService = new ArtistService(this.inMemoryArtistRepo, this.inMemoryArtistRecommendationRepo);
+    this.app = express();
+    this.app.use(cors(this.corsOptions));
+    this.app.use(bodyParser.json());
+    
+    this.app.use('/notification', new NotificationRoute().router);
+    this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
+    this.app.use('/artists', new ArtistRoute(this.artistService).router);
+  }
+}

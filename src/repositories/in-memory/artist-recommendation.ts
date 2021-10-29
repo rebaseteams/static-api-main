@@ -12,4 +12,12 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
 
     return this.artistRecommendationList;
   }
+
+  addNewRecommendation(artistRecoomendation: ArtistRecommendation): Boolean {
+    if (artistRecoomendation) {
+      this.artistRecommendationList.push(artistRecoomendation);
+      return true;
+    }
+    return false;
+  }
 }

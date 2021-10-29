@@ -17,5 +17,18 @@ export default class ArtistRoute {
         res.send([]);
       }
     });
+
+    this.router.post('/concert', async (req, res) => {
+      this.artistService.createNewRecommendation(req.body);
+      res.send({ id: '123' });
+    });
+
+    this.router.get('/:id', (req, res) => {
+      if (req.params.id) {
+        res.send(this.artistService.getArtist(req.params.id));
+      } else {
+        res.send([]);
+      }
+    });
   }
 }
