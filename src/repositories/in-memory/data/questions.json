@@ -1,0 +1,27 @@
+[
+  {
+    "questions": {
+      "userId": "12356",
+      "formName": "adeleConcert",
+      "eventType": "concer",
+      "venue": ["Opera"],
+      "artistBudget": {
+        "min": 1000,
+        "max": 2000
+      },
+      "sponsorshipType": "Multiple",
+      "wantedBrands": ["Rado"],
+      "unwantedBrands": ["Swiss"],
+      "targetAudience": {
+        "ageGroup": ["18-24", "28-24"],
+        "genre": ["Pop"],
+        "gender": ["male", "female"]
+      },
+      "whatSellsMost": {
+        "beer": ["budwiser"],
+        "liquor": ["Glenlivet"],
+        "softDrints": ["CocoCola"]
+      }
+    }
+  }
+]
