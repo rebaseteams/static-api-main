@@ -1,37 +1,36 @@
 {
-    "openapi": "3.0.0",
-    "info": {
-      "version": "1.0.0",
-      "title": "Artist Recommender",
-      "description": "Service for Artist Recommendation for concert"
-    },
-    "servers": [
-      {
-        "url": "http://52.66.164.23/api"
-      }
-    ],
-    "paths": {
-      "/recommender/api/getMatchData/": {
-        "post": {
-          "description": "get the match data based on the given questions",
-          "requestBody": {
-            "required": true,
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Recommender",
+    "description": "Service for Artist Recommendation"
+  },
+  "servers": [
+    {
+      "url": "http://52.66.164.23/api"
+    }
+  ],
+  "paths": {
+    "/artists/concert": {
+      "post": {
+        "description": "Add concert data and return concertId ans curates recomendation",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QuestionData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Saved form data with id",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/QuestionData"
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "A list of users",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/matchData"
-                  }
+                  "$ref": "#/components/schemas/SavedQuestionData"
                 }
               }
             }
@@ -39,74 +38,788 @@
         }
       }
     },
-    "components": {
-      "schemas": {
-        "QuestionData": {
-          "type": "object"
-        },
-        "matchData": {
-          "type": "object",
-          "properties": {
-            "artists_data": {
-              "type": "array",
-              "description": "Array of artists.",
-              "items": {
+    "/artists/recomendations/:id": {
+      "get": {
+        "description": "get the match data based on the given questions",
+        "responses": {
+          "200": {
+            "description": "A list of recommended artists with respect to form id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/matchData"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/artists/:id": {
+      "get": {
+        "description": "get artist data with artist id",
+        "responses": {
+          "200": {
+            "description": "Artist Schema",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/artistData"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "QuestionData": {
+        "type": "object",
+        "properties": {
+          "ueserId": {
+            "type": "string"
+          },
+          "concertName": {
+            "type": "string"
+          },
+          "eventType": {
+            "type": "string"
+          },
+          "venue": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "artisBudget": {
+            "type": "object",
+            "properties": {
+              "min": {
+                "type": "number"
+              },
+              "max": {
+                "type": "number"
+              }
+            }
+          },
+          "sponsorshipType": {
+            "type": "string"
+          },
+          "wantedBrands": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "unwantedBrands": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "targetAudience": {
+            "type": "object",
+            "properties": {
+              "ageGroup": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "genre": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "gender": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "whatSellsMost": {
+            "type": "object",
+            "properties": {
+              "beer": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "liquor": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "softDrints": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "SavedQuestionData": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "dateCreated": {
+            "type": "string"
+          },
+          "concertName": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "matchData": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "users": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "createdOn": {
+            "type": "string"
+          },
+          "lastModified": {
+            "type": "object",
+            "properties": {
+              "date": {
+                "type": "string"
+              },
+              "user": {
                 "type": "object",
                 "properties": {
-                  "artist_name": {
+                  "id": {
                     "type": "string"
                   },
-                  "artist_id": {
+                  "name": {
                     "type": "string"
-                  },
-                  "match_percentage": {
+                  }
+                }
+              }
+            }
+          },
+          "concertData": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "formName": {
+                "type": "string"
+              },
+              "eventType": {
+                "type": "string"
+              },
+              "venue": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "artisBudget": {
+                "type": "object",
+                "properties": {
+                  "min": {
                     "type": "number"
                   },
-                  "match_attributes": {
+                  "max": {
+                    "type": "number"
+                  }
+                }
+              },
+              "sponsorshipType": {
+                "type": "string"
+              },
+              "wantedBrands": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "unwantedBrands": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "targetAudience": {
+                "type": "object",
+                "properties": {
+                  "ageGroup": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "genre": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "gender": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "whatSellsMost": {
+                "type": "object",
+                "properties": {
+                  "beer": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "liquor": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "softDrints": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "artists": {
+            "type": "array",
+            "description": "Array of artists.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "artistName": {
+                  "type": "string"
+                },
+                "artistId": {
+                  "type": "string"
+                },
+                "artistImage": {
+                  "type": "string"
+                },
+                "matchPercentage": {
+                  "type": "number"
+                },
+                "lastCalculated_on": {
+                  "type": "string"
+                },
+                "matchAttributes": {
+                  "type": "object",
+                  "properties": {
+                    "venues": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "address": {
+                            "type": "object",
+                            "properties": {
+                              "pincode": {
+                                "type": "number"
+                              },
+                              "country": {
+                                "type": "string"
+                              },
+                              "city": {
+                                "type": "string"
+                              },
+                              "geoLocation": {
+                                "type": "object",
+                                "properties": {
+                                  "lat": {
+                                    "type": "number"
+                                  },
+                                  "long": {
+                                    "type": "number"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "venueCapacity": {
+                            "type": "number"
+                          },
+                          "matchPercentage": {
+                            "type": "number"
+                          }
+                        }
+                      }
+                    },
+                    "age": {
+                      "type": "object",
+                      "properties": {
+                        "ageGroup": {
+                          "type": "string"
+                        },
+                        "matchPercentage": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "gender": {
+                      "type": "object",
+                      "properties": {
+                        "male": {
+                          "type": "number"
+                        },
+                        "female": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "genre": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "genreName": {
+                            "type": "string"
+                          },
+                          "matchPercentage": {
+                            "type": "number"
+                          }
+                        }
+                      }
+                    },
+                    "associatedBrands": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "contact": {
+                            "type": "string"
+                          },
+                          "website": {
+                            "type": "string"
+                          },
+                          "logo_url": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "summary": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "dislikedArtists": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "string"
+                },
+                "artistId": {
+                  "type": "string"
+                },
+                "artistName": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "artistData": {
+        "type": "object",
+        "properties": {
+          "artistName": {
+            "type": "string"
+          },
+          "contryOrigin": {
+            "type": "string"
+          },
+          "artistId": {
+            "type": "string"
+          },
+          "artistImage": {
+            "type": "string"
+          },
+          "coverImage": {
+            "type": "string"
+          },
+          "artistBio": {
+            "type": "string"
+          },
+          "matchPercentage": {
+            "type": "number"
+          },
+          "socialMediaAnalytics": {
+            "type": "object",
+            "properties": {
+              "youtube": {
+                "type": "object",
+                "properties": {
+                  "channel": {
+                    "type": "string"
+                  },
+                  "subscribers": {
+                    "type": "number"
+                  },
+                  "avgLikes": {
+                    "type": "number"
+                  },
+                  "engegmentRatio": {
+                    "type": "number"
+                  },
+                  "avgView": {
+                    "type": "number"
+                  },
+                  "audience": {
                     "type": "object",
                     "properties": {
-                      "venues": {
+                      "age": {
                         "type": "array",
                         "items": {
                           "type": "object",
                           "properties": {
-                            "name": {
+                            "ageGroup": {
                               "type": "string"
                             },
-                            "match_percentage": {
+                            "matchPercentage": {
                               "type": "number"
                             }
                           }
                         }
                       },
                       "gender": {
-                        "type": "string"
+                        "type": "object",
+                        "properties": {
+                          "male": {
+                            "type": "number"
+                          },
+                          "female": {
+                            "type": "number"
+                          }
+                        }
                       },
                       "genre": {
-                        "type": "string"
-                      },
-                      "associated_brands": {
                         "type": "array",
                         "items": {
                           "type": "object",
                           "properties": {
-                            "name": {
+                            "genreName": {
                               "type": "string"
                             },
-                            "contact": {
-                              "type": "string"
-                            },
-                            "website": {
-                              "type": "string"
+                            "matchPercentage": {
+                              "type": "number"
                             }
                           }
                         }
                       }
                     }
-                  },
-                  "summary": {
-                    "type": "string"
                   }
+                }
+              },
+              "spotify": {
+                "type": "object",
+                "properties": {
+                  "channel": {
+                    "type": "string"
+                  },
+                  "subscribers": {
+                    "type": "number"
+                  },
+                  "avgLikes": {
+                    "type": "number"
+                  },
+                  "engegmentRatio": {
+                    "type": "number"
+                  },
+                  "avgView": {
+                    "type": "number"
+                  },
+                  "audience": {
+                    "type": "object",
+                    "properties": {
+                      "age": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "ageGroup": {
+                              "type": "string"
+                            },
+                            "matchPercentage": {
+                              "type": "number"
+                            }
+                          }
+                        }
+                      },
+                      "gender": {
+                        "type": "object",
+                        "properties": {
+                          "male": {
+                            "type": "number"
+                          },
+                          "female": {
+                            "type": "number"
+                          }
+                        }
+                      },
+                      "genre": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "genreName": {
+                              "type": "string"
+                            },
+                            "matchPercentage": {
+                              "type": "number"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "twitter": {
+                "type": "object",
+                "properties": {
+                  "channel": {
+                    "type": "string"
+                  },
+                  "followers": {
+                    "type": "number"
+                  },
+                  "avgLikes": {
+                    "type": "number"
+                  },
+                  "totalTweets": {
+                    "type": "number"
+                  },
+                  "avgView": {
+                    "type": "number"
+                  },
+                  "audience": {
+                    "type": "object",
+                    "properties": {
+                      "age": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "ageGroup": {
+                              "type": "string"
+                            },
+                            "matchPercentage": {
+                              "type": "number"
+                            }
+                          }
+                        }
+                      },
+                      "gender": {
+                        "type": "object",
+                        "properties": {
+                          "male": {
+                            "type": "number"
+                          },
+                          "female": {
+                            "type": "number"
+                          }
+                        }
+                      },
+                      "genre": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "genreName": {
+                              "type": "string"
+                            },
+                            "matchPercentage": {
+                              "type": "number"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "manager": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "id": {
+                "type": "string"
+              },
+              "contactInfo": {
+                "type": "object",
+                "properties": {
+                  "mobileNo": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "email": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "venues": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "address": {
+                  "type": "object",
+                  "properties": {
+                    "pincode": {
+                      "type": "number"
+                    },
+                    "country": {
+                      "type": "string"
+                    },
+                    "city": {
+                      "type": "string"
+                    },
+                    "geoLocation": {
+                      "type": "object",
+                      "properties": {
+                        "lat": {
+                          "type": "number"
+                        },
+                        "long": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  }
+                },
+                "venueCapacity": {
+                  "type": "number"
+                },
+                "matchPercentage": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "age": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "ageGroup": {
+                  "type": "string"
+                },
+                "matchPercentage": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "gender": {
+            "type": "object",
+            "properties": {
+              "male": {
+                "type": "number"
+              },
+              "female": {
+                "type": "number"
+              }
+            }
+          },
+          "genre": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "genreName": {
+                  "type": "string"
+                },
+                "matchPercentage": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "associatedBrands": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "contact": {
+                  "type": "string"
+                },
+                "website": {
+                  "type": "string"
+                },
+                "logoUrl": {
+                  "type": "string"
                 }
               }
             }
@@ -115,3 +828,4 @@
       }
     }
   }
+}
