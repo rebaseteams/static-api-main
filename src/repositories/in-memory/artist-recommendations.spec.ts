@@ -1,4 +1,5 @@
 import * as expectedArtistRecommendations from './data/artist-recommendations.json';
+import * as questionsData from './data/questions.json';
 import InMemoryArtistRecommendationRepo from './artist-recommendation';
 
 describe('ArtistRecommendations', () => {
@@ -12,6 +13,12 @@ describe('ArtistRecommendations', () => {
     it('should return the artist recommendation if it exists', () => {
       const actualArtistRecommnedations = artistRecommendationRepo.getArtistRecommendations('id1');
       expect(actualArtistRecommnedations).toEqual(expectedArtistRecommendations);
+    });
+  });
+  describe('addNewRecommendation', () => {
+    it('should return the artist recommendation if it exists', () => {
+      const addedArtistRecommendation = artistRecommendationRepo.addNewRecommendation(questionsData[0]);
+      expect(addedArtistRecommendation).toEqual(true);
     });
   });
 });
