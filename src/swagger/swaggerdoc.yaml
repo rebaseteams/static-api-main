@@ -605,7 +605,7 @@ components:
           enum:
             - "email sent successfully"
             - "facebook notification sent successfully"
-            - "twitter notifucation send success fully"
+            - "twitter notification send successfully"
           
     NotificationBadRequest:
       type: object
