@@ -34,7 +34,6 @@ export default class MainServer {
     this.app = express();
     this.app.use(cors(this.corsOptions));
     this.app.use(bodyParser.json());
-    
     this.app.use('/notification', new NotificationRoute().router);
     this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
     this.app.use('/artists', new ArtistRoute(this.artistService).router);
