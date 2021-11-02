@@ -13,5 +13,5 @@ export interface ArtistRepoInterface {
 export interface ArtistServiceInteface {
   getArtist(id : string) : Artist| { message : string };
   addArtist(artist : Artist) : Boolean;
-  getRecommendation(id : string): ArtistRecommendation[];
+  getRecommendation(id : string): ArtistRecommendation | {message: String};
 }

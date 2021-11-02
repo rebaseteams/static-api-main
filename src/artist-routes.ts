@@ -11,7 +11,7 @@ export default class ArtistRoute {
     this.router = express.Router();
 
     this.router.get('/recommendations/:id', (req, res) => {
-      if (req.params.id === 'id1') {
+      if (req.params.id) {
         res.send(this.artistService.getRecommendation(req.params.id));
       } else {
         res.send([]);
@@ -29,6 +29,10 @@ export default class ArtistRoute {
       } else {
         res.send([]);
       }
+    });
+
+    this.router.patch('/concert', (req, res) => {
+      res.send(this.artistService.updateRecommendation(req.body));
     });
   }
 }

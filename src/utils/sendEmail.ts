@@ -2,8 +2,7 @@ import sgMail = require('@sendgrid/mail');
 import handlebars = require('handlebars');
 
 import { MailDataRequired } from '@sendgrid/helpers/classes/mail';
-
-const fs = require('fs');
+import * as fs from 'fs';
 
 // Code is extracted fron rebase util and some modifications are done
 async function sendEmail(input: any) {

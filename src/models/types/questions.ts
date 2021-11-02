@@ -1,19 +1,17 @@
 import { ArtistBudget } from './artist-budget';
-import { Brand } from './brand';
+// import { Brand } from './brand';
 import { TargetAudience } from './target-audience';
-import { WhatSellsMost } from './what-sells-most';
+// import { WhatSellsMost } from './what-sells-most';
 
 export type Questions = {
 
-        userId: String;
-        formName: String;
+        id: String;
+        concertName: String;
         eventType: String;
         venue: Array<String>;
         artistBudget: ArtistBudget;
         sponsorshipType: String,
-        wantedBrands: Array<Brand>;
-        unwantedBrands: Array<Brand>;
+        wantedBrands: Array<String>;
+        unwantedBrands: Array<String>;
         targetAudience: TargetAudience;
-        whatSellsMost: WhatSellsMost;
-
 }

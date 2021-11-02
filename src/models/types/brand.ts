@@ -1,4 +1,7 @@
 export type Brand = {
-    brandName : string;
-    brandId : string;
+    id: String;
+    name: String;
+    contact: String;
+    website: String;
+    logoUrl:String;
 }

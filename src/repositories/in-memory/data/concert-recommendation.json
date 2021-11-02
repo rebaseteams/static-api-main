@@ -1,0 +1,28 @@
+[
+    {
+        "id": "1234",
+        "userId": "12356",
+        "concertName" : "adeleConcert",
+        "discardedArtistId": [
+            "3456",
+            "3465"
+        ],
+        "artistId": [
+            "1243",
+            "1254"
+        ]
+    },
+    {
+        "id": "1235",
+        "userId": "12356",
+        "concertName" : "adeleConcertNew",
+        "discardedArtistId": [
+            "12376",
+            "12386"
+        ],
+        "artistId": [
+            "12354",
+            "12355"
+        ]
+    }
+]

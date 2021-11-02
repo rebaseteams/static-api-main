@@ -2,6 +2,7 @@ import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import * as swaggerUi from 'swagger-ui-express';
 import * as cors from 'cors';
+import * as dotenv from 'dotenv';
 import * as swaggerDoc from './swagger/swagger.json';
 
 import InMemoryArtistRepo from './repositories/in-memory/artist';
@@ -13,8 +14,7 @@ import NotificationRoute from './notification-routes';
 import ArtistService from './services/artist';
 
 // to use .environment variable in the project
-require('dotenv').config();
-
+dotenv.config();
 export default class MainServer {
   private inMemoryArtistRepo: InMemoryArtistRepo;
 

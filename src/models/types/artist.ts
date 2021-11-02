@@ -1,12 +1,13 @@
 /* eslint-disable semi */
 /* eslint-disable no-unused-vars */
 
-import { Brand } from './brand';
-import { Venue } from './venue';
+import { ArtistMatch } from './artist-match';
 
 export type Artist = {
-    artistName : string;
-    artistId : string;
-    brands : Array<Brand>;
-    venues : Array<Venue>;
+    artistName : String;
+    artistId : String;
+    artistImage: String;
+    matchPercentage: Number;
+    matchAttributes: ArtistMatch;
+    summary?: String;
 }

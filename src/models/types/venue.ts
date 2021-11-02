@@ -1,8 +1,9 @@
 import { Address } from './address';
 
 export type Venue = {
-    venueName : string;
-    venueId : string;
-    venueAddress? : Address;
-    venueCapacity? : number;
+    id : String;
+    name : String;
+    address : Address;
+    venueCapacity? : Number;
+    matchPercentage: Number
 }

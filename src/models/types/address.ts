@@ -1,11 +1,11 @@
 /* eslint-disable semi */
 
 export type Address = {
-  pincode: number;
-  country: string;
-  city: string;
+  pincode: Number;
+  country: String;
+  city: String;
   geoLocation: {
-    lat: number;
-    long: number;
+    lat: Number;
+    long: Number;
   };
 };

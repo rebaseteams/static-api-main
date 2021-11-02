@@ -3,6 +3,7 @@ import { ArtistServiceInteface, ArtistRepoInterface } from '../models/interfaces
 import { Questions } from '../models/types/questions';
 import { ArtistRecommendation } from '../models/types/artist-recommendation';
 import { ArtistRecommendationRepoInterface } from '../models/interfaces/artist-recommendation';
+import { ConcertRecommendation } from '../models/types/concert-recommendation';
 
 export default class ArtistService implements ArtistServiceInteface {
   private artistRepo: ArtistRepoInterface;
@@ -22,17 +23,22 @@ export default class ArtistService implements ArtistServiceInteface {
     return this.artistRepo.addArtist(artist);
   }
 
-  getRecommendation(id: string): ArtistRecommendation[] {
+  getRecommendation(id: string): ArtistRecommendation | {message: String} {
     return this.artistRecommendationRepo.getArtistRecommendations(id);
   }
 
   createNewRecommendation(questions: Questions): String {
     const artistRecommendation = {
+      id: '12345',
       questions,
     };
 
     this.artistRecommendationRepo.addNewRecommendation(artistRecommendation);
     const questionId = '123456';
     return questionId;
+  }
+
+  updateRecommendation(userSelection: ConcertRecommendation): Boolean {
+    return this.artistRecommendationRepo.updateConcertRecommendation(userSelection);
   }
 }
