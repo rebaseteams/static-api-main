@@ -1,5 +1,7 @@
-export type whatSellsMost = {
-    beer:Array<String>;
-    liquor: Array<String>;
-    softDrints: Array<String>;
+import { Brand } from './brand';
+
+export type WhatSellsMost = {
+    beer:Array<Brand>;
+    liquor: Array<Brand>;
+    softDrints: Array<Brand>;
   }

@@ -1,4 +1,4 @@
-export type artistBudget = {
+export type ArtistBudget = {
     min: Number;
     max: Number;
 }

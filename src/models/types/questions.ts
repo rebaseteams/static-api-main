@@ -1,6 +1,7 @@
-import { artistBudget } from './artist-budget';
-import { targetAudience } from './target-audience';
-import { whatSellsMost } from './what-sells-most';
+import { ArtistBudget } from './artist-budget';
+import { Brand } from './brand';
+import { TargetAudience } from './target-audience';
+import { WhatSellsMost } from './what-sells-most';
 
 export type Questions = {
 
@@ -8,11 +9,11 @@ export type Questions = {
         formName: String;
         eventType: String;
         venue: Array<String>;
-        artistBudget: artistBudget;
+        artistBudget: ArtistBudget;
         sponsorshipType: String,
-        wantedBrands: Array<String>;
-        unwantedBrands: Array<String>;
-        targetAudience: targetAudience;
-        whatSellsMost: whatSellsMost;
+        wantedBrands: Array<Brand>;
+        unwantedBrands: Array<Brand>;
+        targetAudience: TargetAudience;
+        whatSellsMost: WhatSellsMost;
 
 }
