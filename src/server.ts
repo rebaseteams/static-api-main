@@ -12,6 +12,9 @@ import NotificationRoute from './notification-routes';
 
 import ArtistService from './services/artist';
 
+// to use .environment variable in the project
+require('dotenv').config();
+
 export default class MainServer {
   private inMemoryArtistRepo: InMemoryArtistRepo;
 
