@@ -2,6 +2,8 @@ import * as express from 'express';
 
 import sendEmail from './utils/sendEmail';
 
+import config from './utils/config';
+
 export default class NotificationRoute {
   router: express.Router;
 
@@ -15,7 +17,7 @@ export default class NotificationRoute {
       vendor: {
         name: 'SENDGRID',
       },
-      email: process.env.SEND_GRID_SENDER_EMAIL,
+      email: process.env.SEND_GRID_SENDER_EMAIL || config.SEND_GRID_SENDER_EMAIL,
     },
     content: {
       type: 'HTML',
@@ -34,14 +36,14 @@ export default class NotificationRoute {
           ...req.body,
           sender: {
             vendor: req.body.sender.vendor,
-            email: process.env.SEND_GRID_SENDER_EMAIL,
+            email: process.env.SEND_GRID_SENDER_EMAIL || config.SEND_GRID_SENDER_EMAIL,
           },
         };
         let response;
         switch (type) {
           case 'email':
             response = sendEmail(mailData);
-            res.send(`Email sent Success: ${response}`);
+            res.send(`Email sent Success: ${JSON.stringify(response)}`);
             break;
           case 'facebook':
             res.send('facebook notification sent successfully');

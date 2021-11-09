@@ -3,7 +3,11 @@ import handlebars = require('handlebars');
 
 import { MailDataRequired } from '@sendgrid/helpers/classes/mail';
 
-const fs = require('fs');
+import fs = require('fs');
+
+import config from './config';
+
+const API_KEY = config.SEND_GRID_API_KEY;
 
 // Code is extracted fron rebase util and some modifications are done
 async function sendEmail(input: any) {
@@ -39,7 +43,7 @@ async function sendEmail(input: any) {
   }
   switch (input.sender.vendor.name) {
     case 'SENDGRID':
-      sgMail.setApiKey(String(process.env.SEND_GRID_API_KEY));
+      sgMail.setApiKey(String(API_KEY));
       try {
         const response = await sgMail.send(msg);
         return response;
