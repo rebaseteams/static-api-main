@@ -37,9 +37,13 @@ async function sendEmail(input: any) {
     default:
       return 0;
   }
+  let buff;
+  let api_key;
   switch (input.sender.vendor.name) {
     case 'SENDGRID':
-      sgMail.setApiKey(String(process.env.SEND_GRID_API_KEY));
+      buff = Buffer.from(String(process.env.SEND_GRID_API_KEY), 'base64');
+      api_key = buff.toString('ascii');
+      sgMail.setApiKey(String(api_key));
       try {
         const response = await sgMail.send(msg);
         return response;
