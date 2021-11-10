@@ -1,4 +1,5 @@
 import * as express from 'express';
+import { QuestionsUI } from './models/types/questions';
 import ArtistService from './services/artist';
 
 export default class ArtistRoute {
@@ -19,8 +20,9 @@ export default class ArtistRoute {
     });
 
     this.router.post('/concert', async (req, res) => {
-      this.artistService.createNewRecommendation(req.body);
-      res.send({ id: '123' });
+      const request = req.body as QuestionsUI;
+      const response = this.artistService.createNewRecommendation(request);
+      res.send(response);
     });
 
     this.router.get('/:id', (req, res) => {
