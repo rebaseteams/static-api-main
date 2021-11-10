@@ -39,13 +39,16 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
   }
 
   // eslint-disable-next-line class-methods-use-this
-  getArtistRecommendation(id: string): ArtistRecommendation | null {
-    const file = fs.readFileSync(`./${id}`).toString();
-    if (file) {
-      return JSON.parse(file) as ArtistRecommendation;
+  getArtistRecommendation(id: string): ArtistRecommendation | { error : string} {
+    try {
+      if (fs.existsSync(`./database/${id}`)) {
+        const file = fs.readFileSync(`./database/${id}`).toString();
+        return JSON.parse(file) as ArtistRecommendation;
+      }
+      return { error: 'Recommendation not found' };
+    } catch (e : any) {
+      return { error: e.message };
     }
-
-    return null;
   }
 
   // Save the data to the jsson file and update the sattus to true.

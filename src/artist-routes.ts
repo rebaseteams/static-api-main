@@ -1,4 +1,5 @@
 import * as express from 'express';
+import { ArtistRecommendation } from './models/types/artist-recommendation';
 import { QuestionsUI } from './models/types/questions';
 import ArtistService from './services/artist';
 
@@ -12,11 +13,11 @@ export default class ArtistRoute {
     this.router = express.Router();
 
     this.router.get('/recommendations/:id', (req, res) => {
-      if (req.params.id === 'id1') {
-        res.send(this.artistService.getRecommendation(req.params.id));
-      } else {
-        res.send([]);
-      }
+      const { id } = req.params;
+      const data : ArtistRecommendation | { error : string} = artistService.getRecommendation(id);
+      // eslint-disable-next-line no-prototype-builtins
+      if (!data?.hasOwnProperty('error'))res.send({ data, success: true });
+      else res.send({ data, success: false });
     });
 
     this.router.post('/concert', async (req, res) => {
