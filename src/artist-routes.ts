@@ -27,6 +27,11 @@ export default class ArtistRoute {
       res.send(response);
     });
 
+    this.router.get('/concert', async (req, res) => {
+      const response = artistService.getConcerts();
+      res.send(response);
+    });
+
     this.router.get('/:id', (req, res) => {
       if (req.params.id) {
         res.send(this.artistService.getArtist(req.params.id));
