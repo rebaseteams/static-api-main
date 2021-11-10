@@ -22,7 +22,12 @@ describe('Artists', () => {
       const invalidId = '234';
       const result = await request(server).get(`/artists/recommendations/${invalidId}`);
       expect(result.status).toEqual(200);
-      expect(result.body).toEqual([]);
+      expect(result.body).toEqual({
+        data: {
+          error: 'Recommendation not found',
+        },
+        success: false,
+      });
     });
 
     afterEach(() => {
