@@ -15,5 +15,6 @@ export interface ArtistServiceInteface {
   getArtist(id : string) : Artist| { message : string };
   addArtist(artist : Artist) : Boolean;
   getRecommendation(id : string): ArtistRecommendation | { error : string};
+  getConcerts() : ConcertCreationResponse[] | { error : string };
   createNewRecommendation(questions: QuestionsUI): ConcertCreationResponse
 }

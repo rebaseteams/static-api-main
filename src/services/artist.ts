@@ -39,6 +39,10 @@ export default class ArtistService implements ArtistServiceInteface {
     return this.artistRecommendationRepo.getArtistRecommendation(id);
   }
 
+  getConcerts() : ConcertCreationResponse[] | { error : string } {
+    return this.artistRecommendationRepo.getConcerts();
+  }
+
   // The responsibility of this function is goint to be as followes
   // 1: Generate a uuid for the submitted concert
   // 2: Invoke the recommendations function to compute the recommendation

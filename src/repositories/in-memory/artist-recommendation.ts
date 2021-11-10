@@ -7,6 +7,7 @@ import {
   ArtistRecommendation,
 } from '../../models/types/artist-recommendation';
 import { PatchRequest } from '../../models/types/patch-request';
+import { ConcertCreationResponse } from '../../models/types/questions';
 
 const {
   uniqueNamesGenerator, adjectives, colors, animals,
@@ -97,7 +98,7 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
   }
 
   // eslint-disable-next-line class-methods-use-this
-  getArtistRecommendation(id: string): ArtistRecommendation | { error : string} {
+  getArtistRecommendation(id: string): ArtistRecommendation | { error: string } {
     try {
       if (fs.existsSync(`./database/${id}`)) {
         const file = fs.readFileSync(`./database/${id}`).toString();
@@ -106,9 +107,26 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
         return dataJson;
       }
       return { error: 'Recommendation not found' };
-    } catch (e : any) {
+    } catch (e: any) {
       return { error: e.message };
     }
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  getConcerts(): ConcertCreationResponse[] | { error: string } {
+    const allConcerts : ConcertCreationResponse[] = [];
+    fs.readdirSync('./database/').forEach((file) => {
+      const toread = fs.readFileSync(`./database/${file}`).toString();
+      const dataJson = JSON.parse(toread) as ArtistRecommendation;
+      const concertData = {
+        id: dataJson.concertData.id,
+        concertName: dataJson.concertData.concertName,
+        status: dataJson.status,
+        dateCreated: dataJson.concertData.dateCreated,
+      };
+      allConcerts.push(concertData);
+    });
+    return allConcerts;
   }
 
   // Save the data to the jsson file and update the sattus to true.
@@ -145,7 +163,7 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
   }
 
   // eslint-disable-next-line class-methods-use-this
-  updateDiscardedArtist(request: PatchRequest): { data:ARec[], success: Boolean} | { data:{ error : string}, success: Boolean} {
+  updateDiscardedArtist(request: PatchRequest): { data: ARec[], success: Boolean } | { data: { error: string }, success: Boolean } {
     try {
       const fileData = fs.readFileSync(`./database/${request.formId}`, 'utf8');
       const fileDataObject: ArtistRecommendation = JSON.parse(fileData);
