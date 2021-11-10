@@ -34,7 +34,7 @@ export default class ArtistService implements ArtistServiceInteface {
     return this.artistRepo.addArtist(artist);
   }
 
-  getRecommendation(id: string): ArtistRecommendation | null {
+  getRecommendation(id: string): ArtistRecommendation | { error : string } {
     return this.artistRecommendationRepo.getArtistRecommendation(id);
   }
 
