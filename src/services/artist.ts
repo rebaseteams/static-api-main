@@ -10,8 +10,9 @@ import {
   Questions,
   QuestionsUI,
 } from '../models/types/questions';
-import { ArtistRecommendation } from '../models/types/artist-recommendation';
+import { ARec, ArtistRecommendation } from '../models/types/artist-recommendation';
 import { ArtistRecommendationRepoInterface } from '../models/interfaces/artist-recommendation';
+import { PatchRequest } from '../models/types/patch-request';
 
 export default class ArtistService implements ArtistServiceInteface {
   private artistRepo: ArtistRepoInterface;
@@ -81,5 +82,13 @@ export default class ArtistService implements ArtistServiceInteface {
       status: artistRecommendation.status,
       dateCreated: questionsToSave.dateCreated,
     };
+  }
+
+  updateRecommendation(request: PatchRequest): { data:ARec[], success: Boolean} | { data:{ error : string}, success: Boolean} {
+    const updatedArtistList = this.artistRecommendationRepo.updateDiscardedArtist(request);
+    if (updatedArtistList) {
+      return updatedArtistList;
+    }
+    return { data: { error: 'Error updating Recommendation' }, success: false };
   }
 }

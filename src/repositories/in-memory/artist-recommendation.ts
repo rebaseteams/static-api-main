@@ -6,6 +6,7 @@ import {
   ARec,
   ArtistRecommendation,
 } from '../../models/types/artist-recommendation';
+import { PatchRequest } from '../../models/types/patch-request';
 
 const {
   uniqueNamesGenerator, adjectives, colors, animals,
@@ -141,5 +142,36 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
     );
 
     return true;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  updateDiscardedArtist(request: PatchRequest): { data:ARec[], success: Boolean} | { data:{ error : string}, success: Boolean} {
+    try {
+      const fileData = fs.readFileSync(`./database/${request.formId}`, 'utf8');
+      const fileDataObject: ArtistRecommendation = JSON.parse(fileData);
+      if (fileDataObject) {
+        const discardedArtistData = fileDataObject.artists.find((a) => a.artistId === request.discardedArtistId);
+        const newArtistList = fileDataObject.artists.filter((a) => a.artistId !== request.discardedArtistId);
+        if (discardedArtistData) {
+          const updatedRecommendation: ArtistRecommendation = {
+            concertData: fileDataObject.concertData,
+            artists: newArtistList,
+            discardedArtists: fileDataObject.discardedArtists ? [...fileDataObject.discardedArtists, discardedArtistData] : [discardedArtistData],
+            status: true,
+          };
+          fs.writeFileSync(
+            `./database/${request.formId}`,
+            JSON.stringify(updatedRecommendation),
+          );
+        } else {
+          return { data: { error: `No Artist found for ID:${request.discardedArtistId}` }, success: false };
+        }
+        newArtistList.splice(10);
+        return { data: newArtistList, success: true };
+      }
+      return { data: { error: `No file found for form ID: ${request.formId}` }, success: false };
+    } catch (e: any) {
+      return { data: { error: e.message }, success: false };
+    }
   }
 }
