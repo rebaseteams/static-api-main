@@ -1,4 +1,4 @@
-import * as moment from 'moment';
+// import * as moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 import { Artist } from '../models/types/artist';
 import {
@@ -47,7 +47,7 @@ export default class ArtistService implements ArtistServiceInteface {
     console.log(questions);
     const questionsToSave: Questions = {
       id: uuidv4(),
-      dateCreated: moment().unix().toString(),
+      dateCreated: String(new Date()),
       userId: 'TODO',
       concertName: questions.concertName,
       eventType: questions.eventType,
@@ -64,7 +64,7 @@ export default class ArtistService implements ArtistServiceInteface {
       whatSellsMost: {
         beer: [],
         liquor: [],
-        softDrints: [],
+        softDrinks: [],
       },
     };
     const artistRecommendation: ArtistRecommendation = {
