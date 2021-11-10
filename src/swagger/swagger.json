@@ -38,7 +38,7 @@
         }
       }
     },
-    "/artists/recomendations/:id": {
+    "/artists/recommendations/:id": {
       "get": {
         "description": "get the match data based on the given questions",
         "responses": {

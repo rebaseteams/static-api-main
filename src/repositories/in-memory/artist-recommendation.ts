@@ -100,7 +100,9 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
     try {
       if (fs.existsSync(`./database/${id}`)) {
         const file = fs.readFileSync(`./database/${id}`).toString();
-        return JSON.parse(file) as ArtistRecommendation;
+        const dataJson = JSON.parse(file) as ArtistRecommendation;
+        dataJson.artists = dataJson.artists.slice(0, 10);
+        return dataJson;
       }
       return { error: 'Recommendation not found' };
     } catch (e : any) {
