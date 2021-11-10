@@ -1,5 +1,6 @@
 import * as express from 'express';
 import { ArtistRecommendation } from './models/types/artist-recommendation';
+import { PatchRequest } from './models/types/patch-request';
 import { QuestionsUI } from './models/types/questions';
 import ArtistService from './services/artist';
 
@@ -32,6 +33,12 @@ export default class ArtistRoute {
       } else {
         res.send([]);
       }
+    });
+
+    this.router.patch('/recommendations', (req, res) => {
+      const request = req.body as PatchRequest;
+      const response = this.artistService.updateRecommendation(request);
+      res.send(response);
     });
   }
 }
