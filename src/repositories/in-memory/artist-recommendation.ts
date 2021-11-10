@@ -19,16 +19,73 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
     artistRecommendation: ArtistRecommendation,
   ): ArtistRecommendation {
     const fakeArtists: Array<ARec> = [];
+    // _.times(10, (n) => {
+    // fakeArtists.push({
+    //   artist: {
+    //     artistName: uniqueNamesGenerator({ dictionaries: [adjectives, colors, animals] }),
+    //     artistId: `artist-${n}`,
+    //     brands: [],
+    //     venues: [],
+    //   },
+    //   // TODO: Can do later
+    //   summary: `test summary ${n}`,
+    // });
     _.times(10, (n) => {
       fakeArtists.push({
-        artist: {
-          artistName: uniqueNamesGenerator({ dictionaries: [adjectives, colors, animals] }),
-          artistId: `artist-${n}`,
-          brands: [],
-          venues: [],
+        artistId: `artist-${n}`,
+        artistName: uniqueNamesGenerator({ dictionaries: [adjectives, colors, animals] }),
+        artistImage: 'https://source.unsplash.com/200x200/?avatar',
+        matchPercentage: (90 - n),
+        matchAttributes: {
+          venues: [
+            {
+              id: '11111',
+              name: 'Parade Hall',
+              address: {
+                pincode: 111022,
+                country: 'USA',
+                city: 'london',
+                geoLocation: {
+                  lat: 40,
+                  long: 80,
+                },
+              },
+              venueCapacity: 12000,
+              matchPercentage: 80,
+            },
+          ],
+          age: {
+            ageGroup: '18-30',
+            matchPercentage: 90,
+          },
+          gender: {
+            male: 10,
+            female: 90,
+          },
+          genre: [
+            {
+              genreName: 'Hollywood',
+              matchPercentage: 94,
+            },
+          ],
+          associatedBrands: [
+            {
+              id: '22222',
+              name: 'Apple',
+              contact: '002233',
+              website: 'https://apple.com',
+              logoUrl: '//logo.clearbit.com/apple.com',
+            },
+            {
+              id: '22223',
+              name: 'Google',
+              contact: '0022643',
+              website: 'https://google.com',
+              logoUrl: '//logo.clearbit.com/google.com',
+            },
+          ],
         },
-        // TODO: Can do later
-        summary: `test summary ${n}`,
+        summary: `${uniqueNamesGenerator({ dictionaries: [adjectives, colors, animals] })} is popular single with a lots of hits`,
       });
     });
 
