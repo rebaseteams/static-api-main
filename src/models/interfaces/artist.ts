@@ -2,6 +2,7 @@
 
 import { Artist } from '../types/artist';
 import { ArtistRecommendation } from '../types/artist-recommendation';
+import { ConcertCreationResponse, QuestionsUI } from '../types/questions';
 
 /* The repositories are supposed to implement this interface */
 export interface ArtistRepoInterface {
@@ -13,5 +14,6 @@ export interface ArtistRepoInterface {
 export interface ArtistServiceInteface {
   getArtist(id : string) : Artist| { message : string };
   addArtist(artist : Artist) : Boolean;
-  getRecommendation(id : string): ArtistRecommendation[];
+  getRecommendation(id : string): ArtistRecommendation | null;
+  createNewRecommendation(questions: QuestionsUI): ConcertCreationResponse
 }
