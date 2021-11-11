@@ -115,6 +115,9 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
   // eslint-disable-next-line class-methods-use-this
   getConcerts(): ConcertCreationResponse[] | { error: string } {
     const allConcerts : ConcertCreationResponse[] = [];
+    if (!fs.existsSync('./database')) {
+      fs.mkdirSync('database');
+    }
     fs.readdirSync('./database/').forEach((file) => {
       const toread = fs.readFileSync(`./database/${file}`).toString();
       const dataJson = JSON.parse(toread) as ArtistRecommendation;
