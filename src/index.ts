@@ -1,6 +1,8 @@
 import MainServer from './server';
 
-new MainServer().app.listen(3000, () => {
+const PORT = 3000;
+
+new MainServer().app.listen(PORT, () => {
   // eslint-disable-next-line no-console
-  console.log('Server running on port 3000');
+  console.log(`Server running on port ${PORT}`);
 });
