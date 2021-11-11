@@ -32,7 +32,7 @@ export default class ArtistRoute {
       res.send(response);
     });
 
-    this.router.get('/:id', (req, res) => {
+    this.router.get('/artistInfo/:id', (req, res) => {
       if (req.params.id) {
         res.send(this.artistService.getArtist(req.params.id));
       } else {
