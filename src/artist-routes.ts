@@ -45,5 +45,13 @@ export default class ArtistRoute {
       const response = this.artistService.updateRecommendation(request);
       res.send(response);
     });
+
+    this.router.delete('/concert/:id', (req, res) => {
+      if (req.params.id) {
+        res.send(this.artistService.deleteConcert(req.params.id));
+      } else {
+        res.send({ error: 'No formID provided.' });
+      }
+    });
   }
 }

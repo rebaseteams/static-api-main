@@ -132,7 +132,7 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
     return allConcerts;
   }
 
-  // Save the data to the jsson file and update the sattus to true.
+  // Save the data to the jsson file and update the status to true.
   addNewRecommendation(artistRecommendation: ArtistRecommendation): Boolean {
     // eslint-disable-next-line no-param-reassign
     artistRecommendation.status = false;
@@ -193,6 +193,27 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
       return { data: { error: `No file found for form ID: ${request.formId}` }, success: false };
     } catch (e: any) {
       return { data: { error: e.message }, success: false };
+    }
+  }
+
+  // Deleting Concert Data files and return success state.
+  // eslint-disable-next-line class-methods-use-this
+  deleteConcertData(id: String): {formId: String, success: Boolean} | { error: String, success: Boolean} {
+    try {
+      const fileExits = fs.existsSync(`./database/${id}`);
+      if (fileExits === true) {
+        // eslint-disable-next-line consistent-return
+        fs.rm(`./database/${id}`, { recursive: true }, (err) => {
+          if (err) {
+            return { error: err.message, status: false };
+          }
+          return { formId: id, success: true };
+        });
+        return { formId: id, success: true };
+      }
+      return { error: `File does not exits for FormId: ${id}`, success: false };
+    } catch (e: any) {
+      return { error: e.message, success: false };
     }
   }
 }
