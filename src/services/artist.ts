@@ -95,4 +95,12 @@ export default class ArtistService implements ArtistServiceInteface {
     }
     return { data: { error: 'Error updating Recommendation' }, success: false };
   }
+
+  deleteConcert(id: String): {formId: String, success: Boolean} | { error: String, success: Boolean} {
+    const response = this.artistRecommendationRepo.deleteConcertData(id);
+    if (response) {
+      return response;
+    }
+    return { error: 'Error Deleting Concert Data', success: false };
+  }
 }
