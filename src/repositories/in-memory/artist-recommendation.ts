@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as _ from 'underscore';
+import { first, last } from 'random-name';
 // import * as dummyArtistRecommendations from './/artist-recommendations.json';
 import { ArtistRecommendationRepoInterface } from '../../models/interfaces/artist-recommendation';
 import {
@@ -8,10 +9,6 @@ import {
 } from '../../models/types/artist-recommendation';
 import { PatchRequest } from '../../models/types/patch-request';
 import { ConcertCreationResponse } from '../../models/types/questions';
-
-const {
-  uniqueNamesGenerator, adjectives, colors, animals,
-} = require('unique-names-generator');
 
 export default class InMemoryArtistRecommendationRepo implements ArtistRecommendationRepoInterface {
   // private artistRecommendationList : ArtistRecommendation[] = dummyArtistRecommendations;
@@ -35,7 +32,7 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
     _.times(10, (n) => {
       fakeArtists.push({
         artistId: `artist-${n}`,
-        artistName: uniqueNamesGenerator({ dictionaries: [adjectives, colors, animals] }),
+        artistName: `${first()} ${last()}`,
         artistImage: 'https://source.unsplash.com/200x200/?avatar',
         matchPercentage: (90 - n),
         matchAttributes: {
@@ -87,7 +84,7 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
             },
           ],
         },
-        summary: `${uniqueNamesGenerator({ dictionaries: [adjectives, colors, animals] })} is popular single with a lots of hits`,
+        summary: 'This artist is popular single with a lots of hits',
       });
     });
 
