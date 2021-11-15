@@ -18,8 +18,8 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
     artistRecommendation: ArtistRecommendation,
   ): ArtistRecommendation {
     const fakeArtists: Array<ARec> = [];
-    const artistname: string = `${first()} ${last()}`;
     _.times(10, (n) => {
+      const artistname: string = `${first()} ${last()}`;
       fakeArtists.push({
         artistId: `artist-${n}`,
         artistName: artistname,
