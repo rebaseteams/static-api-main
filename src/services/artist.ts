@@ -10,7 +10,7 @@ import {
   Questions,
   QuestionsUI,
 } from '../models/types/questions';
-import { ARec, ArtistRecommendation } from '../models/types/artist-recommendation';
+import { ArtistRecommendation } from '../models/types/artist-recommendation';
 import { ArtistRecommendationRepoInterface } from '../models/interfaces/artist-recommendation';
 import { PatchRequest } from '../models/types/patch-request';
 
@@ -88,12 +88,12 @@ export default class ArtistService implements ArtistServiceInteface {
     };
   }
 
-  updateRecommendation(request: PatchRequest): { data:ARec[], success: Boolean} | { data:{ error : string}, success: Boolean} {
+  updateRecommendation(request: PatchRequest): { success: Boolean} | { error : string, success: Boolean} {
     const updatedArtistList = this.artistRecommendationRepo.updateDiscardedArtist(request);
     if (updatedArtistList) {
       return updatedArtistList;
     }
-    return { data: { error: 'Error updating Recommendation' }, success: false };
+    return { error: 'Error updating Recommendation', success: false };
   }
 
   deleteConcert(id: String): {formId: String, success: Boolean} | { error: String, success: Boolean} {
