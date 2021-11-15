@@ -173,6 +173,11 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
       if (fileDataObject) {
         const discardedArtistData = fileDataObject.artists.find((a) => a.artistId === request.discardedArtistId);
         const newArtistList = fileDataObject.artists.filter((a) => a.artistId !== request.discardedArtistId);
+        if (newArtistList.length <= 4) {
+          const newRecommendation: ArtistRecommendation = this.simulatorRecommendations(fileDataObject);
+          newRecommendation.artists.splice(6);
+          newRecommendation.artists.forEach((a) => newArtistList.push(a));
+        }
         if (discardedArtistData) {
           const updatedRecommendation: ArtistRecommendation = {
             concertData: fileDataObject.concertData,
