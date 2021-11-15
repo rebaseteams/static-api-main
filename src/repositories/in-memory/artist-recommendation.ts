@@ -18,22 +18,12 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
     artistRecommendation: ArtistRecommendation,
   ): ArtistRecommendation {
     const fakeArtists: Array<ARec> = [];
-    // _.times(10, (n) => {
-    // fakeArtists.push({
-    //   artist: {
-    //     artistName: uniqueNamesGenerator({ dictionaries: [adjectives, colors, animals] }),
-    //     artistId: `artist-${n}`,
-    //     brands: [],
-    //     venues: [],
-    //   },
-    //   // TODO: Can do later
-    //   summary: `test summary ${n}`,
-    // });
+    const artistname: string = `${first()} ${last()}`;
     _.times(10, (n) => {
       fakeArtists.push({
         artistId: `artist-${n}`,
-        artistName: `${first()} ${last()}`,
-        artistImage: 'https://source.unsplash.com/200x200/?avatar',
+        artistName: artistname,
+        artistImage: `https://picsum.photos/id/${n + 500}/600/600.jpg`,
         matchPercentage: (90 - n),
         matchAttributes: {
           venues: [
@@ -84,7 +74,7 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
             },
           ],
         },
-        summary: 'This artist is popular single with a lots of hits',
+        summary: `${artistname} is very popular singar with a lots of hits and nice musics.`,
       });
     });
 
