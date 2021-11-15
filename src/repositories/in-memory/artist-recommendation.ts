@@ -130,22 +130,26 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
 
   // eslint-disable-next-line class-methods-use-this
   getConcerts(): ConcertCreationResponse[] | { error: string } {
-    const allConcerts : ConcertCreationResponse[] = [];
-    if (!fs.existsSync('./database')) {
-      fs.mkdirSync('database');
+    try {
+      const allConcerts : ConcertCreationResponse[] = [];
+      if (!fs.existsSync('./database')) {
+        fs.mkdirSync('database');
+      }
+      fs.readdirSync('./database/').forEach((file) => {
+        const toread = fs.readFileSync(`./database/${file}`).toString();
+        const dataJson = JSON.parse(toread) as ArtistRecommendation;
+        const concertData = {
+          id: dataJson.concertData.id,
+          concertName: dataJson.concertData.concertName,
+          status: dataJson.status,
+          dateCreated: dataJson.concertData.dateCreated,
+        };
+        allConcerts.push(concertData);
+      });
+      return allConcerts;
+    } catch (err: any) {
+      return { error: err };
     }
-    fs.readdirSync('./database/').forEach((file) => {
-      const toread = fs.readFileSync(`./database/${file}`).toString();
-      const dataJson = JSON.parse(toread) as ArtistRecommendation;
-      const concertData = {
-        id: dataJson.concertData.id,
-        concertName: dataJson.concertData.concertName,
-        status: dataJson.status,
-        dateCreated: dataJson.concertData.dateCreated,
-      };
-      allConcerts.push(concertData);
-    });
-    return allConcerts;
   }
 
   // Save the data to the jsson file and update the status to true.
