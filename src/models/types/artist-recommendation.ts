@@ -4,6 +4,7 @@ export type ARec = {
     artistName: string,
     artistId: string,
     artistImage: string,
+    artistGender?: string,
     matchPercentage: number,
     matchAttributes: {
       venues: Array<
@@ -52,5 +53,6 @@ export type ArtistRecommendation = {
   concertData: Questions;
   artists: Array<ARec>;
   discardedArtists?: Array<ARec>;
+  lastChangedUserId?: String;
   status: boolean
 };

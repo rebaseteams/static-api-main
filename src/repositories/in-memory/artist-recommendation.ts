@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as _ from 'underscore';
-import { first, last } from 'random-name';
+import { first, last, place } from 'random-name';
+import * as faker from 'faker';
 // import * as dummyArtistRecommendations from './/artist-recommendations.json';
 import { ArtistRecommendationRepoInterface } from '../../models/interfaces/artist-recommendation';
 import {
@@ -16,68 +17,96 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
   // eslint-disable-next-line class-methods-use-this
   private simulatorRecommendations(
     artistRecommendation: ArtistRecommendation,
+    artists: Array<ARec>,
+    // eslint-disable-next-line no-unused-vars
+    discardedArtist?: Array<ARec>,
   ): ArtistRecommendation {
     const fakeArtists: Array<ARec> = [];
-    _.times(10, (n) => {
-      const artistname: string = `${first()} ${last()}`;
-      fakeArtists.push({
-        artistId: `artist-${n}`,
-        artistName: artistname,
-        artistImage: `https://picsum.photos/id/${n + 500}/600/600.jpg`,
-        matchPercentage: (90 - n),
-        matchAttributes: {
-          venues: [
-            {
-              id: '11111',
-              name: 'Parade Hall',
-              address: {
-                pincode: 111022,
-                country: 'USA',
-                city: 'london',
-                geoLocation: {
-                  lat: 40,
-                  long: 80,
+    const noOfData: number = (10 - artists.length);
+    // eslint-disable-next-line no-console
+    console.log(faker.address.longitude);
+    const multipleDataGenrator = (m:number) => {
+      _.times(m, (n) => {
+        const artistname: string = `${first()} ${last()}`;
+        const eventPlace: string = `${place()}`;
+        let gender: string;
+        if (Math.random() > 0.5) {
+          gender = 'men';
+        } else {
+          gender = 'women';
+        }
+        fakeArtists.push({
+          artistId: `artist-${n}`,
+          artistName: artistname,
+          artistGender: gender,
+          artistImage: `https://randomuser.me/api/portraits/${gender}/${faker.datatype.number(80)}.jpg`,
+          matchPercentage: Number((90 - (Math.random() * 50)).toFixed(0)),
+          matchAttributes: {
+            venues: [
+              {
+                id: '11111',
+                name: eventPlace,
+                address: {
+                  pincode: Number(faker.address.zipCode()),
+                  country: faker.address.country(),
+                  city: faker.address.cityName(),
+                  geoLocation: {
+                    lat: Number(faker.address.latitude()),
+                    long: Number(faker.address.longitude()),
+                  },
                 },
+                venueCapacity: 12000,
+                matchPercentage: 80,
               },
-              venueCapacity: 12000,
-              matchPercentage: 80,
+            ],
+            age: {
+              ageGroup: '18-30',
+              matchPercentage: 90,
             },
-          ],
-          age: {
-            ageGroup: '18-30',
-            matchPercentage: 90,
+            gender: {
+              male: 10,
+              female: 90,
+            },
+            genre: [
+              {
+                genreName: 'Hollywood',
+                matchPercentage: 94,
+              },
+            ],
+            associatedBrands: [
+              {
+                id: '22222',
+                name: 'Apple',
+                contact: '002233',
+                website: 'https://apple.com',
+                logoUrl: '//logo.clearbit.com/apple.com',
+              },
+              {
+                id: '22223',
+                name: 'Google',
+                contact: '0022643',
+                website: 'https://google.com',
+                logoUrl: '//logo.clearbit.com/google.com',
+              },
+            ],
           },
-          gender: {
-            male: 10,
-            female: 90,
-          },
-          genre: [
-            {
-              genreName: 'Hollywood',
-              matchPercentage: 94,
-            },
-          ],
-          associatedBrands: [
-            {
-              id: '22222',
-              name: 'Apple',
-              contact: '002233',
-              website: 'https://apple.com',
-              logoUrl: '//logo.clearbit.com/apple.com',
-            },
-            {
-              id: '22223',
-              name: 'Google',
-              contact: '0022643',
-              website: 'https://google.com',
-              logoUrl: '//logo.clearbit.com/google.com',
-            },
-          ],
-        },
-        summary: `${artistname} is very popular singar with a lots of hits and nice musics.`,
+          summary: `${artistname} is very popular singar with a lots of hits and nice musics.`,
+        });
       });
-    });
-
+    };
+    // _.times(10, (n) => {
+    // fakeArtists.push({
+    //   artist: {
+    //     artistName: uniqueNamesGenerator({ dictionaries: [adjectives, colors, animals] }),
+    //     artistId: `artist-${n}`,
+    //     brands: [],
+    //     venues: [],
+    //   },
+    //   // TODO: Can do later
+    //   summary: `test summary ${n}`,
+    // });
+    multipleDataGenrator(noOfData);
+    fakeArtists.sort((a, b) => b.matchPercentage - a.matchPercentage);
     // eslint-disable-next-line no-param-reassign
     artistRecommendation.artists = fakeArtists;
 
@@ -137,7 +166,7 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
     );
 
     // TODO:  Call the recommendation api in future to get the artist recommendation
-    this.simulatorRecommendations(artistRecommendation);
+    this.simulatorRecommendations(artistRecommendation, []);
     // eslint-disable-next-line no-param-reassign
     artistRecommendation.status = true;
     fs.writeFile(
@@ -153,16 +182,16 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
   }
 
   // eslint-disable-next-line class-methods-use-this
-  updateDiscardedArtist(request: PatchRequest): { data: ARec[], success: Boolean } | { data: { error: string }, success: Boolean } {
+  updateDiscardedArtist(request: PatchRequest): { success: Boolean } | { error: string, success: Boolean } {
     try {
       const fileData = fs.readFileSync(`./database/${request.formId}`, 'utf8');
       const fileDataObject: ArtistRecommendation = JSON.parse(fileData);
       if (fileDataObject) {
         const discardedArtistData = fileDataObject.artists.find((a) => a.artistId === request.discardedArtistId);
         const newArtistList = fileDataObject.artists.filter((a) => a.artistId !== request.discardedArtistId);
+        newArtistList.sort((a, b) => b.matchPercentage - a.matchPercentage);
         if (newArtistList.length <= 4) {
-          const newRecommendation: ArtistRecommendation = this.simulatorRecommendations(fileDataObject);
-          newRecommendation.artists.splice(6);
+          const newRecommendation: ArtistRecommendation = this.simulatorRecommendations(fileDataObject, newArtistList, fileDataObject.discardedArtists);
           newRecommendation.artists.forEach((a) => newArtistList.push(a));
         }
         if (discardedArtistData) {
@@ -170,6 +199,7 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
             concertData: fileDataObject.concertData,
             artists: newArtistList,
             discardedArtists: fileDataObject.discardedArtists ? [...fileDataObject.discardedArtists, discardedArtistData] : [discardedArtistData],
+            lastChangedUserId: request.userId,
             status: true,
           };
           fs.writeFileSync(
@@ -177,14 +207,14 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
             JSON.stringify(updatedRecommendation),
           );
         } else {
-          return { data: { error: `No Artist found for ID:${request.discardedArtistId}` }, success: false };
+          return { error: `No Artist found for ID:${request.discardedArtistId}`, success: false };
         }
         newArtistList.splice(10);
-        return { data: newArtistList, success: true };
+        return { success: true };
       }
-      return { data: { error: `No file found for form ID: ${request.formId}` }, success: false };
+      return { error: `No file found for form ID: ${request.formId}`, success: false };
     } catch (e: any) {
-      return { data: { error: e.message }, success: false };
+      return { error: e.message, success: false };
     }
   }
 

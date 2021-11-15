@@ -9,7 +9,7 @@ import { ConcertCreationResponse } from '../types/questions';
 export interface ArtistRecommendationRepoInterface {
   getArtistRecommendation(id: string): ArtistRecommendation | { error : string };
   addNewRecommendation(artistRecomendation: ArtistRecommendation): Boolean;
-  updateDiscardedArtist(request: PatchRequest): { data:ARec[], success: Boolean} | { data:{ error : string}, success: Boolean};
+  updateDiscardedArtist(request: PatchRequest): { success: Boolean} | { error : string, success: Boolean};
   deleteConcertData(id: String): {formId: String, success: Boolean} | { error: String, success: Boolean};
   getConcerts(): ConcertCreationResponse[] | { error : string };
 }
