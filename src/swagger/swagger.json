@@ -38,9 +38,63 @@
         }
       }
     },
-    "/artists/recommendations/:id": {
+    "/artists/concert/{id}": {
+      "delete": {
+        "description": "Delete consertfrom and return success.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Saved form data with id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteCurationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/artists/concerts": {
+      "get": {
+        "description": "get artist concert data.",
+        "responses": {
+          "200": {
+            "description": "Artist Recommendation Schema",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConcertCreationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/artists/recomendations/{id}": {
       "get": {
         "description": "get the match data based on the given questions",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
             "description": "A list of recommended artists with respect to form id",
@@ -55,9 +109,46 @@
         }
       }
     },
-    "/artists/:id": {
+    "/artists/recomendations": {
+      "patch": {
+        "description": "update recommendations",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchRecommendationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatchRecommendationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/artists/{id}": {
       "get": {
         "description": "get artist data with artist id",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
             "description": "Artist Schema",
@@ -125,7 +216,7 @@
       "QuestionData": {
         "type": "object",
         "properties": {
-          "ueserId": {
+          "userId": {
             "type": "string"
           },
           "concertName": {
@@ -140,7 +231,7 @@
               "type": "string"
             }
           },
-          "artisBudget": {
+          "artistBudget": {
             "type": "object",
             "properties": {
               "min": {
@@ -930,6 +1021,56 @@
             "type": "string"
           },
           "error": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ConcertCreationResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "concertName": {
+            "type": "string"
+          },
+          "status": {
+            "type": "boolean"
+          },
+          "dateCreated": {
+            "type": "string"
+          }
+        }
+      },
+      "DeleteCurationResponse": {
+        "type": "object",
+        "properties": {
+          "formId": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PatchRecommendationRequest": {
+        "type": "object",
+        "properties": {
+          "formId": {
+            "type": "string"
+          },
+          "discardedArtistId": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          }
+        }
+      },
+      "PatchRecommendationResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
             "type": "boolean"
           }
         }
