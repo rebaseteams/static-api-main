@@ -20,7 +20,7 @@ describe('Artists', () => {
 
     it('should return empty array for an invalid artists recoommendation id', async () => {
       const invalidId = '234';
-      const result = await request(server).get(`/artists/recommendations/${invalidId}`);
+      const result = await request(server).get(`/artists/recommendations/${invalidId}`).set({ userid: '1238989' });
       expect(result.status).toEqual(200);
       expect(result.body).toEqual({
         data: {
@@ -28,6 +28,13 @@ describe('Artists', () => {
         },
         success: false,
       });
+    });
+
+    it('should return No userId in headers', async () => {
+      const invalidId = '234';
+      const result = await request(server).get(`/artists/recommendations/${invalidId}`);
+      expect(result.status).toEqual(400);
+      expect(result.body).toEqual({ error: 'No UserId in headers!' });
     });
 
     afterEach(() => {
@@ -51,6 +58,30 @@ describe('Artists', () => {
     //   expect(result.status).toEqual(200);
     //   expect(result.body).toEqual({ id: '123' });
     // });
+
+    afterEach(() => {
+      server.close();
+    });
+  });
+
+  describe('GET /artists/concert', () => {
+    let server: Server;
+    beforeEach(() => {
+      server = new MainServer().app.listen();
+    });
+
+    // Adding Test for userId in req.headers
+    it('should return No userId in header', async () => {
+      const result = await request(server).get('/artists/concert');
+      expect(result.status).toEqual(400);
+      expect(result.body).toEqual({ error: 'No UserId in headers!' });
+    });
+
+    it('should return Invalid User', async () => {
+      const result = await request(server).get('/artists/concert').set({ userid: '1234899' });
+      expect(result.status).toEqual(401);
+      expect(result.body).toEqual({ error: 'Invalid User' });
+    });
 
     afterEach(() => {
       server.close();
