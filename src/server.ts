@@ -7,8 +7,8 @@ import * as swaggerDoc from './swagger/swagger.json';
 import InMemoryArtistRepo from './repositories/in-memory/artist';
 import InMemoryArtistRecommendationRepo from './repositories/in-memory/artist-recommendation';
 
-import ArtistRoute from './artist-routes';
-import NotificationRoute from './notification-routes';
+import ArtistRoute from './routes/artists/artist-routes';
+import NotificationRoute from './routes/notification/notification-routes';
 
 import ArtistService from './services/artist';
 import validateUser from './middleware/userMiddleware';
