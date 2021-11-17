@@ -1,6 +1,6 @@
 import * as express from 'express';
 
-import sendEmail from './utils/sendEmail';
+import sendEmail from '../../utils/sendEmail';
 
 export default class NotificationRoute {
   router: express.Router;

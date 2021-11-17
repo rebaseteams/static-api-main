@@ -1,8 +1,8 @@
 import * as express from 'express';
-import { ArtistRecommendation } from './models/types/artist-recommendation';
-import { PatchRequest } from './models/types/patch-request';
-import { QuestionsUI } from './models/types/questions';
-import ArtistService from './services/artist';
+import { ArtistRecommendation } from '../../models/types/artist-recommendation';
+import { PatchRequest } from '../../models/types/patch-request';
+import { QuestionsUI } from '../../models/types/questions';
+import ArtistService from '../../services/artist';
 
 export default class ArtistRoute {
   private artistService: ArtistService;
