@@ -11,7 +11,7 @@ const validateToken = (token: string | string[]): Boolean => {
 
 // eslint-disable-next-line consistent-return
 const validateUser = ():((req: Request, res: Response, next: NextFunction) => void) => async (req: Request, res: Response, next: NextFunction) => {
-  const notSecurePath = ['/api-docs'];
+  const notSecurePath = ['/auth/login'];
 
   if (notSecurePath.includes(req.path)) {
     return next();
