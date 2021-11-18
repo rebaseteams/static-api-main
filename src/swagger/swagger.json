@@ -8,12 +8,25 @@
   "servers": [
     {
       "url": "http://52.66.164.23/api"
+    },
+    {
+      "url": "http://localhost:3000"
     }
   ],
   "paths": {
-    "/artists/concert": {
+    "/artists/recommendations/": {
       "post": {
         "description": "Add concert data and return concertId ans curates recomendation",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "userid",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -36,38 +49,19 @@
             }
           }
         }
-      }
-    },
-    "/artists/concert/{id}": {
-      "delete": {
-        "description": "Delete consertfrom and return success.",
+      },
+      "get": {
+        "description": "get artist concert data.",
         "parameters": [
           {
-            "in": "path",
-            "name": "id",
+            "in": "header",
+            "name": "userid",
             "schema": {
               "type": "string"
             },
             "required": true
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Saved form data with id",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DeleteCurationResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/artists/concerts": {
-      "get": {
-        "description": "get artist concert data.",
         "responses": {
           "200": {
             "description": "Artist Recommendation Schema",
@@ -80,38 +74,19 @@
             }
           }
         }
-      }
-    },
-    "/artists/recomendations/{id}": {
-      "get": {
-        "description": "get the match data based on the given questions",
+      },
+      "patch": {
+        "description": "update recommendations.",
         "parameters": [
           {
-            "in": "path",
-            "name": "id",
+            "in": "header",
+            "name": "userid",
             "schema": {
               "type": "string"
             },
             "required": true
           }
         ],
-        "responses": {
-          "200": {
-            "description": "A list of recommended artists with respect to form id",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/matchData"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/artists/recomendations": {
-      "patch": {
-        "description": "update recommendations",
         "requestBody": {
           "required": true,
           "content": {
@@ -136,6 +111,74 @@
         }
       }
     },
+    "/artists/recommendations/{id}": {
+      "delete": {
+        "description": "Delete consertfrom and return success.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "userid",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Saved form data with id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteCurationResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "description": "get the match data based on the given questions",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "userid",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of recommended artists with respect to form id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/matchData"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/artists/{id}": {
       "get": {
         "description": "get artist data with artist id",
@@ -143,6 +186,14 @@
           {
             "in": "path",
             "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "userid",
             "schema": {
               "type": "string"
             },
@@ -166,6 +217,16 @@
     "/notification": {
       "post": {
         "description": "Send notification on platforms like email, facebook etc.",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "userid",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
