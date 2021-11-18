@@ -3,13 +3,13 @@ import * as _ from 'underscore';
 import { first, last, place } from 'random-name';
 import * as faker from 'faker';
 // import * as dummyArtistRecommendations from './/artist-recommendations.json';
-import { ArtistRecommendationRepoInterface } from '../../models/interfaces/artist-recommendation';
+import { ArtistRecommendationRepoInterface } from '../../../models/interfaces/artist-recommendation';
 import {
   ARec,
   ArtistRecommendation,
-} from '../../models/types/artist-recommendation';
-import { PatchRequest } from '../../models/types/patch-request';
-import { ConcertCreationResponse } from '../../models/types/questions';
+} from '../../../models/types/artist-recommendation';
+import { PatchRequest } from '../../../models/types/patch-request';
+import { ConcertCreationResponse } from '../../../models/types/questions';
 
 export default class InMemoryArtistRecommendationRepo implements ArtistRecommendationRepoInterface {
   // private artistRecommendationList : ArtistRecommendation[] = dummyArtistRecommendations;

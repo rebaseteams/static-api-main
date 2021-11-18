@@ -1,6 +1,6 @@
-import { Artist } from '../../models/types/artist';
+import { Artist } from '../../../models/types/artist';
 import * as dummyArtists from './data/artists.json';
-import { ArtistRepoInterface } from '../../models/interfaces/artist';
+import { ArtistRepoInterface } from '../../../models/interfaces/artist';
 
 export default class InMemoryArtistRepo implements ArtistRepoInterface {
   private artistList : Artist[] = dummyArtists;

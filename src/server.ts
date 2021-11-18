@@ -4,10 +4,10 @@ import * as swaggerUi from 'swagger-ui-express';
 import * as cors from 'cors';
 import * as swaggerDoc from './swagger/swagger.json';
 
-import InMemoryArtistRepo from './repositories/in-memory/artist';
-import InMemoryArtistRecommendationRepo from './repositories/in-memory/artist-recommendation';
+import InMemoryArtistRepo from './repositories/artists/in-memory/artist';
+import InMemoryArtistRecommendationRepo from './repositories/artistRecommendations/in-memory/artist-recommendation';
 
-import ArtistRoute from './routes/artists/artist-routes';
+import ArtistRoute from './routes/artists/artistRoutes';
 import NotificationRoute from './routes/notification/notification-routes';
 
 import ArtistService from './services/artist';

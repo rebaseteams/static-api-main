@@ -1,6 +1,6 @@
 import * as expectedArtists from './data/artists.json';
 import InMemoryArtistRepo from './artist';
-import { Artist } from '../../models/types/artist';
+import { Artist } from '../../../models/types/artist';
 
 describe('Artists', () => {
   let artistRepo: InMemoryArtistRepo;

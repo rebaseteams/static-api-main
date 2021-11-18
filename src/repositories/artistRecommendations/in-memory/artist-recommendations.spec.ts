@@ -3,7 +3,7 @@
 // import { request } from 'express';
 import InMemoryArtistRecommendationRepo from './artist-recommendation';
 
-import { PatchRequest } from '../../models/types/patch-request';
+import { PatchRequest } from '../../../models/types/patch-request';
 
 describe('ArtistRecommendations', () => {
   let artistRecommendationRepo: InMemoryArtistRecommendationRepo;
