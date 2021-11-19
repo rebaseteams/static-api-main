@@ -16,9 +16,7 @@ export default class AuthRoutes {
     });
     this.router.post('/login', (req, res) => {
       const Request = req.body as Login;
-      // eslint-disable-next-line no-unused-expressions
-      (this.authService.login(Request.username, Request.password)) ? (res.header(this.authService.login(Request.username, Request.password)).send({ sucess: true })) : (res.send({ sucess: false }));
-      // res.send();
+      res.header(this.authService.login(Request.username, Request.password)).send({ sucess: true });
     });
   }
 }
