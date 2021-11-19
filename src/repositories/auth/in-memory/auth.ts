@@ -1,9 +1,13 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-throw-literal */
+/* eslint-disable no-console */
 import * as fs from 'fs';
 import { AuthRepoInterface } from '../../../models/interfaces/auth';
 import { SignUpDB } from '../../../models/types/auth';
+import encodeSession from '../../../utils/tokenGenration';
+
+const { JWT_SECRET_KEY } = process.env;
 
 export default class InMemoryAuthRepo implements AuthRepoInterface {
   // private artistList : Artist[] = dummyArtists;
@@ -19,7 +23,8 @@ export default class InMemoryAuthRepo implements AuthRepoInterface {
     if (fileDataObject) {
       const validUser = fileDataObject.usersDetail.find((a) => (a.username === username && a.password === password));
       if (validUser) {
-        return { token: 'qwertyuiop' };
+        const signedToken = encodeSession('1234567');
+        return { token: signedToken.token };
       }
     }
 
