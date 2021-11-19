@@ -12,7 +12,7 @@ import NotificationRoute from './routes/notification/notification-routes';
 import ArtistService from './services/artist';
 import validateUser from './middleware/userMiddleware';
 import errorHandler from './modules/errorHandler';
-// import contentType from './modules/contentType';
+import contentType from './modules/contentType';
 
 // to use .environment variable in the project
 require('dotenv').config();
@@ -39,7 +39,7 @@ export default class MainServer {
     this.app = express();
     this.app.use(cors(this.corsOptions));
     this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
-    // this.app.use(contentType);
+    this.app.use(contentType);
     this.app.use(express.json());
     this.app.use(validateUser());
     this.app.use('/notification', new NotificationRoute().router);
