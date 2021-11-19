@@ -1,5 +1,5 @@
 export type PatchRequest = {
-    formId: String;
-    discardedArtistId: String;
-    userId: String;
+    formId: string;
+    discardedArtistId: string;
+    userId: string;
 }

@@ -25,40 +25,34 @@ export default class NotificationRoute {
     },
   }
 
+  // TODO: Move code to seprate function
   constructor() {
     this.router = express.Router();
     this.router.post('/', (req: express.Request, res: express.Response) => {
-      try {
-        const { type } = req.body;
-        const mailData = {
-          ...req.body,
-          sender: {
-            vendor: req.body.sender.vendor,
-            email: process.env.SEND_GRID_SENDER_EMAIL,
-          },
-        };
-        let response;
-        switch (type) {
-          case 'email':
-            response = sendEmail(mailData);
-            res.send(`Email sent Success: ${response}`);
-            break;
-          case 'facebook':
-            res.send('facebook notification sent successfully');
-            break;
-          case 'twitter':
-            res.send('twitter notification send successfully');
-            break;
-          default:
-            res.status(422).send(JSON.stringify({
-              message: 'No service available',
-            }));
-        }
-      } catch (error: any) {
-        res.status(500).send(JSON.stringify({
-          errorMessage: error.message,
-          error: true,
-        }));
+      const { type } = req.body;
+      const mailData = {
+        ...req.body,
+        sender: {
+          vendor: req.body.sender.vendor,
+          email: process.env.SEND_GRID_SENDER_EMAIL,
+        },
+      };
+      let response;
+      switch (type) {
+        case 'email':
+          response = sendEmail(mailData);
+          res.send(`Email sent Success: ${response}`);
+          break;
+        case 'facebook':
+          res.send('facebook notification sent successfully');
+          break;
+        case 'twitter':
+          res.send('twitter notification send successfully');
+          break;
+        default:
+          res.status(422).send(JSON.stringify({
+            message: 'No service available',
+          }));
       }
     });
   }

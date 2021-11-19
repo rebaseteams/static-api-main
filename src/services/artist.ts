@@ -27,7 +27,7 @@ export default class ArtistService implements ArtistServiceInteface {
     this.artistRecommendationRepo = artistRecommendationRepo;
   }
 
-  getArtist(id: string): Artist | { message: string } {
+  getArtist(id: string): Artist {
     return this.artistRepo.getArtist(id);
   }
 
@@ -35,11 +35,11 @@ export default class ArtistService implements ArtistServiceInteface {
     return this.artistRepo.addArtist(artist);
   }
 
-  getRecommendation(id: string): ArtistRecommendation | { error : string } {
+  getRecommendation(id: string): ArtistRecommendation {
     return this.artistRecommendationRepo.getArtistRecommendation(id);
   }
 
-  getConcerts() : ConcertCreationResponse[] | { error : string } {
+  getConcerts() : ConcertCreationResponse[] {
     return this.artistRecommendationRepo.getConcerts();
   }
 

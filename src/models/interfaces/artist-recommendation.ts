@@ -7,9 +7,9 @@ import { ConcertCreationResponse } from '../types/questions';
 
 /* The repositories are supposed to implement this interface */
 export interface ArtistRecommendationRepoInterface {
-  getArtistRecommendation(id: string): ArtistRecommendation | { error : string };
+  getArtistRecommendation(id: string): ArtistRecommendation ;
   addNewRecommendation(artistRecomendation: ArtistRecommendation): Boolean;
-  updateDiscardedArtist(request: PatchRequest): { success: Boolean} | { error : string, success: Boolean};
-  deleteConcertData(id: String): {formId: String, success: Boolean} | { error: String, success: Boolean};
-  getConcerts(): ConcertCreationResponse[] | { error : string };
+  updateDiscardedArtist(request: PatchRequest): { success: Boolean};
+  deleteConcertData(id: String): {formId: String, success: Boolean};
+  getConcerts(): ConcertCreationResponse[] ;
 }

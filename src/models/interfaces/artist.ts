@@ -6,15 +6,15 @@ import { ConcertCreationResponse, QuestionsUI } from '../types/questions';
 
 /* The repositories are supposed to implement this interface */
 export interface ArtistRepoInterface {
-  getArtist(id : string) : Artist | { message : string };
+  getArtist(id : string) : Artist ;
   addArtist(artist : Artist) : Boolean;
 }
 
 /* The service is supposed to implement this interface */
 export interface ArtistServiceInteface {
-  getArtist(id : string) : Artist| { message : string };
+  getArtist(id : string) : Artist;
   addArtist(artist : Artist) : Boolean;
-  getRecommendation(id : string): ArtistRecommendation | { error : string};
-  getConcerts() : ConcertCreationResponse[] | { error : string };
+  getRecommendation(id : string): ArtistRecommendation;
+  getConcerts() : ConcertCreationResponse[] ;
   createNewRecommendation(questions: QuestionsUI): ConcertCreationResponse
 }

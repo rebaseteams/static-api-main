@@ -1,4 +1,4 @@
 export type Genre = {
-    genreId: String;
-    genreName: String;
+    genreId: string;
+    genreName: string;
 }

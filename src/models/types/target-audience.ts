@@ -1,7 +1,7 @@
 import { Genre } from './genre';
 
 export type TargetAudience = {
-    ageGroup: Array<String>;
+    ageGroup: Array<string>;
     genre: Array<Genre>;
-    gender: Array<String>;
+    gender: Array<string>;
 }
