@@ -10,7 +10,7 @@ export type Questions = {
         eventType: string;
         venue: Array<string>;
         artistBudget: ArtistBudget;
-        sponsorshipType: String,
+        sponsorshipType: string,
         wantedBrands: Array<Brand>;
         unwantedBrands: Array<Brand>;
         targetAudience: TargetAudience;

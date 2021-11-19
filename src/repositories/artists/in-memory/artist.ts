@@ -1,3 +1,4 @@
+/* eslint-disable no-throw-literal */
 import { Artist } from '../../../models/types/artist';
 import * as dummyArtists from './data/artists.json';
 import { ArtistRepoInterface } from '../../../models/interfaces/artist';
@@ -5,13 +6,13 @@ import { ArtistRepoInterface } from '../../../models/interfaces/artist';
 export default class InMemoryArtistRepo implements ArtistRepoInterface {
   private artistList : Artist[] = dummyArtists;
 
-  getArtist(id: string): Artist | { message: string; } {
+  getArtist(id: string): Artist {
     const artist = this.artistList.find((a) => a.artistId === id);
     if (artist) {
       return artist;
     }
 
-    return { message: 'Not Found' };
+    throw { message: `Artist not found for id: ${id}`, statusCode: 404 };
   }
 
   addArtist(artist: Artist): Boolean {

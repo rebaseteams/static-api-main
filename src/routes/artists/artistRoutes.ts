@@ -12,11 +12,7 @@ export default class ArtistRoute {
     this.router = express.Router();
     this.router.use('/recommendations', new RecommendationsRoute(artistService).router);
     this.router.get('/:id', (req, res) => {
-      if (req.params.id) {
-        res.send(this.artistService.getArtist(req.params.id));
-      } else {
-        res.send([]);
-      }
+      if (req.params.id) res.send(this.artistService.getArtist(req.params.id));
     });
   }
 }

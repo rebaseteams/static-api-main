@@ -6,6 +6,7 @@ import { MailDataRequired } from '@sendgrid/helpers/classes/mail';
 const fs = require('fs');
 
 // Code is extracted fron rebase util and some modifications are done
+// eslint-disable-next-line consistent-return
 async function sendEmail(input: any) {
   const msg: MailDataRequired | any = {
     // extract the email details
@@ -44,12 +45,12 @@ async function sendEmail(input: any) {
       buff = Buffer.from(String(process.env.SEND_GRID_API_KEY), 'base64');
       api_key = buff.toString('ascii');
       sgMail.setApiKey(String(api_key));
-      try {
-        const response = await sgMail.send(msg);
+      // eslint-disable-next-line no-case-declarations
+      const response = await sgMail.send(msg);
+      if (response) {
         return response;
-      } catch (err) {
-        return err;
       }
+      break;
     default:
       return 'No vendor available';
   }

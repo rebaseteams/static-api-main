@@ -21,15 +21,20 @@ export default class RecommendationsRoute {
       else res.send({ data, success: false });
     });
 
-    this.router.post('/', async (req, res) => {
+    this.router.post('/', (req, res) => {
       const request = req.body as QuestionsUI;
       const response = this.artistService.createNewRecommendation(request);
       res.send(response);
     });
 
-    this.router.get('/', async (req, res) => {
-      const response = artistService.getConcerts();
-      res.send(response);
+    // Try Catch block addded for async requests example
+    this.router.get('/', async (req, res, next) => {
+      try {
+        const response = artistService.getConcerts();
+        res.send(response);
+      } catch (err) {
+        next(err);
+      }
     });
 
     this.router.patch('/', (req, res) => {

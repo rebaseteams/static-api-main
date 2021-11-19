@@ -67,13 +67,7 @@ describe('Recommendations', () => {
     it('should return empty array for an invalid artists recoommendation id', async () => {
       const invalidId = '234';
       const result = await request(server).get(`/artists/recommendations/${invalidId}`).set({ userid: '1238989' }).send({});
-      expect(result.status).toEqual(200);
-      expect(result.body).toEqual({
-        data: {
-          error: 'Recommendation not found',
-        },
-        success: false,
-      });
+      expect(result.status).toEqual(404);
     });
 
     it('should return No userId in headers', async () => {

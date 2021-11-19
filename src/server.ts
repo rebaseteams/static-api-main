@@ -13,6 +13,9 @@ import ArtistService from './services/artist';
 import validateUser from './middleware/userMiddleware';
 import errorHandler from './modules/errorHandler';
 import contentType from './modules/contentType';
+import AuthRoutes from './routes/auth/auth-routes';
+import AuthService from './services/auth';
+import InMemoryAuthRepo from './repositories/auth/in-memory/auth';
 
 // to use .environment variable in the project
 require('dotenv').config();
@@ -22,7 +25,11 @@ export default class MainServer {
 
   private inMemoryArtistRecommendationRepo: InMemoryArtistRecommendationRepo;
 
+  private inMemoryAuthRecommendationRepo: InMemoryAuthRepo;
+
   private artistService: ArtistService;
+
+  private authService: AuthService;
 
   app;
 
@@ -35,7 +42,9 @@ export default class MainServer {
   constructor() {
     this.inMemoryArtistRepo = new InMemoryArtistRepo();
     this.inMemoryArtistRecommendationRepo = new InMemoryArtistRecommendationRepo();
+    this.inMemoryAuthRecommendationRepo = new InMemoryAuthRepo();
     this.artistService = new ArtistService(this.inMemoryArtistRepo, this.inMemoryArtistRecommendationRepo);
+    this.authService = new AuthService(this.inMemoryAuthRecommendationRepo);
     this.app = express();
     this.app.use(cors(this.corsOptions));
     this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
@@ -44,6 +53,7 @@ export default class MainServer {
     this.app.use(validateUser());
     this.app.use('/notification', new NotificationRoute().router);
     this.app.use('/artists', new ArtistRoute(this.artistService).router);
+    this.app.use('/auth', new AuthRoutes(this.authService).router);
     this.app.use(errorHandler);
   }
 }
