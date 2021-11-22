@@ -3,6 +3,7 @@ import { ArtistRecommendation } from '../../../models/types/artist-recommendatio
 import { PatchRequest } from '../../../models/types/patch-request';
 import { QuestionsUI } from '../../../models/types/questions';
 import ArtistService from '../../../services/artist';
+import patchRequestValidator from './validators/patchRequest';
 
 export default class RecommendationsRoute {
   private artistService: ArtistService;
@@ -37,7 +38,7 @@ export default class RecommendationsRoute {
       }
     });
 
-    this.router.patch('/', (req, res) => {
+    this.router.patch('/', patchRequestValidator, (req, res) => {
       const request = req.body as PatchRequest;
       const response = this.artistService.updateRecommendation(request);
       res.send(response);
