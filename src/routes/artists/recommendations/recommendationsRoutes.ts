@@ -4,15 +4,22 @@ import { PatchRequest } from '../../../models/types/patch-request';
 import { QuestionsUI } from '../../../models/types/questions';
 import ArtistService from '../../../services/artist';
 import patchRequestValidator from './validators/patchRequest';
+import DocumentsRoutes from './documents/documentsRoutes';
+import DocumentsService from '../../../services/documents';
 
 export default class RecommendationsRoute {
   private artistService: ArtistService;
 
+  private documentsService: DocumentsService;
+
   router: express.Router;
 
-  constructor(artistService: ArtistService) {
+  constructor(artistService: ArtistService, documentsService: DocumentsService) {
     this.artistService = artistService;
+    this.documentsService = documentsService;
     this.router = express.Router();
+
+    this.router.use('/documents', new DocumentsRoutes(documentsService).router);
 
     this.router.get('/:id', (req, res) => {
       const { id } = req.params;
