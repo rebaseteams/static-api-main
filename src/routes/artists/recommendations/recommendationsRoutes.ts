@@ -6,6 +6,7 @@ import ArtistService from '../../../services/artist';
 import patchRequestValidator from './validators/patchRequest';
 import DocumentsRoutes from './documents/documentsRoutes';
 import DocumentsService from '../../../services/documents';
+import postRequestValidator from './validators/postRequest';
 
 export default class RecommendationsRoute {
   private artistService: ArtistService;
@@ -29,7 +30,7 @@ export default class RecommendationsRoute {
       else res.send({ data, success: false });
     });
 
-    this.router.post('/', (req, res) => {
+    this.router.post('/', postRequestValidator, (req, res) => {
       const request = req.body as QuestionsUI;
       const response = this.artistService.createNewRecommendation(request);
       res.send(response);
