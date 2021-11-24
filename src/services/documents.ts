@@ -12,7 +12,7 @@ export default class DocumentsService implements DocumentsInterface {
     this.documentsRepo = documentsRepo;
   }
 
-  sendHTMLtemplates(options: DocumentInput): string {
-    return this.documentsRepo.sendHTMLtemplates(options);
+  sendHtmlTemplates(options: DocumentInput): string {
+    return this.documentsRepo.sendHtmlTemplates(options);
   }
 }
