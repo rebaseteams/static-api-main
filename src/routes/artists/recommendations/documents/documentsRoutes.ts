@@ -14,7 +14,7 @@ export default class DocumentsRoutes {
 
     this.router.post('/', (req, res) => {
       const options = req.body as DocumentInput;
-      const response = this.documentsService.sendHTMLtemplates(options);
+      const response = this.documentsService.sendHtmlTemplates(options);
       res.send(response);
     });
   }
