@@ -11,6 +11,7 @@ import {
 } from '../../../models/types/artist-recommendation';
 import { PatchRequest } from '../../../models/types/patch-request';
 import { ConcertCreationResponse } from '../../../models/types/questions';
+import fileCheck from '../../../utils/fileCheck';
 
 export default class InMemoryArtistRecommendationRepo implements ArtistRecommendationRepoInterface {
   // private artistRecommendationList : ArtistRecommendation[] = dummyArtistRecommendations;
@@ -24,8 +25,6 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
   ): ArtistRecommendation {
     const fakeArtists: Array<ARec> = [];
     const noOfData: number = (10 - artists.length);
-    // eslint-disable-next-line no-console
-    console.log(faker.address.longitude);
     const multipleDataGenrator = (m:number) => {
       _.times(m, (n) => {
         const artistname: string = `${first()} ${last()}`;
@@ -149,13 +148,17 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
   addNewRecommendation(artistRecommendation: ArtistRecommendation): Boolean {
     // eslint-disable-next-line no-param-reassign
     artistRecommendation.status = false;
-    if (!fs.existsSync('./database')) {
-      fs.mkdirSync('database');
-    }
-    fs.writeFileSync(
-      `./database/${artistRecommendation.concertData.id}`,
-      JSON.stringify(artistRecommendation),
-    );
+    // if (!fs.existsSync('./database')) {
+    //   fs.mkdirSync('database');
+    // }
+    // fs.writeFileSync(
+    //   `./database/${artistRecommendation.concertData.id}`,
+    //   JSON.stringify(artistRecommendation),
+    // );
+
+    const pathFolder = './database';
+    const fileName = artistRecommendation.concertData.id;
+    fileCheck(pathFolder, fileName);
 
     // TODO:  Call the recommendation api in future to get the artist recommendation
     this.simulatorRecommendations(artistRecommendation, []);
