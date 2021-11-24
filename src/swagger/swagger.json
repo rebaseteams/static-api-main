@@ -43,7 +43,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SavedQuestionData"
+                  "$ref": "#/components/schemas/ConcertCreationResponse"
                 }
               }
             }
@@ -270,6 +270,80 @@
           }
         }
       }
+    },
+    "/auth/login": {
+      "post": {
+        "description": "Login to system by username and password.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login Sucessfull",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginStatus"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Username or password incorrect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/signup": {
+      "post": {
+        "description": "Login to system by username and password.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignUp"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "SignUp Sucessfull",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignUpStatus"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Duplicate User dectected.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignUpStatus"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -309,13 +383,29 @@
           "wantedBrands": {
             "type": "array",
             "items": {
-              "type": "string"
+              "type": "object",
+              "properties": {
+                "brandName": {
+                  "type": "string"
+                },
+                "brandId": {
+                  "type": "string"
+                }
+              }
             }
           },
           "unwantedBrands": {
             "type": "array",
             "items": {
-              "type": "string"
+              "type": "object",
+              "properties": {
+                "brandName": {
+                  "type": "string"
+                },
+                "brandId": {
+                  "type": "string"
+                }
+              }
             }
           },
           "targetAudience": {
@@ -330,7 +420,15 @@
               "genre": {
                 "type": "array",
                 "items": {
-                  "type": "string"
+                  "type": "object",
+                  "properties": {
+                    "brandName": {
+                      "type": "string"
+                    },
+                    "brandId": {
+                      "type": "string"
+                    }
+                  }
                 }
               },
               "gender": {
@@ -347,39 +445,46 @@
               "beer": {
                 "type": "array",
                 "items": {
-                  "type": "string"
+                  "type": "object",
+                  "properties": {
+                    "brandName": {
+                      "type": "string"
+                    },
+                    "brandId": {
+                      "type": "string"
+                    }
+                  }
                 }
               },
               "liquor": {
                 "type": "array",
                 "items": {
-                  "type": "string"
+                  "type": "object",
+                  "properties": {
+                    "brandName": {
+                      "type": "string"
+                    },
+                    "brandId": {
+                      "type": "string"
+                    }
+                  }
                 }
               },
               "softDrints": {
                 "type": "array",
                 "items": {
-                  "type": "string"
+                  "type": "object",
+                  "properties": {
+                    "brandName": {
+                      "type": "string"
+                    },
+                    "brandId": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
-          }
-        }
-      },
-      "SavedQuestionData": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "dateCreated": {
-            "type": "string"
-          },
-          "concertName": {
-            "type": "string"
-          },
-          "status": {
-            "type": "string"
           }
         }
       },
@@ -455,13 +560,29 @@
               "wantedBrands": {
                 "type": "array",
                 "items": {
-                  "type": "string"
+                  "type": "object",
+                  "properties": {
+                    "brandName": {
+                      "type": "string"
+                    },
+                    "brandId": {
+                      "type": "string"
+                    }
+                  }
                 }
               },
               "unwantedBrands": {
                 "type": "array",
                 "items": {
-                  "type": "string"
+                  "type": "object",
+                  "properties": {
+                    "brandName": {
+                      "type": "string"
+                    },
+                    "brandId": {
+                      "type": "string"
+                    }
+                  }
                 }
               },
               "targetAudience": {
@@ -476,7 +597,15 @@
                   "genre": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "type": "object",
+                      "properties": {
+                        "brandName": {
+                          "type": "string"
+                        },
+                        "brandId": {
+                          "type": "string"
+                        }
+                      }
                     }
                   },
                   "gender": {
@@ -493,19 +622,43 @@
                   "beer": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "type": "object",
+                      "properties": {
+                        "brandName": {
+                          "type": "string"
+                        },
+                        "brandId": {
+                          "type": "string"
+                        }
+                      }
                     }
                   },
                   "liquor": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "type": "object",
+                      "properties": {
+                        "brandName": {
+                          "type": "string"
+                        },
+                        "brandId": {
+                          "type": "string"
+                        }
+                      }
                     }
                   },
                   "softDrints": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "type": "object",
+                      "properties": {
+                        "brandName": {
+                          "type": "string"
+                        },
+                        "brandId": {
+                          "type": "string"
+                        }
+                      }
                     }
                   }
                 }
@@ -1132,6 +1285,44 @@
         "type": "object",
         "properties": {
           "success": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Login": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "SignUp": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "LoginStatus": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SignUpStatus": {
+        "type": "object",
+        "properties": {
+          "status": {
             "type": "boolean"
           }
         }
