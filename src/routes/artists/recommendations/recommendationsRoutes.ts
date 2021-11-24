@@ -3,10 +3,10 @@ import { ArtistRecommendation } from '../../../models/types/artist-recommendatio
 import { PatchRequest } from '../../../models/types/patch-request';
 import { QuestionsUI } from '../../../models/types/questions';
 import ArtistService from '../../../services/artist';
-import patchRequestValidator from './validators/patchRequest';
+import patchRecommendationsSchemaValidator from './validators/patchRequest';
 import DocumentsRoutes from './documents/documentsRoutes';
 import DocumentsService from '../../../services/documents';
-import postRequestValidator from './validators/postRequest';
+import postRecommendationsSchemaValidator from './validators/postRequest';
 
 export default class RecommendationsRoute {
   private artistService: ArtistService;
@@ -30,7 +30,7 @@ export default class RecommendationsRoute {
       else res.send({ data, success: false });
     });
 
-    this.router.post('/', postRequestValidator, (req, res) => {
+    this.router.post('/', postRecommendationsSchemaValidator, (req, res) => {
       const request = req.body as QuestionsUI;
       const response = this.artistService.createNewRecommendation(request);
       res.send(response);
@@ -46,7 +46,7 @@ export default class RecommendationsRoute {
       }
     });
 
-    this.router.patch('/', patchRequestValidator, (req, res) => {
+    this.router.patch('/', patchRecommendationsSchemaValidator, (req, res) => {
       const request = req.body as PatchRequest;
       const response = this.artistService.updateRecommendation(request);
       res.send(response);
