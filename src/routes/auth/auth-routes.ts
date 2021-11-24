@@ -1,6 +1,7 @@
 import * as express from 'express';
 import { Login, SignUp } from '../../models/types/auth';
 import AuthService from '../../services/auth';
+import postLoginSchemaValidator from './validators/postLoginValidator';
 
 export default class AuthRoutes {
   private authService: AuthService;
@@ -14,7 +15,7 @@ export default class AuthRoutes {
       const Request = req.body as SignUp;
       res.send(this.authService.signUp(Request.username, Request.password));
     });
-    this.router.post('/login', (req, res) => {
+    this.router.post('/login', postLoginSchemaValidator, (req, res) => {
       const Request = req.body as Login;
       res.header(this.authService.login(Request.username, Request.password)).send({ sucess: true });
     });

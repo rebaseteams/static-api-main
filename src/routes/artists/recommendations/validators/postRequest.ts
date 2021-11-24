@@ -43,7 +43,7 @@ const QuestionsUIschema = Joi.object({
   }),
 });
 
-const postRequestValidator = (req : Request, res : Response, next : NextFunction) => {
+const postRecommendationsSchemaValidator = (req : Request, res : Response, next : NextFunction) => {
   const val = QuestionsUIschema.validate(req.body);
   if (val.error) {
     const err = { message: val.error.message, statusCode: 400 };
@@ -52,4 +52,4 @@ const postRequestValidator = (req : Request, res : Response, next : NextFunction
   next();
 };
 
-export default postRequestValidator;
+export default postRecommendationsSchemaValidator;
