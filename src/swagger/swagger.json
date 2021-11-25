@@ -16,7 +16,7 @@
   "paths": {
     "/artists/recommendations/": {
       "post": {
-        "description": "Add concert data and return concertId ans curates recomendation",
+        "description": "Create new recommendation",
         "parameters": [
           {
             "in": "header",
@@ -39,7 +39,7 @@
         },
         "responses": {
           "200": {
-            "description": "Saved form data with id",
+            "description": "Created new recommendation successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -61,7 +61,7 @@
         }
       },
       "get": {
-        "description": "get artist concert data.",
+        "description": "get all recommendations.",
         "parameters": [
           {
             "in": "header",
@@ -74,11 +74,11 @@
         ],
         "responses": {
           "200": {
-            "description": "Artist Recommendation Schema",
+            "description": "Returns metadata of all saved recommendations",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ConcertCreationResponse"
+                  "$ref": "#/components/schemas/ConcertCreationResponseArray"
                 }
               }
             }
@@ -86,7 +86,7 @@
         }
       },
       "patch": {
-        "description": "update recommendations.",
+        "description": "discard the given artist for given recommendation.",
         "parameters": [
           {
             "in": "header",
@@ -109,7 +109,7 @@
         },
         "responses": {
           "200": {
-            "description": "Returns success",
+            "description": "Successfully discarded artist for given recommendation",
             "content": {
               "application/json": {
                 "schema": {
@@ -123,7 +123,7 @@
     },
     "/artists/recommendations/{id}": {
       "delete": {
-        "description": "Delete consertfrom and return success.",
+        "description": "Delete recommendation by id.",
         "parameters": [
           {
             "in": "path",
@@ -144,7 +144,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Saved form data with id",
+            "description": "Successfully deleted recommendation for given id",
             "content": {
               "application/json": {
                 "schema": {
@@ -310,7 +310,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LoginStatus"
+                  "$ref": "#/components/schemas/LoginStatusFailure"
                 }
               }
             }
@@ -347,7 +347,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SignUpStatus"
+                  "$ref": "#/components/schemas/SignUpStatusFailure"
                 }
               }
             }
@@ -480,7 +480,7 @@
                   }
                 }
               },
-              "softDrints": {
+              "softDrinks": {
                 "type": "array",
                 "items": {
                   "type": "object",
@@ -632,7 +632,7 @@
                           }
                         }
                       },
-                      "softDrints": {
+                      "softDrinks": {
                         "type": "array",
                         "items": {
                           "type": "object",
@@ -1196,7 +1196,7 @@
       "BadRequest": {
         "type": "object",
         "properties": {
-          "errorMessage": {
+          "message": {
             "type": "string"
           },
           "error": {
@@ -1207,7 +1207,7 @@
       "NotificationServerError": {
         "type": "object",
         "properties": {
-          "errorMessage": {
+          "message": {
             "type": "string"
           },
           "error": {
@@ -1229,6 +1229,26 @@
           },
           "dateCreated": {
             "type": "string"
+          }
+        }
+      },
+      "ConcertCreationResponseArray": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "concertName": {
+              "type": "string"
+            },
+            "status": {
+              "type": "boolean"
+            },
+            "dateCreated": {
+              "type": "string"
+            }
           }
         }
       },
@@ -1295,11 +1315,29 @@
           }
         }
       },
+      "LoginStatusFailure": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": false
+          }
+        }
+      },
       "SignUpStatus": {
         "type": "object",
         "properties": {
           "status": {
             "type": "boolean"
+          }
+        }
+      },
+      "SignUpStatusFailure": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "boolean",
+            "example": false
           }
         }
       }
