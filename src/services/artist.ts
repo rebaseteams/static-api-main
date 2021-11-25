@@ -48,8 +48,6 @@ export default class ArtistService implements ArtistServiceInteface {
   // 2: Invoke the recommendations function to compute the recommendation
   // 3: send back uuid, dateCreated and concert name as response
   createNewRecommendation(questions: QuestionsUI): ConcertCreationResponse {
-    // eslint-disable-next-line no-console
-    console.log(questions);
     const questionsToSave: Questions = {
       id: uuidv4(),
       dateCreated: String(new Date()),
