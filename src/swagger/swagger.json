@@ -501,332 +501,298 @@
       "matchData": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string"
-          },
-          "createdBy": {
-            "type": "string"
-          },
-          "users": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "createdOn": {
-            "type": "string"
-          },
-          "lastModified": {
+          "data": {
             "type": "object",
             "properties": {
-              "date": {
-                "type": "string"
-              },
-              "user": {
+              "concertData": {
                 "type": "object",
                 "properties": {
                   "id": {
                     "type": "string"
                   },
-                  "name": {
+                  "dateCreated": {
                     "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "concertData": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "formName": {
-                "type": "string"
-              },
-              "eventType": {
-                "type": "string"
-              },
-              "venue": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "artisBudget": {
-                "type": "object",
-                "properties": {
-                  "min": {
-                    "type": "number"
                   },
-                  "max": {
-                    "type": "number"
+                  "userId": {
+                    "type": "string"
+                  },
+                  "concertName": {
+                    "type": "string"
+                  },
+                  "eventType": {
+                    "type": "string"
+                  },
+                  "venue": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "artistBudget": {
+                    "type": "object",
+                    "properties": {
+                      "min": {
+                        "type": "number"
+                      },
+                      "max": {
+                        "type": "number"
+                      }
+                    }
+                  },
+                  "sponsorshipType": {
+                    "type": "string"
+                  },
+                  "wantedBrands": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "brandName": {
+                          "type": "string"
+                        },
+                        "brandId": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "unwantedBrands": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "brandName": {
+                          "type": "string"
+                        },
+                        "brandId": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "targetAudience": {
+                    "type": "object",
+                    "properties": {
+                      "ageGroup": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "genre": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "genreName": {
+                              "type": "string"
+                            },
+                            "genreId": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      },
+                      "gender": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "whatSellsMost": {
+                    "type": "object",
+                    "properties": {
+                      "beer": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "brandName": {
+                              "type": "string"
+                            },
+                            "brandId": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      },
+                      "liquor": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "brandName": {
+                              "type": "string"
+                            },
+                            "brandId": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      },
+                      "softDrints": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "brandName": {
+                              "type": "string"
+                            },
+                            "brandId": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
                   }
                 }
               },
-              "sponsorshipType": {
-                "type": "string"
-              },
-              "wantedBrands": {
+              "artists": {
                 "type": "array",
+                "description": "Array of artists.",
                 "items": {
                   "type": "object",
                   "properties": {
-                    "brandName": {
+                    "artistName": {
                       "type": "string"
                     },
-                    "brandId": {
-                      "type": "string"
-                    }
-                  }
-                }
-              },
-              "unwantedBrands": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "brandName": {
+                    "artistId": {
                       "type": "string"
                     },
-                    "brandId": {
+                    "artistGender": {
                       "type": "string"
-                    }
-                  }
-                }
-              },
-              "targetAudience": {
-                "type": "object",
-                "properties": {
-                  "ageGroup": {
-                    "type": "array",
-                    "items": {
+                    },
+                    "artistImage": {
                       "type": "string"
-                    }
-                  },
-                  "genre": {
-                    "type": "array",
-                    "items": {
+                    },
+                    "matchPercentage": {
+                      "type": "number"
+                    },
+                    "matchAttributes": {
                       "type": "object",
                       "properties": {
-                        "brandName": {
-                          "type": "string"
-                        },
-                        "brandId": {
-                          "type": "string"
-                        }
-                      }
-                    }
-                  },
-                  "gender": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  }
-                }
-              },
-              "whatSellsMost": {
-                "type": "object",
-                "properties": {
-                  "beer": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "brandName": {
-                          "type": "string"
-                        },
-                        "brandId": {
-                          "type": "string"
-                        }
-                      }
-                    }
-                  },
-                  "liquor": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "brandName": {
-                          "type": "string"
-                        },
-                        "brandId": {
-                          "type": "string"
-                        }
-                      }
-                    }
-                  },
-                  "softDrints": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "brandName": {
-                          "type": "string"
-                        },
-                        "brandId": {
-                          "type": "string"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "artists": {
-            "type": "array",
-            "description": "Array of artists.",
-            "items": {
-              "type": "object",
-              "properties": {
-                "artistName": {
-                  "type": "string"
-                },
-                "artistId": {
-                  "type": "string"
-                },
-                "artistImage": {
-                  "type": "string"
-                },
-                "matchPercentage": {
-                  "type": "number"
-                },
-                "lastCalculated_on": {
-                  "type": "string"
-                },
-                "matchAttributes": {
-                  "type": "object",
-                  "properties": {
-                    "venues": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string"
-                          },
-                          "name": {
-                            "type": "string"
-                          },
-                          "address": {
+                        "venues": {
+                          "type": "array",
+                          "items": {
                             "type": "object",
                             "properties": {
-                              "pincode": {
-                                "type": "number"
-                              },
-                              "country": {
+                              "id": {
                                 "type": "string"
                               },
-                              "city": {
+                              "name": {
                                 "type": "string"
                               },
-                              "geoLocation": {
+                              "address": {
                                 "type": "object",
                                 "properties": {
-                                  "lat": {
+                                  "pincode": {
                                     "type": "number"
                                   },
-                                  "long": {
-                                    "type": "number"
+                                  "country": {
+                                    "type": "string"
+                                  },
+                                  "city": {
+                                    "type": "string"
+                                  },
+                                  "geoLocation": {
+                                    "type": "object",
+                                    "properties": {
+                                      "lat": {
+                                        "type": "number"
+                                      },
+                                      "long": {
+                                        "type": "number"
+                                      }
+                                    }
                                   }
                                 }
+                              },
+                              "venueCapacity": {
+                                "type": "number"
+                              },
+                              "matchPercentage": {
+                                "type": "number"
                               }
                             }
-                          },
-                          "venueCapacity": {
-                            "type": "number"
-                          },
-                          "matchPercentage": {
-                            "type": "number"
                           }
-                        }
-                      }
-                    },
-                    "age": {
-                      "type": "object",
-                      "properties": {
-                        "ageGroup": {
-                          "type": "string"
                         },
-                        "matchPercentage": {
-                          "type": "number"
-                        }
-                      }
-                    },
-                    "gender": {
-                      "type": "object",
-                      "properties": {
-                        "male": {
-                          "type": "number"
+                        "age": {
+                          "type": "object",
+                          "properties": {
+                            "ageGroup": {
+                              "type": "string"
+                            },
+                            "matchPercentage": {
+                              "type": "number"
+                            }
+                          }
                         },
-                        "female": {
-                          "type": "number"
-                        }
-                      }
-                    },
-                    "genre": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "genreName": {
-                            "type": "string"
-                          },
-                          "matchPercentage": {
-                            "type": "number"
+                        "gender": {
+                          "type": "object",
+                          "properties": {
+                            "male": {
+                              "type": "number"
+                            },
+                            "female": {
+                              "type": "number"
+                            }
+                          }
+                        },
+                        "genre": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "genreName": {
+                                "type": "string"
+                              },
+                              "matchPercentage": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        },
+                        "associatedBrands": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "contact": {
+                                "type": "string"
+                              },
+                              "website": {
+                                "type": "string"
+                              },
+                              "logoUrl": {
+                                "type": "string"
+                              }
+                            }
                           }
                         }
                       }
                     },
-                    "associatedBrands": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string"
-                          },
-                          "name": {
-                            "type": "string"
-                          },
-                          "contact": {
-                            "type": "string"
-                          },
-                          "website": {
-                            "type": "string"
-                          },
-                          "logo_url": {
-                            "type": "string"
-                          }
-                        }
-                      }
+                    "summary": {
+                      "type": "string"
                     }
                   }
-                },
-                "summary": {
-                  "type": "string"
                 }
+              },
+              "status": {
+                "type": "boolean"
               }
             }
           },
-          "dislikedArtists": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "userId": {
-                  "type": "string"
-                },
-                "artistId": {
-                  "type": "string"
-                },
-                "artistName": {
-                  "type": "string"
-                }
-              }
-            }
+          "success": {
+            "type": "boolean"
           }
         }
       },
