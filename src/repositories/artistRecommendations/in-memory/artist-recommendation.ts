@@ -127,9 +127,7 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
   // eslint-disable-next-line class-methods-use-this
   getConcerts(): ConcertCreationResponse[] {
     const allConcerts : ConcertCreationResponse[] = [];
-    if (!fs.existsSync('./database')) {
-      fs.mkdirSync('database');
-    }
+    fileCheck('./database', false);
     fs.readdirSync('./database/').forEach((file) => {
       const toread = fs.readFileSync(`./database/${file}`).toString();
       const dataJson = JSON.parse(toread) as ArtistRecommendation;
@@ -148,17 +146,9 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
   addNewRecommendation(artistRecommendation: ArtistRecommendation): Boolean {
     // eslint-disable-next-line no-param-reassign
     artistRecommendation.status = false;
-    // if (!fs.existsSync('./database')) {
-    //   fs.mkdirSync('database');
-    // }
-    // fs.writeFileSync(
-    //   `./database/${artistRecommendation.concertData.id}`,
-    //   JSON.stringify(artistRecommendation),
-    // );
 
-    const pathFolder = './database';
     const fileName = artistRecommendation.concertData.id;
-    fileCheck(pathFolder, fileName);
+    fileCheck(`./database/${fileName}`);
 
     // TODO:  Call the recommendation api in future to get the artist recommendation
     this.simulatorRecommendations(artistRecommendation, []);
