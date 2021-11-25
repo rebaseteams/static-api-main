@@ -10,7 +10,6 @@ import ArtistRoute from './routes/artists/artistRoutes';
 import NotificationRoute from './routes/notification/notification-routes';
 
 import ArtistService from './services/artist';
-import validateUser from './middleware/userMiddleware';
 import errorHandler from './modules/errorHandler';
 import contentType from './modules/contentType';
 import AuthRoutes from './routes/auth/auth-routes';
@@ -18,6 +17,7 @@ import AuthService from './services/auth';
 import InMemoryAuthRepo from './repositories/auth/in-memory/auth';
 import DocumentsService from './services/documents';
 import InMemoryDocumentsRepo from './repositories/documents/in-memory/documents';
+import authenticate from './modules/auth0';
 
 // to use .environment variable in the project
 require('dotenv').config();
@@ -58,7 +58,7 @@ export default class MainServer {
     this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
     this.app.use(contentType);
     this.app.use(express.json());
-    this.app.use(validateUser());
+    this.app.use(authenticate);
     this.app.use('/notification', new NotificationRoute().router);
     this.app.use('/artists', new ArtistRoute(this.artistService, this.documentsService).router);
     this.app.use('/auth', new AuthRoutes(this.authService).router);

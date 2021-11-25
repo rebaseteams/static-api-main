@@ -1,4 +1,5 @@
 import * as express from 'express';
+import { requiredScopes } from 'express-oauth2-jwt-bearer';
 import { ArtistRecommendation } from '../../../models/types/artist-recommendation';
 import { PatchRequest } from '../../../models/types/patch-request';
 import { QuestionsUI } from '../../../models/types/questions';
@@ -36,7 +37,7 @@ export default class RecommendationsRoute {
     });
 
     // Try Catch block addded for async requests example
-    this.router.get('/', async (req, res, next) => {
+    this.router.get('/', requiredScopes('GET:artists/recommendations'), async (req, res, next) => {
       try {
         const response = artistService.getConcerts();
         res.send(response);
