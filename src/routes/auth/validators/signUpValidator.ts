@@ -6,7 +6,7 @@ const signUpSchema = Joi.object({
   password: Joi.string().required(),
 });
 
-const postSignUpSchemaValidator = (req : Request, res : Response, next : NextFunction) => {
+const signUpValidator = (req : Request, res : Response, next : NextFunction) => {
   const val = signUpSchema.validate(req.body);
   if (val.error) {
     const err = { message: val.error.message, statusCode: 400 };
@@ -15,4 +15,4 @@ const postSignUpSchemaValidator = (req : Request, res : Response, next : NextFun
   next();
 };
 
-export default postSignUpSchemaValidator;
+export default signUpValidator;

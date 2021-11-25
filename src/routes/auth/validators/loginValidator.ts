@@ -6,7 +6,7 @@ const loginSchema = Joi.object({
   password: Joi.string().required(),
 });
 
-const postLoginSchemaValidator = (req : Request, res : Response, next : NextFunction) => {
+const loginValidator = (req : Request, res : Response, next : NextFunction) => {
   const val = loginSchema.validate(req.body);
   if (val.error) {
     const err = { message: val.error.message, statusCode: 400 };
@@ -15,4 +15,4 @@ const postLoginSchemaValidator = (req : Request, res : Response, next : NextFunc
   next();
 };
 
-export default postLoginSchemaValidator;
+export default loginValidator;

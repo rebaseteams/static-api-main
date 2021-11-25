@@ -10,7 +10,7 @@ const schema = Joi.object({
   userId: Joi.string().required(),
 });
 
-const patchRecommendationsSchemaValidator = (req : Request, res : Response, next : NextFunction) => {
+const patchRequestValidator = (req : Request, res : Response, next : NextFunction) => {
   const val = schema.validate(req.body);
   if (val.error) {
     const err = { message: val.error.message, statusCode: 400 };
@@ -19,4 +19,4 @@ const patchRecommendationsSchemaValidator = (req : Request, res : Response, next
   next();
 };
 
-export default patchRecommendationsSchemaValidator;
+export default patchRequestValidator;
