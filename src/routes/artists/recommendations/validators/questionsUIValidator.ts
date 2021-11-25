@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import * as Joi from 'joi';
 
-const QuestionsUIschema = Joi.object({
+const schema = Joi.object({
   userId: Joi.string().required(),
   concertName: Joi.string().required(),
   eventType: Joi.string().required(),
@@ -44,7 +44,7 @@ const QuestionsUIschema = Joi.object({
 });
 
 const questionsUIValidator = (req : Request, res : Response, next : NextFunction) => {
-  const val = QuestionsUIschema.validate(req.body);
+  const val = schema.validate(req.body);
   if (val.error) {
     const err = { message: val.error.message, statusCode: 400 };
     throw err;
