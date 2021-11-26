@@ -3,7 +3,7 @@ import * as fs from 'fs';
 
 function fileCheck(fspath: string, file : boolean = true) {
   if (file) {
-    if (!fs.existsSync(fspath)) fs.createWriteStream(fspath, { flags: 'wx' }); // Create file if not exists
+    if (!fs.existsSync(fspath)) fs.appendFileSync(fspath, ''); // Create file if not exists
   } else if (!fs.existsSync(fspath)) fs.mkdirSync(fspath); // Create folder if not exists
 }
 
