@@ -1,0 +1,11 @@
+{
+    "templateId" : "1234",
+    "template" : "",
+    "questions" : [
+        {
+            "question" : "Who are you?",
+            "field" : "artistName",
+            "type" : "string"
+        }
+    ]
+}
