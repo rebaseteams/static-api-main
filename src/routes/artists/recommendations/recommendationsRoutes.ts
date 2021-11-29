@@ -7,14 +7,15 @@ import patchRequestValidator from './validators/patchRequest';
 import DocumentsRoutes from './documents/documentsRoutes';
 import DocumentsService from '../../../services/documents';
 import questionsUIValidator from './validators/questionsUIValidator';
+import TemplatesService from '../../../services/templates';
 
 export default class RecommendationsRoute {
   router: express.Router;
 
-  constructor(artistService: ArtistService, documentsService: DocumentsService) {
+  constructor(artistService: ArtistService, documentsService: DocumentsService, templatesService: TemplatesService) {
     this.router = express.Router();
 
-    this.router.use('/documents', new DocumentsRoutes(documentsService).router);
+    this.router.use('/documents', new DocumentsRoutes(documentsService, templatesService).router);
 
     this.router.get('/:id', (req, res) => {
       const { id } = req.params;

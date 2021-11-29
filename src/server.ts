@@ -18,6 +18,8 @@ import AuthService from './services/auth';
 import InMemoryAuthRepo from './repositories/auth/in-memory/auth';
 import DocumentsService from './services/documents';
 import InMemoryDocumentsRepo from './repositories/documents/in-memory/documents';
+import TemplatesService from './services/templates';
+import InMemoryTemplatesRepo from './repositories/templates/in-memory/templates';
 
 // to use .environment variable in the project
 require('dotenv').config();
@@ -31,11 +33,15 @@ export default class MainServer {
 
   private inMemoryDocumentsRepo: InMemoryDocumentsRepo;
 
+  private inMemoryTemplatesRepo: InMemoryTemplatesRepo;
+
   private artistService: ArtistService;
 
   private authService: AuthService;
 
-  private documentsService: DocumentsService
+  private documentsService: DocumentsService;
+
+  private templatesService : TemplatesService;
 
   app;
 
@@ -50,9 +56,12 @@ export default class MainServer {
     this.inMemoryArtistRecommendationRepo = new InMemoryArtistRecommendationRepo();
     this.inMemoryAuthRecommendationRepo = new InMemoryAuthRepo();
     this.inMemoryDocumentsRepo = new InMemoryDocumentsRepo();
+    this.inMemoryTemplatesRepo = new InMemoryTemplatesRepo();
     this.artistService = new ArtistService(this.inMemoryArtistRepo, this.inMemoryArtistRecommendationRepo);
     this.authService = new AuthService(this.inMemoryAuthRecommendationRepo);
     this.documentsService = new DocumentsService(this.inMemoryDocumentsRepo);
+    this.templatesService = new TemplatesService(this.inMemoryTemplatesRepo);
+
     this.app = express();
     this.app.use(cors(this.corsOptions));
     this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
@@ -60,7 +69,7 @@ export default class MainServer {
     this.app.use(express.json());
     this.app.use(validateUser());
     this.app.use('/notification', new NotificationRoute().router);
-    this.app.use('/artists', new ArtistRoute(this.artistService, this.documentsService).router);
+    this.app.use('/artists', new ArtistRoute(this.artistService, this.documentsService, this.templatesService).router);
     this.app.use('/auth', new AuthRoutes(this.authService).router);
     this.app.use(errorHandler);
   }

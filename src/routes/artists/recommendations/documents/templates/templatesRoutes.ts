@@ -1,11 +1,11 @@
 /* eslint-disable no-console */
 import { Router } from 'express';
-import DocumentsService from '../../../../../services/documents';
+import TemplatesService from '../../../../../services/templates';
 
 export default class TemplatesRoutes {
   router: Router;
 
-  constructor(documentsService: DocumentsService) {
+  constructor(templatesService: TemplatesService) {
     this.router = Router();
 
     this.router.post('/', (req, res) => {
@@ -14,11 +14,13 @@ export default class TemplatesRoutes {
 
     this.router.get('/', (req, res) => {
       res.send('TODO : send all templates name and id');
-      documentsService.sendHtmlTemplates({ artistName: 'something', reason: 'something' });
     });
 
     this.router.get('/:tempid', (req, res) => {
-      res.send('TODO : send data about given template');
+      res.send({
+        success: true,
+        data: templatesService.getTemplate(req.params.tempid),
+      });
     });
 
     this.router.patch('/:tempid', (req, res) => {
