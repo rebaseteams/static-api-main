@@ -1,22 +1,34 @@
 /* eslint-disable no-console */
-import * as express from 'express';
+import { Router } from 'express';
 import { DocumentInput } from '../../../../models/types/documents';
 import DocumentsService from '../../../../services/documents';
+import TemplatesRoutes from './templates/templatesRoutes';
 import documentInputValidator from './validators/documentInput';
 
 export default class DocumentsRoutes {
-  private documentsService: DocumentsService;
-
-  router: express.Router;
+  router: Router;
 
   constructor(documentsService: DocumentsService) {
-    this.documentsService = documentsService;
-    this.router = express.Router();
+    this.router = Router();
+
+    this.router.use('/templates', new TemplatesRoutes(documentsService).router);
 
     this.router.post('/', documentInputValidator, (req, res) => {
       const options = req.body as DocumentInput;
-      const response = this.documentsService.sendHtmlTemplates(options);
+      const response = documentsService.sendHtmlTemplates(options);
       res.send(response);
+    });
+
+    this.router.get('/:docid', (req, res) => {
+      res.send('TODO : send the given document');
+    });
+
+    this.router.patch('/:docid', (req, res) => {
+      res.send('TODO : edit the document');
+    });
+
+    this.router.delete('/:docid', (req, res) => {
+      res.send('TODO : delete the document');
     });
   }
 }

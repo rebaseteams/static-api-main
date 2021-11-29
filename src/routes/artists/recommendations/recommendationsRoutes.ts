@@ -9,15 +9,9 @@ import DocumentsService from '../../../services/documents';
 import questionsUIValidator from './validators/questionsUIValidator';
 
 export default class RecommendationsRoute {
-  private artistService: ArtistService;
-
-  private documentsService: DocumentsService;
-
   router: express.Router;
 
   constructor(artistService: ArtistService, documentsService: DocumentsService) {
-    this.artistService = artistService;
-    this.documentsService = documentsService;
     this.router = express.Router();
 
     this.router.use('/documents', new DocumentsRoutes(documentsService).router);
@@ -32,7 +26,7 @@ export default class RecommendationsRoute {
 
     this.router.post('/', questionsUIValidator, (req, res) => {
       const request = req.body as QuestionsUI;
-      const response = this.artistService.createNewRecommendation(request);
+      const response = artistService.createNewRecommendation(request);
       res.send(response);
     });
 
@@ -48,13 +42,13 @@ export default class RecommendationsRoute {
 
     this.router.patch('/', patchRequestValidator, (req, res) => {
       const request = req.body as PatchRequest;
-      const response = this.artistService.updateRecommendation(request);
+      const response = artistService.updateRecommendation(request);
       res.send(response);
     });
 
     this.router.delete('/:id', (req, res) => {
       if (req.params.id) {
-        res.send(this.artistService.deleteConcert(req.params.id));
+        res.send(artistService.deleteConcert(req.params.id));
       } else {
         res.send({ error: 'No formID provided.' });
       }
