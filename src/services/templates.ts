@@ -23,4 +23,8 @@ export default class TemplatesService implements TemplatesInterface {
   getTemplate(id : string) {
     return this.templatesRepo.getTemplate(id);
   }
+
+  getAllTemplates() {
+    return this.templatesRepo.getAllTemplates();
+  }
 }
