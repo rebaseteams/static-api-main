@@ -19,8 +19,8 @@ export default class DocumentsService implements DocumentsInterface {
     this.documentsRepo.getAllDocuments();
   }
 
-  getDocument(): void {
-    this.documentsRepo.getDocument();
+  getDocument(id : string): Document {
+    return this.documentsRepo.getDocument(id);
   }
 
   deleteDocument(): void {

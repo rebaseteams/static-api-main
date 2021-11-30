@@ -23,7 +23,8 @@ export default class DocumentsRoutes {
     });
 
     this.router.get('/:docid', (req, res) => {
-      res.send('TODO : send the given document');
+      const data = documentsService.getDocument(req.params.docid);
+      res.send({ success: true, data });
     });
 
     this.router.patch('/:docid', (req, res) => {
