@@ -16,6 +16,9 @@
   "paths": {
     "/artists/recommendations/": {
       "post": {
+        "tags": [
+          "artist recommendations"
+        ],
         "description": "Create new recommendation",
         "parameters": [
           {
@@ -61,6 +64,9 @@
         }
       },
       "get": {
+        "tags": [
+          "artist recommendations"
+        ],
         "description": "get all recommendations.",
         "parameters": [
           {
@@ -86,6 +92,9 @@
         }
       },
       "patch": {
+        "tags": [
+          "artist recommendations"
+        ],
         "description": "discard the given artist for given recommendation.",
         "parameters": [
           {
@@ -123,6 +132,9 @@
     },
     "/artists/recommendations/{id}": {
       "delete": {
+        "tags": [
+          "artist recommendations"
+        ],
         "description": "Delete recommendation by id.",
         "parameters": [
           {
@@ -156,6 +168,9 @@
         }
       },
       "get": {
+        "tags": [
+          "artist recommendations"
+        ],
         "description": "get the match data based on the given questions",
         "parameters": [
           {
@@ -189,8 +204,377 @@
         }
       }
     },
+    "/artists/recommendations/documents": {
+      "get": {
+        "tags": [
+          "artist recommendation documents"
+        ],
+        "description": "get all documents",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "userid",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "retrieved all documents successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "documentId": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "artist recommendation documents"
+        ],
+        "description": "create new document",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "userid",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "templateId": {
+                    "type": "string"
+                  },
+                  "recommendationId": {
+                    "type": "string"
+                  },
+                  "fields": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "returns document after successfully creating it",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "document": {
+                          "type": "object",
+                          "properties": {
+                            "documentId": {},
+                            "recommendationId": {},
+                            "html": {}
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/artists/recommendations/documents/{id}": {
+      "get": {
+        "tags": [
+          "artist recommendation documents"
+        ],
+        "description": "get document for given id",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "userid",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successfully retrieved document for given id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "documentId": {},
+                        "recommendationId": {},
+                        "html": {}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "artist recommendation documents"
+        ],
+        "description": "edit document for given id",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "userid",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "html": {}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successfully updated the document",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "artist recommendation documents"
+        ],
+        "description": "delete document with given id",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "userid",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successfully updated the document",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/artists/recommendations/documents/templates": {
+      "get": {
+        "tags": [
+          "document templates"
+        ],
+        "description": "get metadata of all templates",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "userid",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successfully retrieved metadata of all templates",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "templateId": {},
+                          "templateImg": {},
+                          "templateName": {}
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/artists/recommendations/documents/templates/{id}": {
+      "get": {
+        "tags": [
+          "document templates"
+        ],
+        "description": "get questions for given template id",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "userid",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successfully retrieved questions for given template",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "templateId": {},
+                          "questions": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "question": {},
+                                "field": {},
+                                "type": {}
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/artists/{id}": {
       "get": {
+        "tags": [
+          "artist"
+        ],
         "description": "get artist data with artist id",
         "parameters": [
           {
@@ -226,6 +610,9 @@
     },
     "/notification": {
       "post": {
+        "tags": [
+          "utils"
+        ],
         "description": "Send notification on platforms like email, facebook etc.",
         "parameters": [
           {
@@ -283,6 +670,9 @@
     },
     "/auth/login": {
       "post": {
+        "tags": [
+          "auth"
+        ],
         "description": "Login to system by username and password.",
         "requestBody": {
           "required": true,
@@ -320,6 +710,9 @@
     },
     "/auth/signup": {
       "post": {
+        "tags": [
+          "auth"
+        ],
         "description": "Login to system by username and password.",
         "requestBody": {
           "required": true,
