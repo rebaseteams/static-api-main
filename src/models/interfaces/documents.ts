@@ -8,6 +8,6 @@ export interface DocumentsInterface{
   createDocument(data: any, template : Template, recommendationId : string) : { document : Document };
   getDocument(id : string) : Document;
   deleteDocument(id : string) : { success : boolean };
-  editDocument() : void;
+  editDocument(id : string, html : string) : { success : boolean };
   getAllDocuments() : Document[];
 }
