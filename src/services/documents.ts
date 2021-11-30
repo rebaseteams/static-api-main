@@ -23,8 +23,8 @@ export default class DocumentsService implements DocumentsInterface {
     return this.documentsRepo.getDocument(id);
   }
 
-  deleteDocument(): void {
-    this.documentsRepo.deleteDocument();
+  deleteDocument(id : string): { success : boolean } {
+    return this.documentsRepo.deleteDocument(id);
   }
 
   editDocument(): void {
