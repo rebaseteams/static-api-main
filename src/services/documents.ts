@@ -15,8 +15,8 @@ export default class DocumentsService implements DocumentsInterface {
     return this.documentsRepo.createDocument(data, template, recommendationId);
   }
 
-  getAllDocuments(): void {
-    this.documentsRepo.getAllDocuments();
+  getAllDocuments(): Document[] {
+    return this.documentsRepo.getAllDocuments();
   }
 
   getDocument(id : string): Document {
