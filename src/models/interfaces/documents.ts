@@ -6,7 +6,7 @@ import { Template } from '../types/template';
 /* The repositories are supposed to implement this interface */
 export interface DocumentsInterface{
   createDocument(data: any, template : Template, recommendationId : string) : { document : Document };
-  getDocument() : void;
+  getDocument(id : string) : Document;
   deleteDocument() : void;
   editDocument() : void;
   getAllDocuments() : void;

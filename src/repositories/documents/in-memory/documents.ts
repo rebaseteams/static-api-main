@@ -34,8 +34,14 @@ export default class InMemoryDocumentsRepo implements DocumentsInterface {
     console.log('TODO : get all documents');
   }
 
-  getDocument() : void {
-    console.log('TODO : get document by id');
+  getDocument(id : string) : Document {
+    if (fs.existsSync(`${__dirname}/data/${id}.json`)) {
+      const readData = fs.readFileSync(`${__dirname}/data/${id}.json`).toString();
+      const data = JSON.parse(readData) as Document;
+      return data;
+    }
+    const err = { message: `Document not found for id: ${id}`, statusCode: 404 };
+    throw err;
   }
 
   deleteDocument() : void {
