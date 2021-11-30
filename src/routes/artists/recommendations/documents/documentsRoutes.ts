@@ -19,7 +19,11 @@ export default class DocumentsRoutes {
     });
 
     this.router.get('/', (req, res) => {
-      res.send('TODO : send all documents');
+      const data = documentsService.getAllDocuments();
+      const resp = data.map((value) => ({
+        documentId: value.documentId,
+      }));
+      res.send({ success: true, data: resp });
     });
 
     this.router.get('/:docid', (req, res) => {

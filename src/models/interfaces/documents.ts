@@ -9,5 +9,5 @@ export interface DocumentsInterface{
   getDocument(id : string) : Document;
   deleteDocument(id : string) : { success : boolean };
   editDocument() : void;
-  getAllDocuments() : void;
+  getAllDocuments() : Document[];
 }
