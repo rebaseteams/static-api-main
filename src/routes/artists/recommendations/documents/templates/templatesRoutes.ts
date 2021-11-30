@@ -13,13 +13,23 @@ export default class TemplatesRoutes {
     });
 
     this.router.get('/', (req, res) => {
-      res.send('TODO : send all templates name and id');
+      const data = templatesService.getAllTemplates();
+      const toSend = data.map((value) => ({
+        templateId: value.templateId,
+        templateImg: value.templateImg,
+        templateName: value.templateName,
+      }));
+      res.send({ success: true, data: toSend });
     });
 
     this.router.get('/:tempid', (req, res) => {
+      const data = templatesService.getTemplate(req.params.tempid);
       res.send({
         success: true,
-        data: templatesService.getTemplate(req.params.tempid),
+        data: {
+          templateId: data.templateId,
+          questions: data.questions,
+        },
       });
     });
 

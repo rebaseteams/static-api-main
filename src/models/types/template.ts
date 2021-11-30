@@ -2,6 +2,8 @@ import { question } from './question';
 
 export type Template = {
     templateId : string,
-    template : string,
+    html : string,
+    templateName : string,
+    templateImg : string,
     questions : question[]
 }

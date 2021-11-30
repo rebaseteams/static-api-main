@@ -1,6 +1,8 @@
 {
     "templateId" : "1234",
-    "template" : "",
+    "html" : "",
+    "templateImg" : "https://binaries.templates.cdn.office.net/support/templates/en-us/lt55635225_quantized.png",
+    "templateName" : "Sample",
     "questions" : [
         {
             "question" : "Who are you?",

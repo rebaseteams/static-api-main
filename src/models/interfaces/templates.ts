@@ -7,4 +7,5 @@ export interface TemplatesInterface{
   createTemplate() : void;
   editTemplate() : void;
   getTemplate(id : string) : Template
+  getAllTemplates() : Template[]
 }
