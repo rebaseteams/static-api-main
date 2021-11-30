@@ -1,10 +1,8 @@
 /* eslint-disable no-console */
 import { Router } from 'express';
-import { DocumentInput } from '../../../../models/types/documents';
 import DocumentsService from '../../../../services/documents';
 import TemplatesService from '../../../../services/templates';
 import TemplatesRoutes from './templates/templatesRoutes';
-import documentInputValidator from './validators/documentInput';
 
 export default class DocumentsRoutes {
   router: Router;
@@ -14,10 +12,14 @@ export default class DocumentsRoutes {
 
     this.router.use('/templates', new TemplatesRoutes(templatesService).router);
 
-    this.router.post('/', documentInputValidator, (req, res) => {
-      const options = req.body as DocumentInput;
-      const response = documentsService.sendHtmlTemplates(options);
-      res.send(response);
+    this.router.post('/', (req, res) => {
+      const template = templatesService.getTemplate(req.body.templateId);
+      const data = documentsService.createDocument(req.body.fields, template, req.body.recommendationId);
+      res.send({ success: true, data });
+    });
+
+    this.router.get('/', (req, res) => {
+      res.send('TODO : send all documents');
     });
 
     this.router.get('/:docid', (req, res) => {

@@ -29,17 +29,60 @@ describe('Templates', () => {
       const result = await request(server).get(`/artists/recommendations/documents/templates/${templateId}`).set({ userid: '1238989' }).send({});
       expect(result.status).toEqual(200);
       expect(result.body).toEqual({
+        success: true,
         data: {
           templateId: '1234',
           questions: [
             {
-              question: 'Who are you?',
+              question: 'Whats the artist Name?',
               field: 'artistName',
+              type: 'string',
+            },
+            {
+              question: 'Whats your name?',
+              field: 'creatorName',
               type: 'string',
             },
           ],
         },
+      });
+    });
+
+    afterEach(() => {
+      server.close();
+    });
+  });
+
+  describe('GET artists/recommendations/documents/templates', () => {
+    let server: Server;
+    beforeEach(() => {
+      server = new MainServer().app.listen();
+    });
+
+    it('should return No userId in header', async () => {
+      const result = await request(server).get('/artists/recommendations/documents/templates').send({});
+      expect(result.status).toEqual(400);
+      expect(result.body).toEqual({ error: 'No UserId in headers!' });
+    });
+
+    it('should return Invalid User', async () => {
+      const result = await request(server).get('/artists/recommendations/documents/templates').set({ userid: '1234899' }).send({});
+      expect(result.status).toEqual(401);
+      expect(result.body).toEqual({ error: 'Invalid User' });
+    });
+
+    it('should return all Templates metadata successfully', async () => {
+      const result = await request(server).get('/artists/recommendations/documents/templates').set({ userid: '1238989' }).send({});
+      expect(result.status).toEqual(200);
+      expect(result.body).toEqual({
         success: true,
+        data: [
+          {
+            templateId: '1234',
+            templateImg: 'https://binaries.templates.cdn.office.net/support/templates/en-us/lt55635225_quantized.png',
+            templateName: 'Sample',
+          },
+        ],
       });
     });
 

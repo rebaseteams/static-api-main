@@ -17,9 +17,9 @@ import AuthRoutes from './routes/auth/auth-routes';
 import AuthService from './services/auth';
 import InMemoryAuthRepo from './repositories/auth/in-memory/auth';
 import DocumentsService from './services/documents';
-import InMemoryDocumentsRepo from './repositories/documents/in-memory/documents';
 import TemplatesService from './services/templates';
 import InMemoryTemplatesRepo from './repositories/templates/in-memory/templates';
+import InMemoryDocumentsRepo from './repositories/documents/in-memory/documents';
 
 // to use .environment variable in the project
 require('dotenv').config();
