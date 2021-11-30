@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-irregular-whitespace */
 /* eslint-disable no-console */
 /* eslint-disable class-methods-use-this */
@@ -60,7 +61,15 @@ export default class InMemoryDocumentsRepo implements DocumentsInterface {
     throw err;
   }
 
-  editDocument() : void {
-    console.log('TODO : edit document by id');
+  editDocument(id : string, html : string) : { success : boolean } {
+    if (fs.existsSync(`${__dirname}/data/${id}.json`)) {
+      const jsonString = fs.readFileSync(`${__dirname}/data/${id}.json`).toString();
+      const jsonDocument = JSON.parse(jsonString) as Document;
+      jsonDocument.html = html;
+      fs.writeFileSync(`${__dirname}/data/${id}.json`, JSON.stringify(jsonDocument));
+      return { success: true };
+    }
+    const err = { message: `Document not found for id: ${id}`, statusCode: 404 };
+    throw err;
   }
 }

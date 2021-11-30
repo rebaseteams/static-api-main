@@ -32,7 +32,8 @@ export default class DocumentsRoutes {
     });
 
     this.router.patch('/:docid', (req, res) => {
-      res.send('TODO : edit the document');
+      const data = documentsService.editDocument(req.params.docid, req.body.html);
+      res.send({ success: data.success });
     });
 
     this.router.delete('/:docid', (req, res) => {
