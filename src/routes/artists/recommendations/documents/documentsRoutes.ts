@@ -32,7 +32,8 @@ export default class DocumentsRoutes {
     });
 
     this.router.delete('/:docid', (req, res) => {
-      res.send('TODO : delete the document');
+      const data = documentsService.deleteDocument(req.params.docid);
+      res.send({ success: data.success });
     });
   }
 }

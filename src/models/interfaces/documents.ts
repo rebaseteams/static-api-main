@@ -7,7 +7,7 @@ import { Template } from '../types/template';
 export interface DocumentsInterface{
   createDocument(data: any, template : Template, recommendationId : string) : { document : Document };
   getDocument(id : string) : Document;
-  deleteDocument() : void;
+  deleteDocument(id : string) : { success : boolean };
   editDocument() : void;
   getAllDocuments() : void;
 }
