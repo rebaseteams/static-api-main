@@ -35,5 +35,3 @@ export default class InMemoryTemplatesRepo implements TemplatesInterface {
     return allTemplates;
   }
 }
-
-// /home/prasana/Documents/static-api-main/dist/repositories/templates/in-memory/data/1234.json

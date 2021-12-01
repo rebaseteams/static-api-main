@@ -1,6 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-irregular-whitespace */
-/* eslint-disable no-console */
 /* eslint-disable class-methods-use-this */
 import * as handlebars from 'handlebars';
 import * as _ from 'lodash';
@@ -12,14 +9,16 @@ import { Document } from '../../../models/types/document';
 import fileCheck from '../../../utils/fileCheck';
 
 export default class InMemoryDocumentsRepo implements DocumentsInterface {
-  createDocument(data : any, template : Template, recommendationId : string) : { document : Document } {
+  createDocument(data : any, template : Template, recommendationId : string, docName : string) : { document : Document } {
     const templateFields = template.questions.map((value) => value.field);
     const dataFields = Object.keys(data);
     if (_.isEqual(templateFields.sort(), dataFields.sort())) {
       const { html } = template;
       const compiledHtml = handlebars.compile(html);
-      const document = {
+      const document : Document = {
         documentId: uuidv4(),
+        documentName: docName,
+        createdOn: (new Date()).toString(),
         recommendationId,
         html: compiledHtml(data),
       };
