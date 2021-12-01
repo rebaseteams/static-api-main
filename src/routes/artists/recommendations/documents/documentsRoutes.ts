@@ -16,7 +16,7 @@ export default class DocumentsRoutes {
 
     this.router.post('/', createDocumentValidator, (req, res) => {
       const template = templatesService.getTemplate(req.body.templateId);
-      const data = documentsService.createDocument(req.body.fields, template, req.body.recommendationId);
+      const data = documentsService.createDocument(req.body.fields, template, req.body.recommendationId, req.body.documentName);
       res.send({ success: true, data });
     });
 
@@ -24,6 +24,8 @@ export default class DocumentsRoutes {
       const data = documentsService.getAllDocuments();
       const resp = data.map((value) => ({
         documentId: value.documentId,
+        documentName: value.documentName,
+        createdOn: value.createdOn,
       }));
       res.send({ success: true, data: resp });
     });

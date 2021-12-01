@@ -26,6 +26,7 @@ describe('Documents', () => {
       const result = await request(server).post('/artists/recommendations/documents').set({ userid: '1238989' }).send(
         {
           recommendationId: '123444',
+          documentName: 'sample',
           fields: {
             artistName: 'Praveen',
             creatorName: 'Prajapati',
@@ -64,6 +65,7 @@ describe('Documents', () => {
       const result = await request(server).post('/artists/recommendations/documents').set({ userid: '1238989' }).send(
         {
           recommendationId: '123444',
+          documentName: 'sample',
           fields: {
             artistName: 'Praveen',
             creatorName: 'Prajapati',

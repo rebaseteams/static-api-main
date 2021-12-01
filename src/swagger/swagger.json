@@ -238,6 +238,12 @@
                         "properties": {
                           "documentId": {
                             "type": "string"
+                          },
+                          "documentName": {
+                            "type": "string"
+                          },
+                          "createdOn": {
+                            "type": "string"
                           }
                         }
                       }
@@ -273,6 +279,9 @@
                   "templateId": {
                     "type": "string"
                   },
+                  "documentName": {
+                    "type": "string"
+                  },
                   "recommendationId": {
                     "type": "string"
                   },
@@ -302,6 +311,8 @@
                           "type": "object",
                           "properties": {
                             "documentId": {},
+                            "documentName":{},
+                            "createdOn": {},
                             "recommendationId": {},
                             "html": {}
                           }
@@ -355,6 +366,8 @@
                       "type": "object",
                       "properties": {
                         "documentId": {},
+                        "documentName":{},
+                        "createdOn": {},
                         "recommendationId": {},
                         "html": {}
                       }
