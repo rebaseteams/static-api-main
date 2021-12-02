@@ -20,6 +20,7 @@ import DocumentsService from './services/documents';
 import TemplatesService from './services/templates';
 import InMemoryTemplatesRepo from './repositories/templates/in-memory/templates';
 import InMemoryDocumentsRepo from './repositories/documents/in-memory/documents';
+import DocumentsRepo from './repositories/documents/postgres/documents';
 
 // to use .environment variable in the project
 require('dotenv').config();
@@ -34,6 +35,8 @@ export default class MainServer {
   private inMemoryDocumentsRepo: InMemoryDocumentsRepo;
 
   private inMemoryTemplatesRepo: InMemoryTemplatesRepo;
+
+  private documentsRepo: DocumentsRepo;
 
   private artistService: ArtistService;
 
@@ -57,6 +60,7 @@ export default class MainServer {
     this.inMemoryAuthRecommendationRepo = new InMemoryAuthRepo();
     this.inMemoryDocumentsRepo = new InMemoryDocumentsRepo();
     this.inMemoryTemplatesRepo = new InMemoryTemplatesRepo();
+    // this.documentsRepo = new DocumentsRepo();
     this.artistService = new ArtistService(this.inMemoryArtistRepo, this.inMemoryArtistRecommendationRepo);
     this.authService = new AuthService(this.inMemoryAuthRecommendationRepo);
     this.documentsService = new DocumentsService(this.inMemoryDocumentsRepo);

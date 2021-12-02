@@ -14,35 +14,55 @@ export default class DocumentsRoutes {
 
     this.router.use('/templates', new TemplatesRoutes(templatesService).router);
 
-    this.router.post('/', createDocumentValidator, (req, res) => {
-      const template = templatesService.getTemplate(req.body.templateId);
-      const data = documentsService.createDocument(req.body.fields, template, req.body.recommendationId, req.body.documentName);
-      res.send({ success: true, data });
+    this.router.post('/', createDocumentValidator, async (req, res, next) => {
+      try {
+        const template = templatesService.getTemplate(req.body.templateId);
+        const data = await documentsService.createDocument(req.body.fields, template, req.body.recommendationId, req.body.name, req.body.auth.userId);
+        res.send({ success: true, data });
+      } catch (error) {
+        next(error);
+      }
     });
 
-    this.router.get('/', (req, res) => {
-      const data = documentsService.getAllDocuments();
-      const resp = data.map((value) => ({
-        documentId: value.documentId,
-        documentName: value.documentName,
-        createdOn: value.createdOn,
-      }));
-      res.send({ success: true, data: resp });
+    this.router.get('/', async (req, res, next) => {
+      try {
+        const data = await documentsService.getAllDocuments();
+        const resp = data.map((value) => ({
+          id: value.id,
+          name: value.name,
+          createdOn: value.createdOn,
+        }));
+        res.send({ success: true, data: resp });
+      } catch (error) {
+        next(error);
+      }
     });
 
-    this.router.get('/:docid', (req, res) => {
-      const data = documentsService.getDocument(req.params.docid);
-      res.send({ success: true, data });
+    this.router.get('/:docid', async (req, res, next) => {
+      try {
+        const data = await documentsService.getDocument(req.params.docid);
+        res.send({ success: true, data });
+      } catch (error) {
+        next(error);
+      }
     });
 
-    this.router.patch('/:docid', editDocumentValidator, (req, res) => {
-      const data = documentsService.editDocument(req.params.docid, req.body.html);
-      res.send({ success: data.success });
+    this.router.patch('/:docid', editDocumentValidator, async (req, res, next) => {
+      try {
+        const data = await documentsService.editDocument(req.params.docid, req.body.html);
+        res.send({ success: data.success });
+      } catch (error) {
+        next(error);
+      }
     });
 
-    this.router.delete('/:docid', (req, res) => {
-      const data = documentsService.deleteDocument(req.params.docid);
-      res.send({ success: data.success });
+    this.router.delete('/:docid', async (req, res, next) => {
+      try {
+        const data = await documentsService.deleteDocument(req.params.docid);
+        res.send({ success: data.success });
+      } catch (error) {
+        next(error);
+      }
     });
   }
 }

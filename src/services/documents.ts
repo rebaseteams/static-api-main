@@ -1,5 +1,5 @@
+import Document from '../models/entities/Document';
 import { DocumentsInterface } from '../models/interfaces/documents';
-import { Document } from '../models/types/document';
 import { Template } from '../models/types/template';
 
 export default class DocumentsService implements DocumentsInterface {
@@ -11,23 +11,23 @@ export default class DocumentsService implements DocumentsInterface {
     this.documentsRepo = documentsRepo;
   }
 
-  createDocument(data : any, template : Template, recommendationId : string, docName : string) : { document : Document } {
-    return this.documentsRepo.createDocument(data, template, recommendationId, docName);
+  async createDocument(data : any, template : Template, recommendationId : string, docName : string, userid : string) : Promise<{ document : Document }> {
+    return this.documentsRepo.createDocument(data, template, recommendationId, docName, userid);
   }
 
-  getAllDocuments(): Document[] {
+  async getAllDocuments(): Promise<Document[]> {
     return this.documentsRepo.getAllDocuments();
   }
 
-  getDocument(id : string): Document {
+  async getDocument(id : string): Promise<Document> {
     return this.documentsRepo.getDocument(id);
   }
 
-  deleteDocument(id : string): { success : boolean } {
+  async deleteDocument(id : string): Promise<{ success : boolean }> {
     return this.documentsRepo.deleteDocument(id);
   }
 
-  editDocument(id : string, html : string): { success : boolean } {
+  async editDocument(id : string, html : string): Promise<{ success : boolean }> {
     return this.documentsRepo.editDocument(id, html);
   }
 }

@@ -236,10 +236,10 @@
                       "items": {
                         "type": "object",
                         "properties": {
-                          "documentId": {
+                          "id": {
                             "type": "string"
                           },
-                          "documentName": {
+                          "name": {
                             "type": "string"
                           },
                           "createdOn": {
@@ -279,7 +279,7 @@
                   "templateId": {
                     "type": "string"
                   },
-                  "documentName": {
+                  "name": {
                     "type": "string"
                   },
                   "recommendationId": {
@@ -310,8 +310,8 @@
                         "document": {
                           "type": "object",
                           "properties": {
-                            "documentId": {},
-                            "documentName":{},
+                            "id": {},
+                            "name":{},
                             "createdOn": {},
                             "recommendationId": {},
                             "html": {}
@@ -365,8 +365,8 @@
                     "data": {
                       "type": "object",
                       "properties": {
-                        "documentId": {},
-                        "documentName":{},
+                        "id": {},
+                        "name":{},
                         "createdOn": {},
                         "recommendationId": {},
                         "html": {}
