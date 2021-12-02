@@ -36,12 +36,12 @@ describe('Templates', () => {
             {
               question: 'Whats the artist Name?',
               field: 'artistName',
-              type: 'string',
+              type: 'text',
             },
             {
               question: 'Whats your name?',
               field: 'creatorName',
-              type: 'string',
+              type: 'text',
             },
           ],
         },
