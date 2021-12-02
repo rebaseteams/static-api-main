@@ -5,32 +5,33 @@ import { v4 as uuidv4 } from 'uuid';
 import * as fs from 'fs';
 import { DocumentsInterface } from '../../../models/interfaces/documents';
 import { Template } from '../../../models/types/template';
-import { Document } from '../../../models/types/document';
 import fileCheck from '../../../utils/fileCheck';
+import Document from '../../../models/entities/Document';
 
 export default class InMemoryDocumentsRepo implements DocumentsInterface {
-  createDocument(data : any, template : Template, recommendationId : string, docName : string) : { document : Document } {
+  // eslint-disable-next-line no-unused-vars
+  async createDocument(data : any, template : Template, recommendationId : string, docName : string, userId : string) : Promise<{ document : Document }> {
     const templateFields = template.questions.map((value) => value.field);
     const dataFields = Object.keys(data);
     if (_.isEqual(templateFields.sort(), dataFields.sort())) {
       const { html } = template;
       const compiledHtml = handlebars.compile(html);
       const document : Document = {
-        documentId: uuidv4(),
-        documentName: docName,
-        createdOn: (new Date()).toString(),
-        recommendationId,
+        id: uuidv4(),
+        name: docName,
+        createdOn: new Date(),
+        createdBy: userId,
         html: compiledHtml(data),
       };
       fileCheck(`${__dirname}/data`, false);
-      fs.writeFileSync(`${__dirname}/data/${document.documentId}.json`, JSON.stringify(document));
+      fs.writeFileSync(`${__dirname}/data/${document.id}.json`, JSON.stringify(document));
       return { document };
     }
     const err = { message: 'All fields are required', statusCode: 400 };
     throw err;
   }
 
-  getAllDocuments() : Document[] {
+  async getAllDocuments() : Promise<Document[]> {
     fileCheck(`${__dirname}/data`, false);
     const allDocuments : Document[] = [];
     fs.readdirSync(`${__dirname}/data`).forEach((file) => {
@@ -41,7 +42,7 @@ export default class InMemoryDocumentsRepo implements DocumentsInterface {
     return allDocuments;
   }
 
-  getDocument(id : string) : Document {
+  async getDocument(id : string) : Promise<Document> {
     if (fs.existsSync(`${__dirname}/data/${id}.json`)) {
       const readData = fs.readFileSync(`${__dirname}/data/${id}.json`).toString();
       const data = JSON.parse(readData) as Document;
@@ -51,7 +52,7 @@ export default class InMemoryDocumentsRepo implements DocumentsInterface {
     throw err;
   }
 
-  deleteDocument(id : string) : { success : boolean } {
+  async deleteDocument(id : string) : Promise<{ success : boolean }> {
     if (fs.existsSync(`${__dirname}/data/${id}.json`)) {
       fs.unlinkSync(`${__dirname}/data/${id}.json`);
       return { success: true };
@@ -60,7 +61,7 @@ export default class InMemoryDocumentsRepo implements DocumentsInterface {
     throw err;
   }
 
-  editDocument(id : string, html : string) : { success : boolean } {
+  async editDocument(id : string, html : string) : Promise<{ success : boolean }> {
     if (fs.existsSync(`${__dirname}/data/${id}.json`)) {
       const jsonString = fs.readFileSync(`${__dirname}/data/${id}.json`).toString();
       const jsonDocument = JSON.parse(jsonString) as Document;

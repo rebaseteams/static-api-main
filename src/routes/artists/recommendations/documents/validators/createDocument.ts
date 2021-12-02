@@ -5,9 +5,9 @@ const schema = Joi.object({
   auth: Joi.object({
     userId: Joi.string().required(),
   }).required(),
-  documentName: Joi.string().required(),
+  name: Joi.string().required(),
   templateId: Joi.string().required(),
-  recommendationId: Joi.string().required(),
+  recommendationId: Joi.string(),
   fields: Joi.object().required(),
 });
 

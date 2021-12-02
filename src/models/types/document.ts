@@ -1,6 +1,6 @@
 export type Document = {
-    documentId : string,
-    documentName : string,
+    id : string,
+    name : string,
     createdOn : string,
     recommendationId : string,
     html : string
