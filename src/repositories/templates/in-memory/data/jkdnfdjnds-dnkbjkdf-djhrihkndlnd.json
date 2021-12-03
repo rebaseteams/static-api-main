@@ -34,7 +34,7 @@
         "type" : "text"
       },
       {
-        "question" : "Enter date",
+        "question" : "Enter starting date",
         "field" : "date",
         "type" : "date"
       }
