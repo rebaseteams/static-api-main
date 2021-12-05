@@ -1,9 +1,8 @@
 // import * as moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
-import { Artist } from '../models/types/artist';
+import Artist from '../models/entities/Artist';
 import {
-  ArtistServiceInteface,
-  ArtistRepoInterface,
+  ArtistInterface,
 } from '../models/interfaces/artist';
 import {
   ConcertCreationResponse,
@@ -14,25 +13,21 @@ import { ArtistRecommendation } from '../models/types/artist-recommendation';
 import { ArtistRecommendationRepoInterface } from '../models/interfaces/artist-recommendation';
 import { PatchRequest } from '../models/types/patch-request';
 
-export default class ArtistService implements ArtistServiceInteface {
-  private artistRepo: ArtistRepoInterface;
+export default class ArtistService implements ArtistInterface {
+  private artistRepo: ArtistInterface;
 
   private artistRecommendationRepo: ArtistRecommendationRepoInterface;
 
   constructor(
-    artistRepo: ArtistRepoInterface,
+    artistRepo: ArtistInterface,
     artistRecommendationRepo: ArtistRecommendationRepoInterface,
   ) {
     this.artistRepo = artistRepo;
     this.artistRecommendationRepo = artistRecommendationRepo;
   }
 
-  getArtist(id: string): Artist {
+  async getArtist(id: string): Promise<Artist> {
     return this.artistRepo.getArtist(id);
-  }
-
-  addArtist(artist: Artist): Boolean {
-    return this.artistRepo.addArtist(artist);
   }
 
   getRecommendation(id: string): ArtistRecommendation {

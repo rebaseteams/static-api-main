@@ -1,8 +1,12 @@
 /* eslint-disable no-unused-vars */
 
-import { Artist } from '../types/artist';
+import Artist from '../entities/Artist';
 import { ArtistRecommendation } from '../types/artist-recommendation';
 import { ConcertCreationResponse, QuestionsUI } from '../types/questions';
+
+export interface ArtistInterface {
+  getArtist(id : string) : Promise<Artist>;
+}
 
 /* The repositories are supposed to implement this interface */
 export interface ArtistRepoInterface {

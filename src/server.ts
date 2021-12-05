@@ -3,7 +3,6 @@ import * as swaggerUi from 'swagger-ui-express';
 import cors from 'cors';
 import * as swaggerDoc from './swagger/swagger.json';
 
-import InMemoryArtistRepo from './repositories/artists/in-memory/artist';
 import InMemoryArtistRecommendationRepo from './repositories/artistRecommendations/in-memory/artist-recommendation';
 
 import ArtistRoute from './routes/artists/artistRoutes';
@@ -21,12 +20,13 @@ import TemplatesService from './services/templates';
 import InMemoryTemplatesRepo from './repositories/templates/in-memory/templates';
 import InMemoryDocumentsRepo from './repositories/documents/in-memory/documents';
 import DocumentsRepo from './repositories/documents/postgres/documents';
+import ArtistsRepo from './repositories/artists/postgres/artists';
 
 // to use .environment variable in the project
 require('dotenv').config();
 
 export default class MainServer {
-  private inMemoryArtistRepo: InMemoryArtistRepo;
+  private inMemoryArtistRepo: ArtistsRepo;
 
   private inMemoryArtistRecommendationRepo: InMemoryArtistRecommendationRepo;
 
@@ -55,7 +55,7 @@ export default class MainServer {
   };
 
   constructor() {
-    this.inMemoryArtistRepo = new InMemoryArtistRepo();
+    this.inMemoryArtistRepo = new ArtistsRepo();
     this.inMemoryArtistRecommendationRepo = new InMemoryArtistRecommendationRepo();
     this.inMemoryAuthRecommendationRepo = new InMemoryAuthRepo();
     this.inMemoryDocumentsRepo = new InMemoryDocumentsRepo();

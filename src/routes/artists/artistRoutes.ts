@@ -10,8 +10,12 @@ export default class ArtistRoute {
   constructor(artistService: ArtistService, documentsService: DocumentsService, templatesService: TemplatesService) {
     this.router = express.Router();
     this.router.use('/recommendations', new RecommendationsRoute(artistService, documentsService, templatesService).router);
-    this.router.get('/:id', (req, res) => {
-      if (req.params.id) res.send(artistService.getArtist(req.params.id));
+    this.router.get('/:id', async (req, res, next) => {
+      try {
+        if (req.params.id) res.send(await artistService.getArtist(req.params.id));
+      } catch (error) {
+        next(error);
+      }
     });
   }
 }
