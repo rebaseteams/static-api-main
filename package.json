@@ -8,9 +8,13 @@
     "build": "tsc",
     "test": "jest --detectOpenHandles",
     "build-and-test": "npm run build && npm run test",
-    "lint": "eslint ./src -c .eslintrc.json --ext ts,tsx ",
-    "lint-fix": "eslint ./src/** -c .eslintrc.json --fix --ext ts,tsx ",
-    "presubmit": "npm run lint && npm run build-and-test"
+    "lint": "eslint ./src ./postgres-db -c .eslintrc.json --ext ts,tsx --no-error-on-unmatched-pattern --no-ignore",
+    "lint-fix": "eslint ./src/** ./postgres-db/** -c .eslintrc.json --fix --ext ts,tsx --no-error-on-unmatched-pattern",
+    "presubmit": "npm run lint && npm run build-and-test",
+    "setup": "docker-compose -f docker-compose.yml up -d",
+    "tear-down": "docker-compose -f docker-compose.yml rm --force --stop",
+    "migration-generate": "ts-node postgres-db/scripts/cli.ts migration:generate -n initial-artist-db --pretty",
+    "migration-run": "ts-node postgres-db/scripts/cli.ts migration:run"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +24,7 @@
     "@sendgrid/mail": "^7.6.0",
     "@types/faker": "^5.5.9",
     "@types/lodash": "^4.14.177",
+    "@types/node": "^16.11.11",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
@@ -36,8 +41,10 @@
     "sinon-test": "^3.1.1",
     "swagger-ui-express": "^4.1.6",
     "typeorm": "^0.2.41",
+    "typeorm-naming-strategies": "^2.0.0",
     "underscore": "^1.13.1",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "yargs": "^17.3.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.12",
@@ -48,12 +55,12 @@
     "@types/jwt-simple": "^0.5.33",
     "@types/mocha": "^9.0.0",
     "@types/moment": "^2.13.0",
-    "@types/node": "^16.11.6",
     "@types/random-name": "^0.1.0",
     "@types/supertest": "^2.0.11",
     "@types/swagger-ui-express": "^4.1.3",
     "@types/underscore": "^1.11.3",
     "@types/uuid": "^8.3.1",
+    "@types/yargs": "^17.0.7",
     "@typescript-eslint/eslint-plugin": "^4.32.0",
     "@typescript-eslint/parser": "^4.32.0",
     "eslint": "^7.32.0",
@@ -63,8 +70,9 @@
     "jest": "^27.3.1",
     "supertest": "^6.1.6",
     "ts-jest": "^27.0.7",
-    "ts-node": "^10.3.0",
+    "ts-node": "^9.1.1",
     "tslint": "^6.1.3",
-    "typescript": "^4.4.4"
+    "typescript": "^4.1.5",
+    "yargonaut": "^1.1.4"
   }
 }

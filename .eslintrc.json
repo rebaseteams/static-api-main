@@ -39,6 +39,8 @@
         "no-await-in-loop": "off",
         "guard-for-in": "error",
         "no-implicit-coercion": "error",
-        "camelcase": "off"
+        "camelcase": "off",
+        "import/prefer-default-export": "off",
+        "class-methods-use-this": "off"
     }
 }

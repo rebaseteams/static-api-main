@@ -1,6 +1,6 @@
-import * as express from 'express';
+import express from 'express';
 import * as swaggerUi from 'swagger-ui-express';
-import * as cors from 'cors';
+import cors from 'cors';
 import * as swaggerDoc from './swagger/swagger.json';
 
 import InMemoryArtistRepo from './repositories/artists/in-memory/artist';

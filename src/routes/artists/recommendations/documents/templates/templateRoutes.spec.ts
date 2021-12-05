@@ -1,4 +1,4 @@
-import * as request from 'supertest';
+import request from 'supertest';
 import { Server } from 'http';
 import MainServer from '../../../../../server';
 // import recommendationRequest from '../../../../repositories/artistRecommendations/in-memory/data/recommendationRequest.json';
