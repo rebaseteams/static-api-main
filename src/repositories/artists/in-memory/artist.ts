@@ -1,10 +1,14 @@
 /* eslint-disable no-throw-literal */
 import { Artist } from '../../../models/types/artist';
-import * as dummyArtists from './data/artists.json';
+import dummyArtists from './data/artists.json';
 import { ArtistRepoInterface } from '../../../models/interfaces/artist';
 
 export default class InMemoryArtistRepo implements ArtistRepoInterface {
-  private artistList : Artist[] = dummyArtists;
+  private artistList : Artist[];
+
+  constructor() {
+    this.artistList = dummyArtists.map((data: any) => data as Artist);
+  }
 
   getArtist(id: string): Artist {
     const artist = this.artistList.find((a) => a.artistId === id);
