@@ -2,125 +2,170 @@
   {
     "id": "id1",
     "name": "name1",
-    "summary": "summary1",
-    "brands": [
+    "image": "imagegurl",
+    "gender": "gender",
+    "country": "country",
+    "coverImage": "imageurl",
+    "bio": "bio",
+    "associatedBrands": ["bid1", "bid2", "bid3"],
+    "venues": ["vid1", "vid2", "vid3"],
+    "popuarity": 75,
+    "audience" : [
       {
-        "brandId": "brandId1",
-        "brandName": "brandName1"
-      },
-      {
-        "brandId": "brandId2",
-        "brandName": "brandName2"
+        "demographicName": "demographic name",
+        "fields": [
+          {
+            "name" : "name1",
+            "value" : 65
+          },
+          {
+            "name" : "name1",
+            "value" : 65
+          }
+        ]
       }
     ],
-    "venues": [
+    "mediaHandles" : [
       {
-        "venueId": "venueId1",
-        "venueName": "venueName1"
-      },
-      {
-        "venueId": "venueId2",
-        "venueName": "venueName2"
+        "handleName" : "handle name",
+        "url" : "handle url",
+        "followers" : 122342
       }
     ]
   },
   {
     "id": "id2",
-    "name": "name2",
-    "summary": "summary2",
-    "brands": [
+    "name": "name1",
+    "image": "imagegurl",
+    "gender": "gender",
+    "country": "country",
+    "coverImage": "imageurl",
+    "bio": "bio",
+    "associatedBrands": ["bid1", "bid2", "bid3"],
+    "venues": ["vid1", "vid2", "vid3"],
+    "popuarity": 75,
+    "audience" : [
       {
-        "brandId": "brandId1",
-        "brandName": "brandName1"
-      },
-      {
-        "brandId": "brandId2",
-        "brandName": "brandName2"
+        "demographicName": "demographic name",
+        "fields": [
+          {
+            "name" : "name1",
+            "value" : 65
+          },
+          {
+            "name" : "name1",
+            "value" : 65
+          }
+        ]
       }
     ],
-    "venues": [
+    "mediaHandles" : [
       {
-        "venueId": "venueId1",
-        "venueName": "venueName1"
-      },
-      {
-        "venueId": "venueId2",
-        "venueName": "venueName2"
+        "handleName" : "handle name",
+        "url" : "handle url",
+        "followers" : 122342
       }
     ]
   },
   {
     "id": "id3",
-    "name": "name3",
-    "summary": "summary3",
-    "brands": [
+    "name": "name1",
+    "image": "imagegurl",
+    "gender": "gender",
+    "country": "country",
+    "coverImage": "imageurl",
+    "bio": "bio",
+    "associatedBrands": ["bid1", "bid2", "bid3"],
+    "venues": ["vid1", "vid2", "vid3"],
+    "popuarity": 75,
+    "audience" : [
       {
-        "brandId": "brandId1",
-        "brandName": "brandName1"
-      },
-      {
-        "brandId": "brandId2",
-        "brandName": "brandName2"
+        "demographicName": "demographic name",
+        "fields": [
+          {
+            "name" : "name1",
+            "value" : 65
+          },
+          {
+            "name" : "name1",
+            "value" : 65
+          }
+        ]
       }
     ],
-    "venues": [
+    "mediaHandles" : [
       {
-        "venueId": "venueId1",
-        "venueName": "venueName1"
-      },
-      {
-        "venueId": "venueId2",
-        "venueName": "venueName2"
+        "handleName" : "handle name",
+        "url" : "handle url",
+        "followers" : 122342
       }
     ]
   },
   {
     "id": "id4",
-    "name": "name4",
-    "summary": "summary4",
-    "brands": [
+    "name": "name1",
+    "image": "imagegurl",
+    "gender": "gender",
+    "country": "country",
+    "coverImage": "imageurl",
+    "bio": "bio",
+    "associatedBrands": ["bid1", "bid2", "bid3"],
+    "venues": ["vid1", "vid2", "vid3"],
+    "popuarity": 75,
+    "audience" : [
       {
-        "brandId": "brandId1",
-        "brandName": "brandName1"
-      },
-      {
-        "brandId": "brandId2",
-        "brandName": "brandName2"
+        "demographicName": "demographic name",
+        "fields": [
+          {
+            "name" : "name1",
+            "value" : 65
+          },
+          {
+            "name" : "name1",
+            "value" : 65
+          }
+        ]
       }
     ],
-    "venues": [
+    "mediaHandles" : [
       {
-        "venueId": "venueId1",
-        "venueName": "venueName1"
-      },
-      {
-        "venueId": "venueId2",
-        "venueName": "venueName2"
+        "handleName" : "handle name",
+        "url" : "handle url",
+        "followers" : 122342
       }
     ]
   },
   {
     "id": "id5",
-    "name": "name5",
-    "summary": "summary5",
-    "brands": [
+    "name": "name1",
+    "image": "imagegurl",
+    "gender": "gender",
+    "country": "country",
+    "coverImage": "imageurl",
+    "bio": "bio",
+    "associatedBrands": ["bid1", "bid2", "bid3"],
+    "venues": ["vid1", "vid2", "vid3"],
+    "popuarity": 75,
+    "audience" : [
       {
-        "brandId": "brandId1",
-        "brandName": "brandName1"
-      },
-      {
-        "brandId": "brandId2",
-        "brandName": "brandName2"
+        "demographicName": "demographic name",
+        "fields": [
+          {
+            "name" : "name1",
+            "value" : 65
+          },
+          {
+            "name" : "name1",
+            "value" : 65
+          }
+        ]
       }
     ],
-    "venues": [
+    "mediaHandles" : [
       {
-        "venueId": "venueId1",
-        "venueName": "venueName1"
-      },
-      {
-        "venueId": "venueId2",
-        "venueName": "venueName2"
+        "handleName" : "handle name",
+        "url" : "handle url",
+        "followers" : 122342
       }
     ]
   }

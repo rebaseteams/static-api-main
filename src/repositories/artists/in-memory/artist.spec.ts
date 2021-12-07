@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
 import * as expectedArtists from './data/artists.json';
 import InMemoryArtistRepo from './artist';
-import { Artist } from '../../../models/types/artist';
 
 describe('Artists', () => {
   let artistRepo: InMemoryArtistRepo;
@@ -11,9 +10,9 @@ describe('Artists', () => {
   });
 
   describe('getArtist', () => {
-    it('should return the artist if it exists', () => {
+    it('should return the artist if it exists', async () => {
       const expectedArtist = expectedArtists[0];
-      const actualArtist = artistRepo.getArtist('id1');
+      const actualArtist = await artistRepo.getArtist('id1');
       expect(actualArtist).toEqual(expectedArtist);
     });
 
@@ -23,29 +22,5 @@ describe('Artists', () => {
     //   console.log(actualArtist);
     //   expect(actualArtist).toEqual(expectedError);
     // });
-  });
-
-  describe('addArtist', () => {
-    it('should add the artist if it does not exist', () => {
-      const artistToAdd: Artist = {
-        artistId: 'id10',
-        artistName: 'Test Artist',
-        venues: [],
-        brands: [],
-      };
-      const actualArtist = artistRepo.addArtist(artistToAdd);
-      expect(actualArtist).toBe(true);
-    });
-
-    it('should not add the artist if it already exists', () => {
-      const artistToAdd: Artist = {
-        artistId: 'id1',
-        artistName: 'Test Artist',
-        venues: [],
-        brands: [],
-      };
-      const actualArtist = artistRepo.addArtist(artistToAdd);
-      expect(actualArtist).toBe(false);
-    });
   });
 });
