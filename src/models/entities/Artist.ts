@@ -6,34 +6,34 @@ export default class Artist {
     id: string,
     name: string,
     gender: string,
-    associatedBrands: string[],
+    associated_brands: string[],
     venues: string[],
     country: string,
     image: string,
-    coverImage: string,
+    cover_image: string,
     bio: string,
     manager: string,
     contact: string,
     address: string,
     popularity: number,
     audience: string,
-    mediaHandles: string,
+    media_handles: string,
   ) {
     this.id = id;
     this.name = name;
     this.gender = gender;
-    this.associatedBrands = associatedBrands;
+    this.associated_brands = associated_brands;
     this.venues = venues;
     this.country = country;
     this.image = image;
-    this.coverImage = coverImage;
+    this.cover_image = cover_image;
     this.bio = bio;
     this.manager = manager;
     this.contact = contact;
     this.address = address;
     this.popularity = popularity;
     this.audience = audience;
-    this.mediaHandles = mediaHandles;
+    this.media_handles = media_handles;
   }
 
   @PrimaryColumn()
@@ -46,7 +46,7 @@ export default class Artist {
   gender: string;
 
   @Column('text', { array: true })
-  associatedBrands: string[];
+  associated_brands: string[];
 
   @Column('text', { array: true })
   venues: string[];
@@ -58,7 +58,7 @@ export default class Artist {
   image: string;
 
   @Column()
-  coverImage: string;
+  cover_image: string;
 
   @Column()
   bio: string;
@@ -79,5 +79,5 @@ export default class Artist {
   audience: string;
 
   @Column({ type: 'text' })
-  mediaHandles: string;
+  media_handles: string;
 }

@@ -15,7 +15,6 @@ export default class ArtistsRepo implements ArtistInterface {
     if (artist) {
       return artist;
     }
-
     throw { message: `Artist not found for id: ${id}`, statusCode: 404 };
   }
 }

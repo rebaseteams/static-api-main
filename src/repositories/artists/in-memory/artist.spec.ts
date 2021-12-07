@@ -12,15 +12,8 @@ describe('Artists', () => {
   describe('getArtist', () => {
     it('should return the artist if it exists', async () => {
       const expectedArtist = expectedArtists[0];
-      const actualArtist = await artistRepo.getArtist('id1');
+      const actualArtist = await artistRepo.getArtist(expectedArtist.id);
       expect(actualArtist).toEqual(expectedArtist);
     });
-
-    // it('should return the error if artist does not exist', () => {
-    //   const expectedError = { message: 'Artist not found for id: invalidId' };
-    //   const actualArtist = artistRepo.getArtist('invalidId');
-    //   console.log(actualArtist);
-    //   expect(actualArtist).toEqual(expectedError);
-    // });
   });
 });
