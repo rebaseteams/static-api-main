@@ -5,20 +5,20 @@
    "username": "admin",
    "password": "admin",
    "database": "concert_curator",
-   "synchronize": true,
+   "synchronize": false,
    "logging": false,
    "entities": [
       "dist/models/entities/**/*.js"
    ],
    "migrations": [
-      "dist/migration/**/*.js"
+      "dist/models/migration/**/*.js"
    ],
    "subscribers": [
-      "dist/subscriber/**/*.js"
+      "dist/models/subscriber/**/*.js"
    ],
    "cli": {
-      "entitiesDir": "dist/models/entities",
-      "migrationsDir": "dist/migration",
-      "subscribersDir": "dist/subscriber"
+      "entitiesDir": "src/models/entities",
+      "migrationsDir": "src/models/migration",
+      "subscribersDir": "src/models/subscriber"
    }
 }

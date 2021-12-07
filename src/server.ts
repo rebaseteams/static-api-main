@@ -20,7 +20,7 @@ import TemplatesService from './services/templates';
 import InMemoryTemplatesRepo from './repositories/templates/in-memory/templates';
 import InMemoryDocumentsRepo from './repositories/documents/in-memory/documents';
 import DocumentsRepo from './repositories/documents/postgres/documents';
-import ArtistsRepo from './repositories/artists/postgres/artists';
+import ArtistsRepo from './repositories/artists/in-memory/artist';
 
 // to use .environment variable in the project
 require('dotenv').config();

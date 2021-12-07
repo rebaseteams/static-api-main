@@ -5,6 +5,8 @@ import { PgArtistEntity } from '../models/entities/pg-artist';
 import { InvalidConfigurationError, TypedError } from '../models/types/errors';
 import { DbConfig } from '../providers/db-config.provider';
 import { OmitStrict } from './omit';
+import Artist from '../models/entities/Artist';
+import Document from '../models/entities/Document';
 
 export type ConnectionInfo = OmitStrict<DbConfig, 'password'>;
 
@@ -81,6 +83,8 @@ export async function createPgConnection(
       type: 'postgres',
       entities: [
         PgArtistEntity,
+        Artist,
+        Document,
       ],
       migrations,
       database,
