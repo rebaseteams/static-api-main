@@ -1,4 +1,5 @@
-/* eslint-disable no-throw-literal */
+/* eslint-disable consistent-return */
+/* eslint-disable array-callback-return */
 import Artist from '../../../models/entities/Artist';
 import dummyArtists from './data/artists.json';
 import { ArtistInterface } from '../../../models/interfaces/artist';
@@ -15,6 +16,18 @@ export default class ArtistsRepo implements ArtistInterface {
     if (artist) {
       return artist;
     }
-    throw { message: `Artist not found for id: ${id}`, statusCode: 404 };
+    const err = { message: `Artist not found for id: ${id}`, statusCode: 404 };
+    throw err;
+  }
+
+  async getArtists(skip: number, limit: number) : Promise<Artist[]> {
+    let tracker = 0;
+    const artists = this.artistList.filter((artist, ind) => {
+      if (skip < ind && tracker < limit) {
+        tracker += 1;
+        return artist;
+      }
+    });
+    return artists;
   }
 }

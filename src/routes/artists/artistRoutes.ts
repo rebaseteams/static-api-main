@@ -18,5 +18,13 @@ export default class ArtistRoute {
         next(error);
       }
     });
+    this.router.get('/:skip/:limit', async (req, res, next) => {
+      try {
+        const artists = await artistService.getArtists(parseInt(req.params.skip, 10), parseInt(req.params.limit, 10));
+        res.send({ success: true, data: { artists } });
+      } catch (error) {
+        next(error);
+      }
+    });
   }
 }

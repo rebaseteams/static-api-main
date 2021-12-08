@@ -30,6 +30,10 @@ export default class ArtistService implements ArtistInterface {
     return this.artistRepo.getArtist(id);
   }
 
+  async getArtists(skip: number, limit: number): Promise<Artist[]> {
+    return this.artistRepo.getArtists(skip, limit);
+  }
+
   getRecommendation(id: string): ArtistRecommendation {
     return this.artistRecommendationRepo.getArtistRecommendation(id);
   }
