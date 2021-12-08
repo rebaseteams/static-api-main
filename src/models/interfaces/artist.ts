@@ -6,6 +6,7 @@ import { ConcertCreationResponse, QuestionsUI } from '../types/questions';
 
 export interface ArtistInterface {
   getArtist(id : string) : Promise<Artist>;
+  getArtists(skip: number, limit: number) : Promise<Artist[]>;
 }
 
 /* The repositories are supposed to implement this interface */

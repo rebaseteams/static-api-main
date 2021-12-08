@@ -18,4 +18,15 @@ export default class ArtistsRepo implements ArtistInterface {
     const err = { message: `Artist not found for id: ${id}`, statusCode: 404 };
     throw err;
   }
+
+  async getArtists(skip: number, limit : number) : Promise<Artist[]> {
+    const artists = await this.artistRepository.find({
+      order: {
+        popularity: 'ASC',
+      },
+      take: limit,
+      skip,
+    });
+    return artists;
+  }
 }
