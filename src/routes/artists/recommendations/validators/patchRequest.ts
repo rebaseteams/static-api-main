@@ -5,9 +5,8 @@ const schema = Joi.object({
   auth: Joi.object({
     userId: Joi.string().required(),
   }).required(),
-  formId: Joi.string().required(),
-  discardedArtistId: Joi.string().required(),
-  userId: Joi.string().required(),
+  id: Joi.string().required(),
+  artistId: Joi.string().required(),
 });
 
 const patchRequestValidator = (req : Request, res : Response, next : NextFunction) => {

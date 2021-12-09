@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 
-import Artist from '../entities/Artist';
+import { Artist } from '../types/artist';
 import { ArtistRecommendation } from '../types/artist-recommendation';
 import { ConcertCreationResponse, QuestionsUI } from '../types/questions';
 

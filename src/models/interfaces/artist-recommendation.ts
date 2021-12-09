@@ -2,14 +2,16 @@
 
 import { Artist } from '../types/artist';
 import { ARec, ArtistRecommendation } from '../types/artist-recommendation';
-import { PatchRequest } from '../types/patch-request';
-import { ConcertCreationResponse } from '../types/questions';
+import { ConcertCreationResponse, QuestionsUI } from '../types/questions';
 
 /* The repositories are supposed to implement this interface */
-export interface ArtistRecommendationRepoInterface {
-  getArtistRecommendation(id: string): ArtistRecommendation ;
-  addNewRecommendation(artistRecomendation: ArtistRecommendation): Boolean;
-  updateDiscardedArtist(request: PatchRequest): { success: Boolean};
-  deleteConcertData(id: String): {formId: String, success: Boolean};
-  getConcerts(): ConcertCreationResponse[] ;
+export interface ArtistRecommendationInterface {
+  getRecommendation(id : string) : Promise<ArtistRecommendation>;
+  getAllRecommendations() : Promise<ConcertCreationResponse[]>;
+  discardArtist(id : string, artistId : string) : Promise<{ success: boolean }>;
+  deleteRecommendation(id : string) : Promise<{ success: boolean }>
+  createRecommendation(questions: QuestionsUI) : Promise<ConcertCreationResponse>;
+  generateRecommendedArtists(id : string, _artists : Artist[]) : Promise<{ success: boolean }>;
+  getArtistCount(id : string) : Promise<{count : number }>
+  getRecommendationStatus(id : string) : Promise<{status : boolean}>;
 }

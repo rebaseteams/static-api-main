@@ -31,12 +31,12 @@ export type ARec = {
         male: number,
         female: number,
       },
-      genre: [
+      genre: Array<
         {
           genreName: string,
           matchPercentage: number,
-        },
-      ],
+        }
+      >,
       associatedBrands: Array<
         {
           id: string,
