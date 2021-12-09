@@ -10,14 +10,18 @@ export default class ArtistRoute {
 
   constructor(artistService: ArtistService, documentsService: DocumentsService, templatesService: TemplatesService) {
     this.router = express.Router();
+
     this.router.use('/recommendations', new RecommendationsRoute(artistService, documentsService, templatesService).router);
+
     this.router.get('/:id', async (req, res, next) => {
       try {
-        if (req.params.id) res.send(snakeToCamel(await artistService.getArtist(req.params.id)));
+        const data = snakeToCamel(await artistService.getArtist(req.params.id));
+        if (req.params.id) res.send({ success: true, data });
       } catch (error) {
         next(error);
       }
     });
+
     this.router.get('/:skip/:limit', async (req, res, next) => {
       try {
         const artists = await artistService.getArtists(parseInt(req.params.skip, 10), parseInt(req.params.limit, 10));

@@ -1,6 +1,6 @@
 /* eslint-disable consistent-return */
 /* eslint-disable array-callback-return */
-import Artist from '../../../models/entities/Artist';
+import { Artist } from '../../../models/types/artist';
 import dummyArtists from './data/artists.json';
 import { ArtistInterface } from '../../../models/interfaces/artist';
 
