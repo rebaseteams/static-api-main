@@ -64,7 +64,7 @@ export default class Artist {
   @Column()
   bio: string;
 
-  @Column({ type: 'text' })
+  @Column()
   manager: string;
 
   @Column()

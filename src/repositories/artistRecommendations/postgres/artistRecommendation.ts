@@ -35,17 +35,17 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
           userId: recommendation.user_id,
           concertName: recommendation.name,
           eventType: recommendation.event_type,
-          venue: JSON.parse(recommendation.venue),
-          artistBudget: JSON.parse(recommendation.artist_budget),
+          venue: recommendation.venue,
+          artistBudget: recommendation.artist_budget,
           sponsorshipType: recommendation.sponsorship_type,
-          wantedBrands: JSON.parse(recommendation.wanted_brands),
-          unwantedBrands: JSON.parse(recommendation.unwanted_brands),
-          targetAudience: JSON.parse(recommendation.target_audience),
-          whatSellsMost: JSON.parse(recommendation.target_audience),
+          wantedBrands: recommendation.wanted_brands,
+          unwantedBrands: recommendation.unwanted_brands,
+          targetAudience: recommendation.target_audience,
+          whatSellsMost: recommendation.what_sells_most,
           dateCreated: recommendation.date_created.toDateString(),
         },
-        artists: JSON.parse(recommendation.artists),
-        discardedArtists: JSON.parse(recommendation.discarded_artists),
+        artists: recommendation.artists,
+        discardedArtists: recommendation.discarded_artists,
         lastChangedUserId: recommendation.user_id,
         status: recommendation.status,
       };
@@ -73,8 +73,8 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
   async discardArtist(id : string, artistId : string) : Promise<{ success: boolean }> {
     const artistRecommendation = await this.artistRecommendationRepository.findOne(id);
     if (artistRecommendation) {
-      let artistsArray = JSON.parse(artistRecommendation.artists) as ARec[];
-      const discardedArtistArray = JSON.parse(artistRecommendation.discarded_artists) as ARec[];
+      let artistsArray = artistRecommendation.artists;
+      const discardedArtistArray = artistRecommendation.discarded_artists;
       let found = false;
       artistsArray = artistsArray.filter((artist) => {
         if (artist.artistId !== artistId) {
@@ -87,8 +87,8 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
         const err = { message: `Artist not found for id: ${artistId}`, statusCode: 404 };
         throw err;
       }
-      artistRecommendation.discarded_artists = JSON.stringify(discardedArtistArray);
-      artistRecommendation.artists = JSON.stringify(artistsArray);
+      artistRecommendation.discarded_artists = discardedArtistArray;
+      artistRecommendation.artists = artistsArray;
       this.artistRecommendationRepository.save(artistRecommendation);
       return { success: true };
     }
@@ -110,13 +110,13 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
       new Date(),
       questions.userId,
       questions.eventType,
-      JSON.stringify(questions.venue),
-      JSON.stringify(questions.artistBudget),
+      questions.venue,
+      questions.artistBudget,
       questions.sponsorshipType,
-      JSON.stringify(questions.wantedBrands),
-      JSON.stringify(questions.unwantedBrands),
-      JSON.stringify(questions.targetAudience),
-      JSON.stringify(questions.whatSellsMost),
+      questions.wantedBrands,
+      questions.unwantedBrands,
+      questions.targetAudience,
+      questions.whatSellsMost,
     );
     await this.artistRecommendationRepository.save(recommendation);
     const data : ConcertCreationResponse = {
@@ -131,7 +131,7 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
   async generateRecommendedArtists(id : string, _artists : Artist[]) : Promise<{ success: boolean }> {
     const artistRecommendation = await this.artistRecommendationRepository.findOne(id);
     if (artistRecommendation) {
-      let artists : ARec[] = JSON.parse(artistRecommendation.artists);
+      let { artists } = artistRecommendation;
       const recommendedArtists : ARec[] = [];
       _artists.forEach((element) => {
         const artistRec : ARec = {
@@ -208,7 +208,7 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
         recommendedArtists.push(artistRec);
       });
       artists = artists.concat(recommendedArtists).slice(0, 10);
-      artistRecommendation.artists = JSON.stringify(artists);
+      artistRecommendation.artists = artists;
       artistRecommendation.status = true;
       this.artistRecommendationRepository.save(artistRecommendation);
       return { success: true };
@@ -220,8 +220,8 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
   async getArtistCount(id : string) : Promise<{count : number }> {
     const artistRecommendation = await this.artistRecommendationRepository.findOne(id);
     if (artistRecommendation) {
-      const artistsCount = JSON.parse(artistRecommendation.artists).length;
-      const discardedArtistsCount = JSON.parse(artistRecommendation.discarded_artists).length;
+      const artistsCount = artistRecommendation.artists.length;
+      const discardedArtistsCount = artistRecommendation.discarded_artists.length;
       return { count: discardedArtistsCount + artistsCount };
     }
     const err = { message: `Recommendation not found for id: ${id}`, statusCode: 404 };
