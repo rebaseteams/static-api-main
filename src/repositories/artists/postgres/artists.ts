@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
 import { createConnection, Repository } from 'typeorm';
-import { Artist as TypeArtist, audience, media_handles } from '../../../models/types/artist';
+import { Artist as TypeArtist } from '../../../models/types/artist';
 import { ArtistInterface } from '../../../models/interfaces/artist';
 import Artist from '../../../models/entities/Artist';
 
@@ -30,8 +30,8 @@ export default class ArtistsRepo implements ArtistInterface {
         contact: artist.contact,
         address: artist.address,
         popularity: artist.popularity,
-        audience: JSON.parse(artist.audience) as audience,
-        media_handles: JSON.parse(artist.media_handles) as media_handles,
+        audience: artist.audience,
+        media_handles: artist.media_handles,
       };
       return toSendArtist;
     }
@@ -62,8 +62,8 @@ export default class ArtistsRepo implements ArtistInterface {
         contact: artist.contact,
         address: artist.address,
         popularity: artist.popularity,
-        audience: JSON.parse(artist.audience) as audience,
-        media_handles: JSON.parse(artist.media_handles) as media_handles,
+        audience: artist.audience,
+        media_handles: artist.media_handles,
       };
       return toSendArtist;
     });

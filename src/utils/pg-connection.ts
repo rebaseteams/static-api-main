@@ -7,6 +7,7 @@ import { DbConfig } from '../providers/db-config.provider';
 import { OmitStrict } from './omit';
 import Artist from '../models/entities/Artist';
 import Document from '../models/entities/Document';
+import ArtistRecommendation from '../models/entities/ArtistRecommendation';
 
 export type ConnectionInfo = OmitStrict<DbConfig, 'password'>;
 
@@ -85,6 +86,7 @@ export async function createPgConnection(
         PgArtistEntity,
         Artist,
         Document,
+        ArtistRecommendation,
       ],
       migrations,
       database,

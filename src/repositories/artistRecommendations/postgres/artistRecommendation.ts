@@ -132,7 +132,7 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
     const artistRecommendation = await this.artistRecommendationRepository.findOne(id);
     if (artistRecommendation) {
       let artists : ARec[] = JSON.parse(artistRecommendation.artists);
-      let recommendedArtists : ARec[];
+      const recommendedArtists : ARec[] = [];
       _artists.forEach((element) => {
         const artistRec : ARec = {
           artistName: element.name,
@@ -207,7 +207,7 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
         };
         recommendedArtists.push(artistRec);
       });
-      artists = artists.concat(recommendedArtists).slice(0, 9);
+      artists = artists.concat(recommendedArtists).slice(0, 10);
       artistRecommendation.artists = JSON.stringify(artists);
       artistRecommendation.status = true;
       this.artistRecommendationRepository.save(artistRecommendation);
