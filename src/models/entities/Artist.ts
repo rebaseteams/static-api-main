@@ -1,4 +1,5 @@
 import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { audience, media_handles } from '../types/artist';
 
 @Entity()
 export default class Artist {
@@ -16,8 +17,8 @@ export default class Artist {
     contact: string,
     address: string,
     popularity: number,
-    audience: string,
-    media_handles: string,
+    _audience: audience,
+    _media_handles: media_handles,
   ) {
     this.id = id;
     this.name = name;
@@ -32,8 +33,8 @@ export default class Artist {
     this.contact = contact;
     this.address = address;
     this.popularity = popularity;
-    this.audience = audience;
-    this.media_handles = media_handles;
+    this.audience = _audience;
+    this.media_handles = _media_handles;
   }
 
   @PrimaryColumn()
@@ -75,9 +76,9 @@ export default class Artist {
   @Column()
   popularity: number;
 
-  @Column({ type: 'text' })
-  audience: string;
+  @Column('jsonb')
+  audience: audience;
 
-  @Column({ type: 'text' })
-  media_handles: string;
+  @Column('jsonb')
+  media_handles: media_handles;
 }

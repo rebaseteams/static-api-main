@@ -35,7 +35,7 @@ const randomDataGenerator = async () => {
         profile.phone,
         `${profile.location.city},${profile.location.state},${profile.location.country},${profile.location.postcode}`,
         Math.floor(Math.random() * 99),
-        JSON.stringify([
+        [
           {
             demographicName: 'gender',
             fields: [
@@ -87,8 +87,8 @@ const randomDataGenerator = async () => {
               },
             ],
           },
-        ]),
-        JSON.stringify([
+        ],
+        [
           {
             handleName: 'Youtube',
             url: 'https://www.youtube.com/c/PehchanMusic',
@@ -107,11 +107,9 @@ const randomDataGenerator = async () => {
             logo: 'https://res.cloudinary.com/crunchbase-production/image/upload/c_lpad,f_auto,q_auto:eco,dpr_1/v1475248336/qmsen1jtcy8xgsghzc8z.jpg',
             followers: Math.floor(Math.random() * 1000000),
           },
-        ]),
+        ],
       );
       connection.manager.save(artistObj);
-      artistObj.media_handles = JSON.parse(artistObj.media_handles);
-      artistObj.audience = JSON.parse(artistObj.audience);
       artistList.push(artistObj);
     }
     fs.writeFileSync(`${__dirname}/data/artists.json`, JSON.stringify(artistList));
