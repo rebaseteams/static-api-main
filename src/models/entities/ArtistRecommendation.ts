@@ -1,4 +1,9 @@
 import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { ArtistBudget } from '../types/artist-budget';
+import { ARec } from '../types/artist-recommendation';
+import { Brand } from '../types/brand';
+import { TargetAudience } from '../types/target-audience';
+import { WhatSellsMost } from '../types/what-sells-most';
 
 @Entity()
 export default class ArtistRecommendation {
@@ -8,15 +13,15 @@ export default class ArtistRecommendation {
     date_created: Date,
     user_id: string,
     event_type: string,
-    venue: string,
-    artist_budget: string,
+    venue: string[],
+    artist_budget: ArtistBudget,
     sponsorship_type: string,
-    wanted_brands: string,
-    unwanted_brands: string,
-    target_audience: string,
-    what_sells_most: string,
-    artists : string = '[]',
-    discarded_artists : string = '[]',
+    wanted_brands: Brand[],
+    unwanted_brands: Brand[],
+    target_audience: TargetAudience,
+    what_sells_most: WhatSellsMost,
+    artists : ARec[] = [],
+    discarded_artists : ARec[] = [],
     status : boolean = false,
   ) {
     this.id = id;
@@ -51,32 +56,32 @@ export default class ArtistRecommendation {
   @Column()
   event_type: string;
 
-  @Column('text')
-  venue: string;
+  @Column('text', { array: true })
+  venue: string[];
 
-  @Column('text')
-  artist_budget: string;
+  @Column('jsonb')
+  artist_budget: ArtistBudget;
 
   @Column()
   sponsorship_type: string;
 
-  @Column('text')
-  wanted_brands: string;
+  @Column('jsonb')
+  wanted_brands: Brand[];
 
-  @Column('text')
-  unwanted_brands: string;
+  @Column('jsonb')
+  unwanted_brands: Brand[];
 
-  @Column('text')
-  target_audience: string;
+  @Column('jsonb')
+  target_audience: TargetAudience;
 
-  @Column('text')
-  what_sells_most: string;
+  @Column('jsonb')
+  what_sells_most: WhatSellsMost;
 
-  @Column('text')
-  artists: string;
+  @Column('jsonb')
+  artists: ARec[];
 
-  @Column('text')
-  discarded_artists: string;
+  @Column('jsonb')
+  discarded_artists: ARec[];
 
   @Column()
   status: boolean;
