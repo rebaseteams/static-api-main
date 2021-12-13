@@ -21,6 +21,10 @@ import InMemoryTemplatesRepo from './repositories/templates/in-memory/templates'
 import InMemoryDocumentsRepo from './repositories/documents/in-memory/documents';
 import DocumentsRepo from './repositories/documents/postgres/documents';
 import ArtistsRepo from './repositories/artists/in-memory/artist';
+import ArtistRecommendationRepo from './repositories/artistRecommendations/postgres/artistRecommendation';
+import BrandsRoutes from './routes/brand/brandRoutes';
+import BrandRepo from './repositories/brands/inmemory/brand';
+import BrandsService from './services/brand';
 
 // to use .environment variable in the project
 require('dotenv').config();
@@ -38,6 +42,10 @@ export default class MainServer {
 
   private documentsRepo: DocumentsRepo;
 
+  private brandRepo: BrandRepo;
+
+  private artistRecommendationRepo: ArtistRecommendationRepo;
+
   private artistService: ArtistService;
 
   private authService: AuthService;
@@ -45,6 +53,8 @@ export default class MainServer {
   private documentsService: DocumentsService;
 
   private templatesService : TemplatesService;
+
+  private brandsService : BrandsService;
 
   app;
 
@@ -60,12 +70,14 @@ export default class MainServer {
     this.inMemoryAuthRecommendationRepo = new InMemoryAuthRepo();
     this.inMemoryDocumentsRepo = new InMemoryDocumentsRepo();
     this.inMemoryTemplatesRepo = new InMemoryTemplatesRepo();
+    // this.artistRecommendationRepo = new ArtistRecommendationRepo();
     // this.documentsRepo = new DocumentsRepo();
+    this.brandRepo = new BrandRepo();
     this.artistService = new ArtistService(this.inMemoryArtistRepo, this.inMemoryArtistRecommendationRepo);
     this.authService = new AuthService(this.inMemoryAuthRecommendationRepo);
     this.documentsService = new DocumentsService(this.inMemoryDocumentsRepo);
     this.templatesService = new TemplatesService(this.inMemoryTemplatesRepo);
-
+    this.brandsService = new BrandsService(this.brandRepo);
     this.app = express();
     this.app.use(cors(this.corsOptions));
     this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
@@ -75,6 +87,7 @@ export default class MainServer {
     this.app.use('/notification', new NotificationRoute().router);
     this.app.use('/artists', new ArtistRoute(this.artistService, this.documentsService, this.templatesService).router);
     this.app.use('/auth', new AuthRoutes(this.authService).router);
+    this.app.use('/brands', new BrandsRoutes(this.brandsService).router);
     this.app.use(errorHandler);
   }
 }
