@@ -25,6 +25,9 @@ import ArtistRecommendationRepo from './repositories/artistRecommendations/postg
 import BrandsRoutes from './routes/brand/brandRoutes';
 import BrandRepo from './repositories/brands/inmemory/brand';
 import BrandsService from './services/brand';
+import VenuesRoutes from './routes/venue/venueRoutes';
+import VenueRepo from './repositories/venues/inmemory/venue';
+import VenuesService from './services/venue';
 
 // to use .environment variable in the project
 require('dotenv').config();
@@ -44,6 +47,8 @@ export default class MainServer {
 
   private brandRepo: BrandRepo;
 
+  private venueRepo: VenueRepo;
+
   private artistRecommendationRepo: ArtistRecommendationRepo;
 
   private artistService: ArtistService;
@@ -55,6 +60,8 @@ export default class MainServer {
   private templatesService : TemplatesService;
 
   private brandsService : BrandsService;
+
+  private venuesService : VenuesService;
 
   app;
 
@@ -73,11 +80,13 @@ export default class MainServer {
     // this.artistRecommendationRepo = new ArtistRecommendationRepo();
     // this.documentsRepo = new DocumentsRepo();
     this.brandRepo = new BrandRepo();
+    this.venueRepo = new VenueRepo();
     this.artistService = new ArtistService(this.inMemoryArtistRepo, this.inMemoryArtistRecommendationRepo);
     this.authService = new AuthService(this.inMemoryAuthRecommendationRepo);
     this.documentsService = new DocumentsService(this.inMemoryDocumentsRepo);
     this.templatesService = new TemplatesService(this.inMemoryTemplatesRepo);
     this.brandsService = new BrandsService(this.brandRepo);
+    this.venuesService = new VenuesService(this.venueRepo);
     this.app = express();
     this.app.use(cors(this.corsOptions));
     this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
@@ -88,6 +97,7 @@ export default class MainServer {
     this.app.use('/artists', new ArtistRoute(this.artistService, this.documentsService, this.templatesService).router);
     this.app.use('/auth', new AuthRoutes(this.authService).router);
     this.app.use('/brands', new BrandsRoutes(this.brandsService).router);
+    this.app.use('/venues', new VenuesRoutes(this.venuesService).router);
     this.app.use(errorHandler);
   }
 }
