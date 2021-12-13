@@ -1,11 +1,12 @@
 /* eslint-disable no-console */
 import { v4 as uuidv4 } from 'uuid';
+import * as fs from 'fs';
 import Brand from '../../../models/entities/Brand';
 import { BrandsInterface } from '../../../models/interfaces/brand';
+import fileCheck from '../../../utils/fileCheck';
 
 export default class BrandRepo implements BrandsInterface {
   async createBrand(name : string, logo : string, website : string, contact : string) : Promise<{brand : Brand}> {
-    // TODO : Create brand in memory
     const brand = new Brand(
       uuidv4(),
       name,
@@ -13,6 +14,8 @@ export default class BrandRepo implements BrandsInterface {
       website,
       contact,
     );
+    fileCheck(`${__dirname}/data`, false);
+    fs.writeFileSync(`${__dirname}/data/${brand.id}.json`, JSON.stringify(brand));
     return { brand };
   }
 
