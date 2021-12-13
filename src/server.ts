@@ -28,6 +28,9 @@ import BrandsService from './services/brand';
 import VenuesRoutes from './routes/venue/venueRoutes';
 import VenueRepo from './repositories/venues/inmemory/venue';
 import VenuesService from './services/venue';
+import GenreRepo from './repositories/genre/in-memory/genre';
+import GenresService from './services/genre';
+import GenresRoutes from './routes/genre/genreRoutes';
 
 // to use .environment variable in the project
 require('dotenv').config();
@@ -49,6 +52,8 @@ export default class MainServer {
 
   private venueRepo: VenueRepo;
 
+  private genreRepo: GenreRepo;
+
   private artistRecommendationRepo: ArtistRecommendationRepo;
 
   private artistService: ArtistService;
@@ -62,6 +67,8 @@ export default class MainServer {
   private brandsService : BrandsService;
 
   private venuesService : VenuesService;
+
+  private genresService : GenresService;
 
   app;
 
@@ -81,12 +88,14 @@ export default class MainServer {
     // this.documentsRepo = new DocumentsRepo();
     this.brandRepo = new BrandRepo();
     this.venueRepo = new VenueRepo();
+    this.genreRepo = new GenreRepo();
     this.artistService = new ArtistService(this.inMemoryArtistRepo, this.inMemoryArtistRecommendationRepo);
     this.authService = new AuthService(this.inMemoryAuthRecommendationRepo);
     this.documentsService = new DocumentsService(this.inMemoryDocumentsRepo);
     this.templatesService = new TemplatesService(this.inMemoryTemplatesRepo);
     this.brandsService = new BrandsService(this.brandRepo);
     this.venuesService = new VenuesService(this.venueRepo);
+    this.genresService = new GenresService(this.genreRepo);
     this.app = express();
     this.app.use(cors(this.corsOptions));
     this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
@@ -98,6 +107,7 @@ export default class MainServer {
     this.app.use('/auth', new AuthRoutes(this.authService).router);
     this.app.use('/brands', new BrandsRoutes(this.brandsService).router);
     this.app.use('/venues', new VenuesRoutes(this.venuesService).router);
+    this.app.use('/genres', new GenresRoutes(this.genresService).router);
     this.app.use(errorHandler);
   }
 }
