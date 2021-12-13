@@ -20,15 +20,13 @@ export default class BrandRepo implements BrandsInterface {
   }
 
   async getBrand(id : string) : Promise<Brand> {
-    // TODO : Get brand from in memory
-    const brand = new Brand(
-      id,
-      'name',
-      'logo',
-      'website',
-      'contact',
-    );
-    return brand;
+    if (fs.existsSync(`${__dirname}/data/${id}.json`)) {
+      const readData = fs.readFileSync(`${__dirname}/data/${id}.json`).toString();
+      const data = JSON.parse(readData) as Brand;
+      return data;
+    }
+    const err = { message: `Brand not found for id: ${id}`, statusCode: 404 };
+    throw err;
   }
 
   async deleteBrand(id : string) : Promise<{success : boolean}> {
