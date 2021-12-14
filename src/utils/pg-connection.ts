@@ -8,6 +8,9 @@ import { OmitStrict } from './omit';
 import Artist from '../models/entities/Artist';
 import Document from '../models/entities/Document';
 import ArtistRecommendation from '../models/entities/ArtistRecommendation';
+import Brand from '../models/entities/Brand';
+import Venue from '../models/entities/Venue';
+import Genre from '../models/entities/Genre';
 
 export type ConnectionInfo = OmitStrict<DbConfig, 'password'>;
 
@@ -87,6 +90,9 @@ export async function createPgConnection(
         Artist,
         Document,
         ArtistRecommendation,
+        Brand,
+        Venue,
+        Genre,
       ],
       migrations,
       database,
