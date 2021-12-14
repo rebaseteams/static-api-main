@@ -1,55 +1,63 @@
 /* eslint-disable no-console */
+import { createConnection, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import Brand from '../../../models/entities/Brand';
 import { BrandsInterface } from '../../../models/interfaces/brand';
 
 export default class BrandRepo implements BrandsInterface {
-  async createBrand(name : string, logo : string, website : string, contact : string) : Promise<{brand : Brand}> {
-    // TODO : Create brand in Postgres
-    const brand = new Brand(
-      uuidv4(),
-      name,
-      logo,
-      website,
-      contact,
-    );
-    return { brand };
-  }
+    private brandRepository : Repository<Brand>;
 
-  async getBrand(id : string) : Promise<Brand> {
-    // TODO : Get brand from postgres
-    const brand = new Brand(
-      id,
-      'name',
-      'logo',
-      'website',
-      'contact',
-    );
-    return brand;
-  }
+    constructor() {
+      createConnection().then((connection) => {
+        this.brandRepository = connection.getRepository(Brand);
+      });
+    }
 
-  async deleteBrand(id : string) : Promise<{success : boolean}> {
-    // TODO : Delete brand from postgres
-    console.log(id);
-    return { success: true };
-  }
+    async createBrand(name : string, logo : string, website : string, contact : string) : Promise<{brand : Brand}> {
+      const brand = new Brand(
+        uuidv4(),
+        name,
+        logo,
+        website,
+        contact,
+      );
+      await this.brandRepository.save(brand);
+      return { brand };
+    }
 
-  async editBrand(id : string) : Promise<{success : boolean}> {
-    // TODO : Edit brand from postgres
-    console.log(id);
-    return { success: true };
-  }
+    async getBrand(id : string) : Promise<Brand> {
+      const brand = await this.brandRepository.findOne({ id });
+      if (brand) return brand;
+      const err = { message: `Brand not found for id: ${id}`, statusCode: 404 };
+      throw err;
+    }
 
-  async getBrands(skip : number, limit : number) : Promise<Brand[]> {
-    // TODO : Get brands with given pagination conditions from postgres
-    console.log(skip, limit);
-    const brands = [new Brand(
-      uuidv4(),
-      'name',
-      'logo',
-      'website',
-      'contact',
-    )];
-    return brands;
-  }
+    async deleteBrand(id : string) : Promise<{success : boolean}> {
+      const resp = await this.brandRepository.delete({ id });
+      if (resp.affected && resp.affected > 0) return { success: true };
+      const err = { message: `Brand not found for id: ${id}`, statusCode: 404 };
+      throw err;
+    }
+
+    async editBrand(id : string, name : string, logo : string, website : string, contact : string) : Promise<{success : boolean}> {
+      const brand = await this.brandRepository.findOne({ id });
+      if (brand) {
+        brand.name = name;
+        brand.logo = logo;
+        brand.website = website;
+        brand.contact = contact;
+        this.brandRepository.save(brand);
+        return { success: true };
+      }
+      const err = { message: `Brand not found for id: ${id}`, statusCode: 404 };
+      throw err;
+    }
+
+    async getBrands(skip : number, limit : number) : Promise<Brand[]> {
+      const brands : Brand[] = await this.brandRepository.find({
+        take: limit,
+        skip,
+      });
+      return brands;
+    }
 }
