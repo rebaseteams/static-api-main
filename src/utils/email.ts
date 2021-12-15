@@ -26,8 +26,7 @@ const sendEmail = async (
     html,
     attachments,
   };
-  const resp = await sgMail.send(msg);
-  console.log(resp);
+  await sgMail.send(msg);
   return { success: true };
 };
 

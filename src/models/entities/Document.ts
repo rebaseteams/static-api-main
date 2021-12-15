@@ -2,8 +2,9 @@ import { Entity, Column, PrimaryColumn } from 'typeorm';
 
 @Entity()
 export default class Document {
-  constructor(id: string, name: string, createdBy: string, createdOn: Date, html: string) {
+  constructor(id: string, template_id: string, name: string, createdBy: string, createdOn: Date, html: string) {
     this.id = id;
+    this.template_id = template_id;
     this.name = name;
     this.createdBy = createdBy;
     this.createdOn = createdOn;
@@ -12,6 +13,9 @@ export default class Document {
 
   @PrimaryColumn()
   id: string;
+
+  @Column()
+  template_id: string;
 
   @Column()
   name: string;
