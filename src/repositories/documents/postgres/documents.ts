@@ -1,7 +1,10 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-console */
 /* eslint-disable class-methods-use-this */
 import * as handlebars from 'handlebars';
 import * as _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
+import { Express } from 'express';
 import { createConnection, Repository } from 'typeorm';
 import { Template } from '../../../models/types/template';
 import Document from '../../../models/entities/Document';
@@ -59,5 +62,10 @@ export default class DocumentsRepo implements DocumentsInterface {
     if (resp.affected && resp.affected > 0) return { success: true };
     const err = { message: `Document not found for id: ${id}`, statusCode: 404 };
     throw err;
+  }
+
+  async shareDocument(id : string, files : {[fieldname: string]: Express.Multer.File[]} |Express.Multer.File[], emails : string[]) {
+    console.log(files);
+    return { success: true };
   }
 }

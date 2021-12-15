@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+import { Express } from 'express';
 import Document from '../models/entities/Document';
 import { DocumentsInterface } from '../models/interfaces/documents';
 import { Template } from '../models/types/template';
@@ -29,5 +31,9 @@ export default class DocumentsService implements DocumentsInterface {
 
   async editDocument(id : string, html : string): Promise<{ success : boolean }> {
     return this.documentsRepo.editDocument(id, html);
+  }
+
+  async shareDocument(id : string, files : {[fieldname: string]: Express.Multer.File[]} |Express.Multer.File[], emails : [string]) {
+    return this.documentsRepo.shareDocument(id, files, emails);
   }
 }

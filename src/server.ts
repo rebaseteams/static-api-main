@@ -6,7 +6,6 @@ import * as swaggerDoc from './swagger/swagger.json';
 import InMemoryArtistRecommendationRepo from './repositories/artistRecommendations/in-memory/artist-recommendation';
 
 import ArtistRoute from './routes/artists/artistRoutes';
-import NotificationRoute from './routes/notification/notification-routes';
 
 import ArtistService from './services/artist';
 import validateUser from './middleware/userMiddleware';
@@ -102,7 +101,6 @@ export default class MainServer {
     this.app.use(contentType);
     this.app.use(express.json());
     this.app.use(validateUser());
-    this.app.use('/notification', new NotificationRoute().router);
     this.app.use('/artists', new ArtistRoute(this.artistService, this.documentsService, this.templatesService).router);
     this.app.use('/auth', new AuthRoutes(this.authService).router);
     this.app.use('/brands', new BrandsRoutes(this.brandsService).router);

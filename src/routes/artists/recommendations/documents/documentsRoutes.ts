@@ -1,10 +1,13 @@
 /* eslint-disable no-console */
 import { Router } from 'express';
+import multer from 'multer';
 import DocumentsService from '../../../../services/documents';
 import TemplatesService from '../../../../services/templates';
 import TemplatesRoutes from './templates/templatesRoutes';
 import createDocumentValidator from './validators/createDocument';
 import editDocumentValidator from './validators/editDocument';
+
+const upload = multer({ storage: multer.memoryStorage() });
 
 export default class DocumentsRoutes {
   router: Router;
@@ -59,6 +62,15 @@ export default class DocumentsRoutes {
     this.router.delete('/:docid', async (req, res, next) => {
       try {
         const data = await documentsService.deleteDocument(req.params.docid);
+        res.send({ success: data.success });
+      } catch (error) {
+        next(error);
+      }
+    });
+
+    this.router.post('/share/:docid', upload.array('attachments'), async (req, res, next) => {
+      try {
+        const data = await documentsService.shareDocument(req.params.docid, req.files, JSON.parse(req.body.emails));
         res.send({ success: data.success });
       } catch (error) {
         next(error);
