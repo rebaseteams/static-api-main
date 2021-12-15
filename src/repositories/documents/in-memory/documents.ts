@@ -1,12 +1,14 @@
-/* eslint-disable class-methods-use-this */
 import * as handlebars from 'handlebars';
 import * as _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import * as fs from 'fs';
+import { Express } from 'express';
+import { AttachmentJSON } from '@sendgrid/helpers/classes/attachment';
 import { DocumentsInterface } from '../../../models/interfaces/documents';
 import { Template } from '../../../models/types/template';
 import fileCheck from '../../../utils/fileCheck';
 import Document from '../../../models/entities/Document';
+import sendEmail from '../../../utils/email';
 
 export default class InMemoryDocumentsRepo implements DocumentsInterface {
   // eslint-disable-next-line no-unused-vars
@@ -67,6 +69,32 @@ export default class InMemoryDocumentsRepo implements DocumentsInterface {
       const jsonDocument = JSON.parse(jsonString) as Document;
       jsonDocument.html = html;
       fs.writeFileSync(`${__dirname}/data/${id}.json`, JSON.stringify(jsonDocument));
+      return { success: true };
+    }
+    const err = { message: `Document not found for id: ${id}`, statusCode: 404 };
+    throw err;
+  }
+
+  async shareDocument(id : string, files : {[fieldname: string]: Express.Multer.File[]} |Express.Multer.File[], emails : string[]) : Promise<{success : boolean}> {
+    if (fs.existsSync(`${__dirname}/data/${id}.json`)) {
+      const readData = fs.readFileSync(`${__dirname}/data/${id}.json`).toString();
+      const data = JSON.parse(readData) as Document;
+      const attachments :AttachmentJSON[] = [];
+      for (let index = 0; index < files.length; index += 1) {
+        const file = files[index];
+        attachments.push({
+          content: file.buffer.toString('base64'),
+          filename: file.originalname,
+          type: file.mimetype,
+          disposition: 'attachment',
+        });
+      }
+      await sendEmail({
+        to: emails[0],
+        subject: 'Document shared',
+        html: `<bold>Document Name : ${data.name}</bold>`,
+        attachments,
+      });
       return { success: true };
     }
     const err = { message: `Document not found for id: ${id}`, statusCode: 404 };
