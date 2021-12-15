@@ -5,7 +5,7 @@ import * as handlebars from 'handlebars';
 import * as _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { Express } from 'express';
-import { createConnection, Repository } from 'typeorm';
+import { createConnection, In, Repository } from 'typeorm';
 import { Template } from '../../../models/types/template';
 import Document from '../../../models/entities/Document';
 import { DocumentsInterface } from '../../../models/interfaces/documents';
@@ -36,6 +36,14 @@ export default class DocumentsRepo implements DocumentsInterface {
   async getAllDocuments() : Promise<Document[]> {
     let allDocuments : Document[] = [];
     allDocuments = await this.documentRepository.find();
+    return allDocuments;
+  }
+
+  async getDocuments(ids : string[]) : Promise<Document[]> {
+    let allDocuments : Document[] = [];
+    allDocuments = await this.documentRepository.find({
+      where: { id: In(ids) },
+    });
     return allDocuments;
   }
 

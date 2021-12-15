@@ -45,6 +45,17 @@ export default class InMemoryDocumentsRepo implements DocumentsInterface {
     return allDocuments;
   }
 
+  async getDocuments(ids : string[]) : Promise<Document[]> {
+    fileCheck(`${__dirname}/data`, false);
+    const allDocuments : Document[] = [];
+    fs.readdirSync(`${__dirname}/data`).forEach((file) => {
+      const toread = fs.readFileSync(`${__dirname}/data/${file}`).toString();
+      const dataJson = JSON.parse(toread) as Document;
+      if (ids.includes(dataJson.id)) allDocuments.push(dataJson);
+    });
+    return allDocuments;
+  }
+
   async getDocument(id : string) : Promise<Document> {
     if (fs.existsSync(`${__dirname}/data/${id}.json`)) {
       const readData = fs.readFileSync(`${__dirname}/data/${id}.json`).toString();
