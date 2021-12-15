@@ -100,6 +100,7 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
       },
       artists: [],
       discardedArtists: [],
+      documents: [],
       lastChangedUserId: questions.userId,
       status: false,
     };
@@ -211,6 +212,18 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
       const artistsCount = data.artists.length;
       const discardedArtistsCount = data.discardedArtists.length;
       return { count: artistsCount + discardedArtistsCount };
+    }
+    const err = { message: `Recommendation not found for id: ${id}`, statusCode: 404 };
+    throw err;
+  }
+
+  async registerDocument(id : string, docid : string) : Promise<{success : boolean}> {
+    if (fs.existsSync(`${__dirname}/data/${id}.json`)) {
+      const readData = fs.readFileSync(`${__dirname}/data/${id}.json`).toString();
+      const data = JSON.parse(readData) as ArtistRecommendation;
+      data.documents.push(docid);
+      fs.writeFileSync(`${__dirname}/data/${id}.json`, JSON.stringify(data));
+      return { success: true };
     }
     const err = { message: `Recommendation not found for id: ${id}`, statusCode: 404 };
     throw err;

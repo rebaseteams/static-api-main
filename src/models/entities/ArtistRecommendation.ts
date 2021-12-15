@@ -23,6 +23,7 @@ export default class ArtistRecommendation {
     artists : ARec[] = [],
     discarded_artists : ARec[] = [],
     status : boolean = false,
+    documents : string[] = [],
   ) {
     this.id = id;
     this.name = name;
@@ -38,6 +39,7 @@ export default class ArtistRecommendation {
     this.what_sells_most = what_sells_most;
     this.artists = artists;
     this.discarded_artists = discarded_artists;
+    this.documents = documents;
     this.status = status;
   }
 
@@ -82,6 +84,9 @@ export default class ArtistRecommendation {
 
   @Column('jsonb')
   discarded_artists: ARec[];
+
+  @Column('text', { array: true })
+  documents : string[];
 
   @Column()
   status: boolean;

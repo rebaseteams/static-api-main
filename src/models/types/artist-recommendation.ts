@@ -53,6 +53,7 @@ export type ArtistRecommendation = {
   concertData: Questions;
   artists: Array<ARec>;
   discardedArtists?: Array<ARec>;
+  documents : string[];
   lastChangedUserId?: string;
   status: boolean
 };

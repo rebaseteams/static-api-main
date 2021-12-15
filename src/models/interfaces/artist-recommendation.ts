@@ -14,4 +14,5 @@ export interface ArtistRecommendationInterface {
   generateRecommendedArtists(id : string, _artists : Artist[]) : Promise<{ success: boolean }>;
   getArtistCount(id : string) : Promise<{count : number }>
   getRecommendationStatus(id : string) : Promise<{status : boolean}>;
+  registerDocument(id : string, docid : string) : Promise<{success : boolean}>;
 }
