@@ -65,4 +65,8 @@ export default class ArtistService implements ArtistInterface, ArtistRecommendat
     if (recommendation.artists.length < 5) this.generateRecommendedArtists(id);
     return data;
   }
+
+  async registerDocument(id : string, docid : string) : Promise<{ success: boolean}> {
+    return this.artistRecommendationRepo.registerDocument(id, docid);
+  }
 }

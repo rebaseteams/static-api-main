@@ -46,6 +46,7 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
         },
         artists: recommendation.artists,
         discardedArtists: recommendation.discarded_artists,
+        documents: recommendation.documents,
         lastChangedUserId: recommendation.user_id,
         status: recommendation.status,
       };
@@ -223,6 +224,17 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
       const artistsCount = artistRecommendation.artists.length;
       const discardedArtistsCount = artistRecommendation.discarded_artists.length;
       return { count: discardedArtistsCount + artistsCount };
+    }
+    const err = { message: `Recommendation not found for id: ${id}`, statusCode: 404 };
+    throw err;
+  }
+
+  async registerDocument(id : string, docid : string) : Promise<{success : boolean}> {
+    const artistRecommendation = await this.artistRecommendationRepository.findOne(id);
+    if (artistRecommendation) {
+      artistRecommendation.documents.push(docid);
+      this.artistRecommendationRepository.save(artistRecommendation);
+      return { success: true };
     }
     const err = { message: `Recommendation not found for id: ${id}`, statusCode: 404 };
     throw err;

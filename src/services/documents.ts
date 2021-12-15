@@ -1,20 +1,27 @@
 /* eslint-disable no-console */
 import { Express } from 'express';
 import Document from '../models/entities/Document';
+import { ArtistRecommendationInterface } from '../models/interfaces/artist-recommendation';
 import { DocumentsInterface } from '../models/interfaces/documents';
 import { Template } from '../models/types/template';
 
 export default class DocumentsService implements DocumentsInterface {
   private documentsRepo: DocumentsInterface;
 
+  private artistRecommendationRepo: ArtistRecommendationInterface;
+
   constructor(
     documentsRepo: DocumentsInterface,
+    artistRecommendationRepo: ArtistRecommendationInterface,
   ) {
     this.documentsRepo = documentsRepo;
+    this.artistRecommendationRepo = artistRecommendationRepo;
   }
 
   async createDocument(data : any, template : Template, recommendationId : string, docName : string, userid : string) : Promise<{ document : Document }> {
-    return this.documentsRepo.createDocument(data, template, recommendationId, docName, userid);
+    const createDocData = await this.documentsRepo.createDocument(data, template, recommendationId, docName, userid);
+    if (recommendationId) await this.artistRecommendationRepo.registerDocument(recommendationId, createDocData.document.id);
+    return createDocData;
   }
 
   async getAllDocuments(): Promise<Document[]> {

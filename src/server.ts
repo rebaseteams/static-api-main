@@ -90,7 +90,7 @@ export default class MainServer {
     this.genreRepo = new GenreRepo();
     this.artistService = new ArtistService(this.inMemoryArtistRepo, this.inMemoryArtistRecommendationRepo);
     this.authService = new AuthService(this.inMemoryAuthRecommendationRepo);
-    this.documentsService = new DocumentsService(this.inMemoryDocumentsRepo);
+    this.documentsService = new DocumentsService(this.inMemoryDocumentsRepo, this.inMemoryArtistRecommendationRepo);
     this.templatesService = new TemplatesService(this.inMemoryTemplatesRepo);
     this.brandsService = new BrandsService(this.brandRepo);
     this.venuesService = new VenuesService(this.venueRepo);
