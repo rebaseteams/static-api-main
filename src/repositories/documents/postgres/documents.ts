@@ -25,7 +25,7 @@ export default class DocumentsRepo implements DocumentsInterface {
     if (_.isEqual(templateFields.sort(), dataFields.sort())) {
       const { html } = template;
       const compiledHtml = handlebars.compile(html);
-      const document = new Document(uuidv4(), docName, userId, new Date(), compiledHtml(data));
+      const document = new Document(uuidv4(), template.templateId, docName, userId, new Date(), compiledHtml(data));
       await this.documentRepository.save(document);
       return { document };
     }
@@ -64,7 +64,7 @@ export default class DocumentsRepo implements DocumentsInterface {
     throw err;
   }
 
-  async shareDocument(id : string, files : {[fieldname: string]: Express.Multer.File[]} |Express.Multer.File[], emails : string[]) {
+  async shareDocument(id : string, files : {[fieldname: string]: Express.Multer.File[]} |Express.Multer.File[], emails : string[], template : Template) {
     console.log(files);
     return { success: true };
   }

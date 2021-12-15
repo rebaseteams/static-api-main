@@ -14,5 +14,6 @@
             "field" : "creatorName",
             "type" : "text"
         }
-    ]
+    ],
+    "email" : "<b>Shared document with you</b>"
 }

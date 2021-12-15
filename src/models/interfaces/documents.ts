@@ -9,5 +9,5 @@ export interface DocumentsInterface{
   deleteDocument(id : string) : Promise<{ success : boolean }>;
   editDocument(id : string, html : string) : Promise<{ success : boolean }>;
   getAllDocuments() : Promise<Document[]>;
-  shareDocument(id : string, files : {[fieldname: string]: Express.Multer.File[]} |Express.Multer.File[], emails : string[]) : Promise<{success : boolean}>;
+  shareDocument(id : string, files : {[fieldname: string]: Express.Multer.File[]} |Express.Multer.File[], emails : string[], template : Template) : Promise<{success : boolean}>;
 }

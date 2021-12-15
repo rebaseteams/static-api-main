@@ -20,6 +20,7 @@ export default class InMemoryDocumentsRepo implements DocumentsInterface {
       const compiledHtml = handlebars.compile(html);
       const document : Document = {
         id: uuidv4(),
+        template_id: template.templateId,
         name: docName,
         createdOn: new Date(),
         createdBy: userId,
@@ -75,10 +76,8 @@ export default class InMemoryDocumentsRepo implements DocumentsInterface {
     throw err;
   }
 
-  async shareDocument(id : string, files : {[fieldname: string]: Express.Multer.File[]} |Express.Multer.File[], emails : string[]) : Promise<{success : boolean}> {
+  async shareDocument(id : string, files : {[fieldname: string]: Express.Multer.File[]} |Express.Multer.File[], emails : string[], template : Template) : Promise<{success : boolean}> {
     if (fs.existsSync(`${__dirname}/data/${id}.json`)) {
-      const readData = fs.readFileSync(`${__dirname}/data/${id}.json`).toString();
-      const data = JSON.parse(readData) as Document;
       const attachments :AttachmentJSON[] = [];
       for (let index = 0; index < files.length; index += 1) {
         const file = files[index];
@@ -92,7 +91,7 @@ export default class InMemoryDocumentsRepo implements DocumentsInterface {
       await sendEmail({
         to: emails[0],
         subject: 'Document shared',
-        html: `<bold>Document Name : ${data.name}</bold>`,
+        html: template.email,
         attachments,
       });
       return { success: true };
