@@ -33,6 +33,10 @@ export default class DocumentsService implements DocumentsInterface {
     return this.documentsRepo.getAllDocuments();
   }
 
+  async getDocuments(ids : string[]): Promise<Document[]> {
+    return this.documentsRepo.getDocuments(ids);
+  }
+
   async getDocument(id : string): Promise<Document> {
     return this.documentsRepo.getDocument(id);
   }

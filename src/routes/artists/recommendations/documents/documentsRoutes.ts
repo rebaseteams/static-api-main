@@ -27,6 +27,20 @@ export default class DocumentsRoutes {
       }
     });
 
+    this.router.post('/ids', async (req, res, next) => {
+      try {
+        const data = await documentsService.getDocuments(req.body.ids);
+        const resp = data.map((value) => ({
+          id: value.id,
+          name: value.name,
+          createdOn: value.createdOn,
+        }));
+        res.send({ success: true, data: resp });
+      } catch (error) {
+        next(error);
+      }
+    });
+
     this.router.get('/', async (req, res, next) => {
       try {
         const data = await documentsService.getAllDocuments();
