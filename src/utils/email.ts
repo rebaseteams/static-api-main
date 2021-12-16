@@ -2,9 +2,8 @@
 import { AttachmentJSON } from '@sendgrid/helpers/classes/attachment';
 import sgMail from '@sendgrid/mail';
 
-const key = '';
 const from = 'prasana.shinde.rebase@gmail.com';
-sgMail.setApiKey(key);
+sgMail.setApiKey(process.env.SG_KEY);
 
 const sendEmail = async (
   {
