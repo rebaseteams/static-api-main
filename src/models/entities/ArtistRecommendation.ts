@@ -85,7 +85,7 @@ export default class ArtistRecommendation {
   @Column('jsonb')
   discarded_artists: ARec[];
 
-  @Column('text', { array: true })
+  @Column('text', { array: true, default: [] })
   documents : string[];
 
   @Column()

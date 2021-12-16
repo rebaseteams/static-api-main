@@ -14,7 +14,7 @@ export default class Document {
   @PrimaryColumn()
   id: string;
 
-  @Column()
+  @Column({ default: '1234' })
   template_id: string;
 
   @Column()
