@@ -19,7 +19,7 @@ export default class DocumentsRepo implements DocumentsInterface {
     });
   }
 
-  async createDocument(data : any, template : Template, recommendationId : string, docName : string, userId : string) : Promise<{ document : Document }> {
+  async createDocument(data : any, required : any, template : Template, recommendationId : string, docName : string, userId : string) : Promise<{ document : Document }> {
     const templateFields = template.questions.map((value) => value.field);
     const dataFields = Object.keys(data);
     if (_.isEqual(templateFields.sort(), dataFields.sort())) {
