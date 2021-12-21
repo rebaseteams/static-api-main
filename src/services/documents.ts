@@ -23,8 +23,8 @@ export default class DocumentsService implements DocumentsInterface {
     this.templateRepo = templateRepo;
   }
 
-  async createDocument(data : any, template : Template, recommendationId : string, docName : string, userid : string) : Promise<{ document : Document }> {
-    const createDocData = await this.documentsRepo.createDocument(data, template, recommendationId, docName, userid);
+  async createDocument(data : any, required : any, template : Template, recommendationId : string, docName : string, userid : string) : Promise<{ document : Document }> {
+    const createDocData = await this.documentsRepo.createDocument(data, required, template, recommendationId, docName, userid);
     if (recommendationId) await this.artistRecommendationRepo.registerDocument(recommendationId, createDocData.document.id);
     return createDocData;
   }

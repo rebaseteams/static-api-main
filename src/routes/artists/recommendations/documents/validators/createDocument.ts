@@ -9,6 +9,7 @@ const schema = Joi.object({
   templateId: Joi.string().required(),
   recommendationId: Joi.string(),
   fields: Joi.object().required(),
+  required: Joi.object().required(),
 });
 
 const createDocumentValidator = (req : Request, res : Response, next : NextFunction) => {

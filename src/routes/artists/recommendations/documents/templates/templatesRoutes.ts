@@ -28,6 +28,7 @@ export default class TemplatesRoutes {
         data: {
           templateId: data.templateId,
           questions: data.questions,
+          required: data.required,
         },
       });
     });
