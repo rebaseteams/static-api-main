@@ -6,6 +6,10 @@ import Artist from '../../../models/entities/Artist';
 
 const randomDataGenerator = async () => {
   const artistList = [];
+  // axios.get('https://source.unsplash.com/random/1600x400').then((data) => {
+  //   console.log(data.request.res.responseUrl);
+  // });
+
   createConnection(
     {
       type: 'postgres',
@@ -28,8 +32,9 @@ const randomDataGenerator = async () => {
         [uuidv4(), uuidv4(), uuidv4()],
         [uuidv4(), uuidv4(), uuidv4()],
         profile.location.country,
-        profile.picture.thumbnail,
         profile.picture.large,
+        // `https://placeskull.com/1600/400/00000/${Math.floor(Math.random() * 44)}`,
+        (await axios.get('https://source.unsplash.com/random/1600x400')).request.res.responseUrl,
         `${profile.name.first} ${profile.name.last} lives in ${profile.location.country}. ${profile.name.first} ${profile.name.last} is ${profile.gender}`,
         uuidv4(),
         profile.phone,

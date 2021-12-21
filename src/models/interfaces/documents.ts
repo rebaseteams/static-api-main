@@ -4,7 +4,7 @@ import Document from '../entities/Document';
 import { Template } from '../types/template';
 
 export interface DocumentsInterface{
-  createDocument(data: any, template : Template, recommendationId : string, docName : string, userId : string) : Promise<{ document : Document }>;
+  createDocument(data: any, required: any, template : Template, recommendationId : string, docName : string, userId : string) : Promise<{ document : Document }>;
   getDocument(id : string) : Promise<Document>;
   deleteDocument(id : string) : Promise<{ success : boolean }>;
   editDocument(id : string, html : string) : Promise<{ success : boolean }>;

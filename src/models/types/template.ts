@@ -6,5 +6,7 @@ export type Template = {
     email : string,
     templateName : string,
     templateImg : string,
+    required: Array<string>,
+    resources : Array< {name : string, url : string} >
     questions : question[]
 }
