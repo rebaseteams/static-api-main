@@ -32,6 +32,9 @@ describe('Templates', () => {
         success: true,
         data: {
           templateId: '1234',
+          required: [
+            'artistId',
+          ],
           questions: [
             {
               question: 'Whats your name?',
