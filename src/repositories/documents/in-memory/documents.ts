@@ -35,9 +35,9 @@ export default class InMemoryDocumentsRepo implements DocumentsInterface {
       createdBy: userId,
       html,
     };
+    fileCheck(`${__dirname}/data`, false);
     fileCheck(`${__dirname}/data/html`, false);
     fs.writeFileSync(`${__dirname}/data/html/${document.id}.html`, JSON.stringify(compiledHtml(requiredResources)));
-    fileCheck(`${__dirname}/data`, false);
     fs.writeFileSync(`${__dirname}/data/${document.id}.json`, JSON.stringify(document));
     return { document };
   }
