@@ -30,6 +30,9 @@ import VenuesService from './services/venue';
 import GenreRepo from './repositories/genre/in-memory/genre';
 import GenresService from './services/genre';
 import GenresRoutes from './routes/genre/genreRoutes';
+import DocusignRoutes from './routes/docusign/docusignRoutes';
+import { DocusignService } from './services/docusign';
+import { InMemoryDocusignRep } from './repositories/docusign/in-memory/docusign';
 
 // to use .environment variable in the project
 require('dotenv').config();
@@ -44,6 +47,8 @@ export default class MainServer {
   private inMemoryDocumentsRepo: InMemoryDocumentsRepo;
 
   private inMemoryTemplatesRepo: InMemoryTemplatesRepo;
+
+  private inMemoryDocusignRepo: InMemoryDocusignRep;
 
   private documentsRepo: DocumentsRepo;
 
@@ -69,6 +74,8 @@ export default class MainServer {
 
   private genresService : GenresService;
 
+  private docusignService: DocusignService;
+
   app;
 
   corsOptions = {
@@ -83,6 +90,7 @@ export default class MainServer {
     this.inMemoryAuthRecommendationRepo = new InMemoryAuthRepo();
     this.inMemoryDocumentsRepo = new InMemoryDocumentsRepo();
     this.inMemoryTemplatesRepo = new InMemoryTemplatesRepo();
+    this.inMemoryDocusignRepo = new InMemoryDocusignRep();
     // this.artistRecommendationRepo = new ArtistRecommendationRepo();
     // this.documentsRepo = new DocumentsRepo();
     this.brandRepo = new BrandRepo();
@@ -95,6 +103,7 @@ export default class MainServer {
     this.brandsService = new BrandsService(this.brandRepo);
     this.venuesService = new VenuesService(this.venueRepo);
     this.genresService = new GenresService(this.genreRepo);
+    this.docusignService = new DocusignService(this.inMemoryDocusignRepo);
     this.app = express();
     this.app.use(cors(this.corsOptions));
     this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
@@ -106,6 +115,7 @@ export default class MainServer {
     this.app.use('/brands', new BrandsRoutes(this.brandsService).router);
     this.app.use('/venues', new VenuesRoutes(this.venuesService).router);
     this.app.use('/genres', new GenresRoutes(this.genresService).router);
+    this.app.use('/docusign', new DocusignRoutes(this.docusignService).router);
     this.app.use(errorHandler);
   }
 }
