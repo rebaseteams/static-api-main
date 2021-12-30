@@ -6,11 +6,18 @@ import fileCheck from '../../../utils/fileCheck';
 import refreshAccessToken from './regenerateAuthoriztion';
 
 export class InMemoryDocusignRep implements DocusignInterface {
+  apiconfig = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `bearer ${config.docusign.authorization}`,
+    },
+  }
+
   async createEnvelope(envelopeData: any): Promise<any> {
     let calls: number = 0;
     const api_call = (resolve) => {
       calls += 1;
-      axios.post(`${config.docusign.base_uri}/envelopes`, envelopeData, config.docusign.config).then((response) => {
+      axios.post(`${config.docusign.base_uri}/envelopes`, envelopeData, this.apiconfig).then((response) => {
         fileCheck(`${__dirname}/data`, false);
         if (!fs.existsSync(`${__dirname}/data/envelopes.json`)) {
           fs.writeFileSync(`${__dirname}/data/envelopes.json`, '[]');
