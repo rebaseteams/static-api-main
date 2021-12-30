@@ -1,6 +1,7 @@
 import * as express from 'express';
 import ArtistService from '../../services/artist';
 import DocumentsService from '../../services/documents';
+import { DocusignService } from '../../services/docusign';
 import TemplatesService from '../../services/templates';
 import snakeToCamel from '../../utils/snakeToCamel';
 import RecommendationsRoute from './recommendations/recommendationsRoutes';
@@ -8,10 +9,13 @@ import RecommendationsRoute from './recommendations/recommendationsRoutes';
 export default class ArtistRoute {
   router: express.Router;
 
-  constructor(artistService: ArtistService, documentsService: DocumentsService, templatesService: TemplatesService) {
+  constructor(artistService: ArtistService,
+    documentsService: DocumentsService,
+    templatesService: TemplatesService,
+    docusignService: DocusignService) {
     this.router = express.Router();
 
-    this.router.use('/recommendations', new RecommendationsRoute(artistService, documentsService, templatesService).router);
+    this.router.use('/recommendations', new RecommendationsRoute(artistService, documentsService, templatesService, docusignService).router);
 
     this.router.get('/:id', async (req, res, next) => {
       try {

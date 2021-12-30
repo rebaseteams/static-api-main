@@ -2,4 +2,5 @@
 
 export interface DocusignInterface {
   createEnvelope(envelopeData: any): Promise<any>;
+  getAllEnvelopes(): Promise<Array<any>>;
 }

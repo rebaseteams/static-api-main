@@ -1,8 +1,10 @@
 /* eslint-disable no-console */
 import { Router } from 'express';
 import multer from 'multer';
+import { DocusignInterface } from '../../../../models/interfaces/docusign';
 import DocumentsService from '../../../../services/documents';
 import TemplatesService from '../../../../services/templates';
+import DocusignRoutes from './docusign/docusignRoutes';
 import TemplatesRoutes from './templates/templatesRoutes';
 import createDocumentValidator from './validators/createDocument';
 import editDocumentValidator from './validators/editDocument';
@@ -12,10 +14,16 @@ const upload = multer({ storage: multer.memoryStorage() });
 export default class DocumentsRoutes {
   router: Router;
 
-  constructor(documentsService: DocumentsService, templatesService: TemplatesService) {
+  constructor(
+    documentsService: DocumentsService,
+    templatesService: TemplatesService,
+    docusignService: DocusignInterface,
+  ) {
     this.router = Router();
 
     this.router.use('/templates', new TemplatesRoutes(templatesService).router);
+
+    this.router.use('/docusign', new DocusignRoutes(docusignService).router);
 
     this.router.post('/', createDocumentValidator, async (req, res, next) => {
       try {
