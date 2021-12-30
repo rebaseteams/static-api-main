@@ -12,4 +12,10 @@ export class DocusignService implements DocusignInterface {
       resolve(this.DocusignRepo.createEnvelope(envelopeData));
     });
   }
+
+  getAllEnvelopes(): Promise<Array<any>> {
+    return new Promise((resolve) => {
+      resolve(this.DocusignRepo.getAllEnvelopes());
+    });
+  }
 }

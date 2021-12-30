@@ -30,7 +30,6 @@ import VenuesService from './services/venue';
 import GenreRepo from './repositories/genre/in-memory/genre';
 import GenresService from './services/genre';
 import GenresRoutes from './routes/genre/genreRoutes';
-import DocusignRoutes from './routes/docusign/docusignRoutes';
 import { DocusignService } from './services/docusign';
 import { InMemoryDocusignRep } from './repositories/docusign/in-memory/docusign';
 
@@ -110,12 +109,11 @@ export default class MainServer {
     this.app.use(contentType);
     this.app.use(express.json());
     this.app.use(validateUser());
-    this.app.use('/artists', new ArtistRoute(this.artistService, this.documentsService, this.templatesService).router);
+    this.app.use('/artists', new ArtistRoute(this.artistService, this.documentsService, this.templatesService, this.docusignService).router);
     this.app.use('/auth', new AuthRoutes(this.authService).router);
     this.app.use('/brands', new BrandsRoutes(this.brandsService).router);
     this.app.use('/venues', new VenuesRoutes(this.venuesService).router);
     this.app.use('/genres', new GenresRoutes(this.genresService).router);
-    this.app.use('/docusign', new DocusignRoutes(this.docusignService).router);
     this.app.use(errorHandler);
   }
 }

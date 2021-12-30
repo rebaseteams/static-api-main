@@ -6,14 +6,20 @@ import DocumentsRoutes from './documents/documentsRoutes';
 import DocumentsService from '../../../services/documents';
 import questionsUIValidator from './validators/questionsUIValidator';
 import TemplatesService from '../../../services/templates';
+import { DocusignService } from '../../../services/docusign';
 
 export default class RecommendationsRoute {
   router: express.Router;
 
-  constructor(artistService: ArtistService, documentsService: DocumentsService, templatesService: TemplatesService) {
+  constructor(
+    artistService: ArtistService,
+    documentsService: DocumentsService,
+    templatesService: TemplatesService,
+    docusignService: DocusignService,
+  ) {
     this.router = express.Router();
 
-    this.router.use('/documents', new DocumentsRoutes(documentsService, templatesService).router);
+    this.router.use('/documents', new DocumentsRoutes(documentsService, templatesService, docusignService).router);
 
     this.router.get('/:id', async (req, res, next) => {
       try {
