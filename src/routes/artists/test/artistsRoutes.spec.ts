@@ -13,15 +13,15 @@ describe('Artists', () => {
     it('should return No userId in header', async () => {
       const artistId = 'id1';
       const result = await request(server).get(`/artists/${artistId}`).send({});
-      expect(result.status).toEqual(400);
-      expect(result.body).toEqual({ error: 'No UserId in headers!' });
+      expect(result.status).toEqual(401);
+      expect(result.body).toEqual({ error: true, message: 'Unauthorized' });
     });
 
     it('should return Invalid User', async () => {
       const artistId = 'id1';
       const result = await request(server).get(`/artists/${artistId}`).set({ userid: '1234899' }).send({});
       expect(result.status).toEqual(401);
-      expect(result.body).toEqual({ error: 'Invalid User' });
+      expect(result.body).toEqual({ error: true, message: 'Unauthorized' });
     });
 
     afterEach(() => {
