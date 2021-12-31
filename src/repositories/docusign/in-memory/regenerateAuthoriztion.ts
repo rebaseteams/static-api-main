@@ -1,36 +1,32 @@
-import fs from 'fs';
-import fileCheck from '../../../utils/fileCheck';
-import configFile from './config.json';
+import axios from 'axios';
 
-const axios = require('axios');
-
-const refreshAccessToken = () => {
-  const data = JSON.stringify({
+const updateAccessToken = (): Promise<string | boolean> => {
+  const data = {
     grant_type: 'refresh_token',
-    refresh_token: configFile.docusign.refresh_token,
-  });
-  const config = {
-    method: 'post',
-    url: 'https://account-d.docusign.com/oauth/token',
-    headers: {
-      Authorization: 'Basic YjUzMTRlODYtMzY4ZS00MDZmLWJjMjktNjE4OTZiNzA4N2UxOjRlOGM0YTdiLTFkMWEtNGYyNS1hNzU2LWRiOWYzZWM0MjE2Nw==',
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    data,
+    refresh_token: process.env.DOCUSIGN_REFRESH_TOKEN,
   };
 
-  axios(config)
-    .then((response) => {
-      fileCheck(`${__dirname}/config.json`);
-      const configData = JSON.parse(fs.readFileSync(`${__dirname}/config.json`, 'utf-8'));
-      configData.docusign.authorization = `Bearer ${response.data.access_token}`;
-      configData.docusign.config.Authorization = `Bearer ${response.data.access_token}`;
-      fs.writeFileSync(`${__dirname}/config.json`, configData);
-    })
-    .catch((error) => {
+  const config = {
+    headers: {
+      Authorization: `Basic ${process.env.DOCUSIGN_AUTHENTICATION_BASIC}`,
+      'Content-Type': 'application/json',
+    },
+  };
+
+  return new Promise((resolve) => {
+    axios.post(
+      'https://account-d.docusign.com/oauth/token',
+      data,
+      config,
+    ).then((res) => {
+      process.env.DOCUSIGN_ACCESS_TOKEN = res.data.access_token;
+      resolve(process.env.DOCUSIGN_ACCESS_TOKEN);
+    }).catch((err) => {
       // eslint-disable-next-line no-console
-      console.log(error);
+      console.log('Refresh Error', err.response);
+      resolve(false);
     });
+  });
 };
 
-export default refreshAccessToken;
+export default updateAccessToken;

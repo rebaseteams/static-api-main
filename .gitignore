@@ -3,3 +3,4 @@ package-lock.json
 dist/*
 database
 src/repositories/documents/in-memory/data/*.json
+.env

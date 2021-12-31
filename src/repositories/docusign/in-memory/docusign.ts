@@ -1,23 +1,19 @@
 import axios from 'axios';
 import fs from 'fs';
-import config from './config.json';
 import { DocusignInterface } from '../../../models/interfaces/docusign';
 import fileCheck from '../../../utils/fileCheck';
-import refreshAccessToken from './regenerateAuthoriztion';
+import updateAccessToken from './regenerateAuthoriztion';
 
 export class InMemoryDocusignRep implements DocusignInterface {
-  apiconfig = {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `bearer ${config.docusign.authorization}`,
-    },
-  }
-
   async createEnvelope(envelopeData: any): Promise<any> {
-    let calls: number = 0;
-    const api_call = (resolve) => {
-      calls += 1;
-      axios.post(`${config.docusign.base_uri}/envelopes`, envelopeData, this.apiconfig).then((response) => {
+    const api_call = async () => {
+      const apiconfig = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `bearer ${process.env.DOCUSIGN_ACCESS_TOKEN}`,
+        },
+      };
+      return new Promise((resolve) => axios.post(`${process.env.DOCUSIGN_BASE_URI}/envelopes`, envelopeData, apiconfig).then((response) => {
         fileCheck(`${__dirname}/data`, false);
         if (!fs.existsSync(`${__dirname}/data/envelopes.json`)) {
           fs.writeFileSync(`${__dirname}/data/envelopes.json`, '[]');
@@ -26,21 +22,26 @@ export class InMemoryDocusignRep implements DocusignInterface {
         envelopes.push(response.data);
         fs.writeFileSync(`${__dirname}/data/envelopes.json`, JSON.stringify(envelopes));
         resolve(response.data);
-      }).catch((err) => {
+      }).catch(async (err) => {
         if (err.response.data.errorCode === 'USER_AUTHENTICATION_FAILED') {
-          refreshAccessToken();
-          if (calls < 3) {
-            api_call(resolve);
+          const result = await updateAccessToken();
+          if (result) {
+            api_call();
           }
+          resolve('Failed refreshing');
         }
-        resolve(err);
-      });
+        resolve('Somthing went wrong');
+      }));
     };
     return new Promise((resolve) => {
       try {
-        api_call(resolve);
+        api_call().then((result) => {
+          resolve({ success: true, data: result });
+        }).catch((err) => {
+          resolve({ success: false, data: err });
+        });
       } catch (error) {
-        resolve(error);
+        resolve({ success: false, error: error.message });
       }
     });
   }
