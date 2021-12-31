@@ -12,14 +12,14 @@ describe('Documents', () => {
 
     it('should return No userId in header', async () => {
       const result = await request(server).post('/artists/recommendations/documents').send({});
-      expect(result.status).toEqual(400);
-      expect(result.body).toEqual({ error: 'No UserId in headers!' });
+      expect(result.status).toEqual(401);
+      expect(result.body).toEqual({ error: true, message: 'Unauthorized' });
     });
 
     it('should return Invalid User', async () => {
       const result = await request(server).post('/artists/recommendations/documents').set({ userid: '1234899' }).send({});
       expect(result.status).toEqual(401);
-      expect(result.body).toEqual({ error: 'Invalid User' });
+      expect(result.body).toEqual({ error: true, message: 'Unauthorized' });
     });
 
     afterEach(() => {
@@ -35,14 +35,14 @@ describe('Documents', () => {
 
     it('should return No userId in header', async () => {
       const result = await request(server).get('/artists/recommendations/documents/someid').send({});
-      expect(result.status).toEqual(400);
-      expect(result.body).toEqual({ error: 'No UserId in headers!' });
+      expect(result.status).toEqual(401);
+      expect(result.body).toEqual({ message: 'Unauthorized', error: true });
     });
 
     it('should return Invalid User', async () => {
       const result = await request(server).get('/artists/recommendations/documents/someid').set({ userid: '1234899' }).send({});
       expect(result.status).toEqual(401);
-      expect(result.body).toEqual({ error: 'Invalid User' });
+      expect(result.body).toEqual({ error: true, message: 'Unauthorized' });
     });
 
     afterEach(() => {

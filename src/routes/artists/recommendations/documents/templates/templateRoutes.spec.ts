@@ -13,15 +13,15 @@ describe('Templates', () => {
     it('should return No userId in header', async () => {
       const templateId = '1234';
       const result = await request(server).get(`/artists/recommendations/documents/templates/${templateId}`).send({});
-      expect(result.status).toEqual(400);
-      expect(result.body).toEqual({ error: 'No UserId in headers!' });
+      expect(result.status).toEqual(401);
+      expect(result.body).toEqual({ error: true, message: 'Unauthorized' });
     });
 
     it('should return Invalid User', async () => {
       const templateId = '1234';
       const result = await request(server).get(`/artists/recommendations/documents/templates/${templateId}`).set({ userid: '1234899' }).send({});
       expect(result.status).toEqual(401);
-      expect(result.body).toEqual({ error: 'Invalid User' });
+      expect(result.body).toEqual({ error: true, message: 'Unauthorized' });
     });
 
     it('should return Template questions successfully', async () => {
@@ -59,14 +59,14 @@ describe('Templates', () => {
 
     it('should return No userId in header', async () => {
       const result = await request(server).get('/artists/recommendations/documents/templates').send({});
-      expect(result.status).toEqual(400);
-      expect(result.body).toEqual({ error: 'No UserId in headers!' });
+      expect(result.status).toEqual(401);
+      expect(result.body).toEqual({ error: true, message: 'Unauthorized' });
     });
 
     it('should return Invalid User', async () => {
       const result = await request(server).get('/artists/recommendations/documents/templates').set({ userid: '1234899' }).send({});
       expect(result.status).toEqual(401);
-      expect(result.body).toEqual({ error: 'Invalid User' });
+      expect(result.body).toEqual({ error: true, message: 'Unauthorized' });
     });
 
     it('should return all Templates metadata successfully', async () => {
