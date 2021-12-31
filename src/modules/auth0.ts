@@ -1,16 +1,18 @@
 import { auth } from 'express-oauth2-jwt-bearer';
 import axios from 'axios';
-import { NextFunction, Request } from 'express';
-import { Response } from '@sendgrid/helpers/classes';
+import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import config from '../config';
+
+// eslint-disable-next-line no-unused-vars
+let tokenGenerated;
 
 const auth0 = auth({
   issuerBaseURL: config.AUTH_DOMAIN,
   audience: config.AUTH_AUDIENCE,
 });
 
-const authenticate = (req : Request, res, next : NextFunction) => {
+const authenticate = (req : Request, res : Response, next : NextFunction) => {
   if (req.headers.userid === '1238989') return next();
   return auth0(req, res, next);
 };
@@ -31,9 +33,9 @@ const generateToken = async () => {
     await axios.post(options.url, options.data, { headers: options.headers }).then((response) => {
       config.AUTH_TOKEN = response.data.access_token;
     });
+    tokenGenerated = true;
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.log(error.message);
+    tokenGenerated = false;
   }
 };
 
