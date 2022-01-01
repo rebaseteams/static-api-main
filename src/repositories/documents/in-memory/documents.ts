@@ -28,7 +28,7 @@ export default class InMemoryDocumentsRepo implements DocumentsInterface {
     };
     const { html } = template;
     const templateHtml = `./data/html/${html}`;
-    const compiledHtml = handlebars.compile(fs.readFileSync(templateHtml).toString().replace(/\n/g, '').replace(/(^"|"$)/g, ''));
+    const compiledHtml = handlebars.compile(fs.readFileSync(templateHtml).toString());
     const document : Document = {
       id: uuidv4(),
       template_id: template.templateId,
@@ -40,7 +40,7 @@ export default class InMemoryDocumentsRepo implements DocumentsInterface {
     fileCheck(`${__dirname}/data`, false);
     fileCheck(`${__dirname}/data/html`, false);
     const htmlFile = `${__dirname}/data/html/${document.id}.html`;
-    fs.writeFileSync(htmlFile, JSON.stringify(compiledHtml(requiredResources)));
+    fs.writeFileSync(htmlFile, compiledHtml(requiredResources));
     const documentFile = `${__dirname}/data/${document.id}.json`;
     fs.writeFileSync(documentFile, JSON.stringify(document));
     return { document };
@@ -76,7 +76,7 @@ export default class InMemoryDocumentsRepo implements DocumentsInterface {
     if (fs.existsSync(`${__dirname}/data/${id}.json`)) {
       const readData = fs.readFileSync(`${__dirname}/data/${id}.json`).toString();
       const data = JSON.parse(readData) as Document;
-      data.html = fs.readFileSync(`${__dirname}/data/html/${id}.html`).toString().replace(/\n/g, '').replace(/(^"|"$)/g, '');
+      data.html = fs.readFileSync(`${__dirname}/data/html/${id}.html`).toString();
       return data;
     }
     const err = { message: `Document not found for id: ${id}`, statusCode: 404 };
@@ -95,7 +95,7 @@ export default class InMemoryDocumentsRepo implements DocumentsInterface {
 
   async editDocument(id : string, html : string) : Promise<{ success : boolean }> {
     if (fs.existsSync(`${__dirname}/data/${id}.json`) && fs.existsSync(`${__dirname}/data/html/${id}.html`)) {
-      fs.writeFileSync(`${__dirname}/data/html/${id}.html`, JSON.stringify(html));
+      fs.writeFileSync(`${__dirname}/data/html/${id}.html`, html);
       return { success: true };
     }
     const err = { message: `Document not found for id: ${id}`, statusCode: 404 };
