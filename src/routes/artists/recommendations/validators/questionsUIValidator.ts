@@ -2,9 +2,9 @@ import { NextFunction, Request, Response } from 'express';
 import * as Joi from 'joi';
 
 const schema = Joi.object({
-  // auth: Joi.object({
-  //   userId: Joi.string().required(),
-  // }).required(),
+  auth: Joi.object({
+    userId: Joi.string().required(),
+  }).required(),
   userId: Joi.string().required(),
   concertName: Joi.string().required(),
   eventType: Joi.string().required(),
