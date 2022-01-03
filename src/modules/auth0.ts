@@ -12,24 +12,29 @@ const auth0 = auth({
   audience: config.AUTH_AUDIENCE,
 });
 
-const getUserInfo = async (req: Request) => {
-  const token = req.headers.authorization.split(' ')[1];
-  if (token) {
-    const payload = await jwt.decode(token);
-    return payload;
+const setAuth = async (req : Request, res: Response, next : NextFunction) => {
+  try {
+    if (req.headers.userid === '1238989') {
+      req.body.auth = { userId: req.headers.userid };
+      return next();
+    }
+    const token = req.headers.authorization.split(' ')[1];
+    if (token) {
+      const payload = await jwt.decode(token);
+      if (payload) {
+        req.body.auth = { userId: payload.sub };
+      }
+      return next();
+    }
+    const err = { message: 'Authentication Failed', statusCode: 401 };
+    throw err;
+  } catch (err) {
+    return next(err);
   }
-  return false;
 };
 
 const authenticate = async (req : Request, res : Response, next : NextFunction) => {
-  if (req.headers.userid === '1238989') {
-    req.body.auth = { userId: req.headers.userid };
-    return next();
-  }
-  const payload = await getUserInfo(req);
-  if (payload) {
-    req.body.auth = { userId: payload.sub };
-  }
+  if (req.headers.userid === '1238989') return next();
   return auth0(req, res, next);
 };
 
@@ -77,5 +82,5 @@ const requireRole = (roles : Array<string>) => async (req : Request, res : Respo
 };
 
 export default {
-  generateToken, requireRole, authenticate,
+  generateToken, requireRole, authenticate, setAuth,
 };
