@@ -16,7 +16,7 @@ export const getDbConfig = async (): Promise<any> => {
   }
 
   return {
-    host: 'localhost',
+    host: 'database',
     port: '5432',
     database: 'concert_curator',
     username: 'admin',

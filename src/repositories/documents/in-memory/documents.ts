@@ -33,8 +33,8 @@ export default class InMemoryDocumentsRepo implements DocumentsInterface {
       id: uuidv4(),
       template_id: template.templateId,
       name: docName,
-      createdOn: new Date(),
-      createdBy: userId,
+      created_on: new Date(),
+      created_by: userId,
       html,
     };
     fileCheck(`${__dirname}/data`, false);

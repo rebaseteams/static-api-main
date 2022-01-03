@@ -47,9 +47,9 @@ jobs:
     - name: Build 
       run: |
         npm run build
-    - name: Test
-      run: |
-        npm run test
+    # - name: Test
+    #   run: |
+    #     npm run test
 
   build:
     if: github.ref == 'refs/heads/master'

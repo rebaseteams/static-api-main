@@ -42,7 +42,7 @@ export default class DocumentsRoutes {
         const resp = data.map((value) => ({
           id: value.id,
           name: value.name,
-          createdOn: value.createdOn,
+          createdOn: value.created_on,
         }));
         res.send({ success: true, data: resp });
       } catch (error) {
@@ -56,7 +56,7 @@ export default class DocumentsRoutes {
         const resp = data.map((value) => ({
           id: value.id,
           name: value.name,
-          createdOn: value.createdOn,
+          createdOn: value.created_on,
         }));
         res.send({ success: true, data: resp });
       } catch (error) {

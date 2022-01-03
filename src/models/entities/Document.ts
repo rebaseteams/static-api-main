@@ -6,8 +6,8 @@ export default class Document {
     this.id = id;
     this.template_id = template_id;
     this.name = name;
-    this.createdBy = createdBy;
-    this.createdOn = createdOn;
+    this.created_by = createdBy;
+    this.created_on = createdOn;
     this.html = html;
   }
 
@@ -21,10 +21,10 @@ export default class Document {
   name: string;
 
   @Column()
-  createdBy: string;
+  created_by: string;
 
   @Column({ type: 'timestamp' })
-  createdOn: Date;
+  created_on: Date;
 
   @Column({ type: 'text' })
   html: string;
