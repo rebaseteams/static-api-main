@@ -110,6 +110,7 @@ export default class MainServer {
     this.app.use(contentType);
     this.app.use(express.json());
     this.app.use(auth0.authenticate);
+    this.app.use(auth0.setAuth);
     this.app.use('/artists', auth0.requireRole(['branduser']), new ArtistRoute(this.artistService, this.documentsService, this.templatesService, this.docusignService).router);
     this.app.use('/auth', new AuthRoutes(this.authService).router);
     this.app.use('/brands', new BrandsRoutes(this.brandsService).router);
