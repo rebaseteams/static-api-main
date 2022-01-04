@@ -19,7 +19,7 @@ export default class InMemoryDocumentsRepo implements DocumentsInterface {
     //   // eslint-disable-next-line no-restricted-syntax
     //   for await (const resource of template.resources) {
     //     const compiledUrl = handlebars.compile(resource.url);
-    //     requiredResources[resource.name] = (await axios.get(compiledUrl(required), { headers: { userid: '1238989' } })).data;
+    //     requiredResources[resource.name] = (await axios.get(compiledUrl(required), { headers: { userid: process.env.DEFAULT_USERID } })).data;
     //   }
     // }
     requiredResources = {
