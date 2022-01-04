@@ -90,14 +90,14 @@ export default class MainServer {
     // this.inMemoryDocumentsRepo = new InMemoryDocumentsRepo();
     this.inMemoryTemplatesRepo = new InMemoryTemplatesRepo();
     this.inMemoryDocusignRepo = new InMemoryDocusignRep();
-    // this.artistRecommendationRepo = new ArtistRecommendationRepo();
+    this.artistRecommendationRepo = new ArtistRecommendationRepo();
     this.documentsRepo = new DocumentsRepo();
     this.brandRepo = new BrandRepo();
     this.venueRepo = new VenueRepo();
     this.genreRepo = new GenreRepo();
-    this.artistService = new ArtistService(this.inMemoryArtistRepo, this.inMemoryArtistRecommendationRepo);
+    this.artistService = new ArtistService(this.inMemoryArtistRepo, this.artistRecommendationRepo);
     this.authService = new AuthService(this.inMemoryAuthRecommendationRepo);
-    this.documentsService = new DocumentsService(this.documentsRepo, this.inMemoryArtistRecommendationRepo, this.inMemoryTemplatesRepo);
+    this.documentsService = new DocumentsService(this.documentsRepo, this.artistRecommendationRepo, this.inMemoryTemplatesRepo);
     this.templatesService = new TemplatesService(this.inMemoryTemplatesRepo);
     this.brandsService = new BrandsService(this.brandRepo);
     this.venuesService = new VenuesService(this.venueRepo);
