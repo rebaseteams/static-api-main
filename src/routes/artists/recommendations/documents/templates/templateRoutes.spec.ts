@@ -26,7 +26,7 @@ describe('Templates', () => {
 
     it('should return Template questions successfully', async () => {
       const templateId = '1234';
-      const result = await request(server).get(`/artists/recommendations/documents/templates/${templateId}`).set({ userid: '1238989' }).send({});
+      const result = await request(server).get(`/artists/recommendations/documents/templates/${templateId}`).set({ userid: process.env.DEFAULT_USERID }).send({});
       expect(result.status).toEqual(200);
       expect(result.body).toEqual({
         success: true,
@@ -70,7 +70,7 @@ describe('Templates', () => {
     });
 
     it('should return all Templates metadata successfully', async () => {
-      const result = await request(server).get('/artists/recommendations/documents/templates').set({ userid: '1238989' }).send({});
+      const result = await request(server).get('/artists/recommendations/documents/templates').set({ userid: process.env.DEFAULT_USERID }).send({});
       expect(result.status).toEqual(200);
       expect(result.body.success).toEqual(true);
     });

@@ -19,8 +19,8 @@ export const getDbConfig = async (): Promise<any> => {
     host: 'database',
     port: '5432',
     database: 'concert_curator',
-    username: 'admin',
-    password: 'admin',
+    username: process.env.DB_USER,
+    password: process.env.DB_PASS,
   };
 };
 

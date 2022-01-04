@@ -49,7 +49,7 @@ describe('Recommendations', () => {
     });
 
     it('should return all recommendations', async () => {
-      const result = await request(server).get('/artists/recommendations/').set({ userid: '1238989' }).send({});
+      const result = await request(server).get('/artists/recommendations/').set({ userid: process.env.DEFAULT_USERID }).send({});
       expect(result.status).toEqual(200);
     });
 
@@ -66,7 +66,7 @@ describe('Recommendations', () => {
 
     it('should return empty array for an invalid artists recoommendation id', async () => {
       const invalidId = '234';
-      const result = await request(server).get(`/artists/recommendations/${invalidId}`).set({ userid: '1238989' }).send({});
+      const result = await request(server).get(`/artists/recommendations/${invalidId}`).set({ userid: 'process.env.DEFAULT_USERID' }).send({});
       expect(result.status).toEqual(404);
     });
 

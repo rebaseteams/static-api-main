@@ -14,7 +14,7 @@ const auth0 = auth({
 
 const setAuth = async (req : Request, res: Response, next : NextFunction) => {
   try {
-    if (req.headers.userid === '1238989') {
+    if (req.headers.userid === process.env.DEFAULT_USERID) {
       req.body.auth = { userId: req.headers.userid };
       return next();
     }
@@ -34,7 +34,7 @@ const setAuth = async (req : Request, res: Response, next : NextFunction) => {
 };
 
 const authenticate = async (req : Request, res : Response, next : NextFunction) => {
-  if (req.headers.userid === '1238989') return next();
+  if (req.headers.userid === process.env.DEFAULT_USERID) return next();
   return auth0(req, res, next);
 };
 
@@ -69,7 +69,7 @@ const checkRoles = async (roles : Array<string>, userId : string | (() => string
 // eslint-disable-next-line consistent-return
 const requireRole = (roles : Array<string>) => async (req : Request, res : Response, next : NextFunction) => {
   try {
-    if (req.headers.userid === '1238989') return next();
+    if (req.headers.userid === process.env.DEFAULT_USERID) return next();
     const token = req.headers.authorization.split(' ')[1];
     const payload = await jwt.decode(token);
     const roleCheck = await checkRoles(roles, payload.sub);

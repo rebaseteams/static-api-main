@@ -3,7 +3,7 @@
 import { Request, Response, NextFunction } from 'express';
 
 const validateToken = (token: string | string[]): Boolean => {
-  if (token === '1238989') {
+  if (token === process.env.DEFAULT_USERID) {
     return true;
   }
   return false;
