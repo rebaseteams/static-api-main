@@ -5,6 +5,7 @@ import * as handlebars from 'handlebars';
 import * as _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { Express } from 'express';
+import * as fs from 'fs';
 import { createConnection, In, Repository } from 'typeorm';
 import { Template } from '../../../models/types/template';
 import Document from '../../../models/entities/Document';
@@ -20,17 +21,35 @@ export default class DocumentsRepo implements DocumentsInterface {
   }
 
   async createDocument(data : any, required : any, template : Template, recommendationId : string, docName : string, userId : string) : Promise<{ document : Document }> {
-    const templateFields = template.questions.map((value) => value.field);
-    const dataFields = Object.keys(data);
-    if (_.isEqual(templateFields.sort(), dataFields.sort())) {
-      const { html } = template;
-      const compiledHtml = handlebars.compile(html);
-      const document = new Document(uuidv4(), template.templateId, docName, userId, new Date(), compiledHtml(data));
-      await this.documentRepository.save(document);
-      return { document };
-    }
-    const err = { message: 'All fields are required', statusCode: 400 };
-    throw err;
+    let requiredResources = {};
+    // Tempararyly disabling error prone code
+    // if (template.resources) {
+    //   // eslint-disable-next-line no-restricted-syntax
+    //   for await (const resource of template.resources) {
+    //     const compiledUrl = handlebars.compile(resource.url);
+    //     requiredResources[resource.name] = (await axios.get(compiledUrl(required), { headers: { userid: process.env.DEFAULT_USERID } })).data;
+    //   }
+    // }
+    requiredResources = {
+      ...requiredResources,
+      ...data,
+    };
+    const { html } = template;
+    const templateHtml = `./data/html/${html}`;
+    const compiledHtml = handlebars.compile(fs.readFileSync(templateHtml).toString());
+    const document : Document = {
+      id: uuidv4(),
+      template_id: template.templateId,
+      name: docName,
+      created_on: new Date(),
+      created_by: userId,
+      html,
+    };
+    const htmlFile = `${__dirname}/../in-memory/data/html/${document.id}.html`;
+    fs.writeFileSync(htmlFile, compiledHtml(requiredResources));
+    this.documentRepository.save(document);
+    document.html = compiledHtml(requiredResources);
+    return { document };
   }
 
   async getAllDocuments() : Promise<Document[]> {
