@@ -4,3 +4,5 @@ dist/*
 database
 src/repositories/documents/in-memory/data/*.json
 .env
+docker-compose.yml
+conf
