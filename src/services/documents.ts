@@ -4,6 +4,7 @@ import Document from '../models/entities/Document';
 import { ArtistRecommendationInterface } from '../models/interfaces/artist-recommendation';
 import { DocumentsInterface } from '../models/interfaces/documents';
 import { TemplatesInterface } from '../models/interfaces/templates';
+import { PatchDocumentStatus } from '../models/types/documentContract';
 import { Template } from '../models/types/template';
 
 export default class DocumentsService implements DocumentsInterface {
@@ -21,6 +22,11 @@ export default class DocumentsService implements DocumentsInterface {
     this.documentsRepo = documentsRepo;
     this.artistRecommendationRepo = artistRecommendationRepo;
     this.templateRepo = templateRepo;
+  }
+
+  async patchDocumentStatus(data: PatchDocumentStatus) {
+    const patchData = await this.documentsRepo.patchDocumentStatus(data);
+    return patchData;
   }
 
   async createDocument(data : any, required : any, template : Template, recommendationId : string, docName : string, userid : string) : Promise<{ document : Document }> {

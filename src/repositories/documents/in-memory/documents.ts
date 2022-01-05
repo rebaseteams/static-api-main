@@ -9,6 +9,7 @@ import { Template } from '../../../models/types/template';
 import fileCheck from '../../../utils/fileCheck';
 import Document from '../../../models/entities/Document';
 import sendEmail from '../../../utils/email';
+import { DocumentContractData, DocumentMode, PatchDocumentStatus } from '../../../models/types/documentContract';
 
 export default class InMemoryDocumentsRepo implements DocumentsInterface {
   // eslint-disable-next-line no-unused-vars
@@ -29,10 +30,20 @@ export default class InMemoryDocumentsRepo implements DocumentsInterface {
     const { html } = template;
     const templateHtml = `./data/html/${html}`;
     const compiledHtml = handlebars.compile(fs.readFileSync(templateHtml).toString());
+    const defaultMode: DocumentMode = 'edit';
+    const defaultContract: DocumentContractData = {
+      envelopeId: '',
+      url: '',
+      dateCreated: '',
+      signDate: '',
+      status: '',
+    };
     const document : Document = {
       id: uuidv4(),
       template_id: template.templateId,
       name: docName,
+      mode: defaultMode,
+      contract: defaultContract,
       created_on: new Date(),
       created_by: userId,
       html,
@@ -124,5 +135,11 @@ export default class InMemoryDocumentsRepo implements DocumentsInterface {
     }
     const err = { message: `Document not found for id: ${id}`, statusCode: 404 };
     throw err;
+  }
+
+  async patchDocumentStatus(data: PatchDocumentStatus): Promise<any> {
+    return new Promise((resolve) => {
+      resolve({ message: 'TODO', data });
+    });
   }
 }
