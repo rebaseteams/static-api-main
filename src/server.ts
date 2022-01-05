@@ -103,7 +103,7 @@ export default class MainServer {
     this.venuesService = new VenuesService(this.venueRepo);
     this.genresService = new GenresService(this.genreRepo);
     auth0.generateToken();
-    this.docusignService = new DocusignService(this.inMemoryDocusignRepo);
+    this.docusignService = new DocusignService(this.inMemoryDocusignRepo, this.documentsService);
     this.app = express();
     this.app.use(cors(this.corsOptions));
     this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));

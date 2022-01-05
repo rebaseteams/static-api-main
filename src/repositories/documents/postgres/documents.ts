@@ -10,6 +10,7 @@ import { createConnection, In, Repository } from 'typeorm';
 import { Template } from '../../../models/types/template';
 import Document from '../../../models/entities/Document';
 import { DocumentsInterface } from '../../../models/interfaces/documents';
+import { DocumentContractData, DocumentMode, PatchDocumentStatus } from '../../../models/types/documentContract';
 
 export default class DocumentsRepo implements DocumentsInterface {
   private documentRepository : Repository<Document>;
@@ -37,10 +38,20 @@ export default class DocumentsRepo implements DocumentsInterface {
     const { html } = template;
     const templateHtml = `./data/html/${html}`;
     const compiledHtml = handlebars.compile(fs.readFileSync(templateHtml).toString());
+    const defaultMode: DocumentMode = 'edit';
+    const defaultContract: DocumentContractData = {
+      envelopeId: '',
+      url: '',
+      dateCreated: '',
+      signDate: '',
+      status: '',
+    };
     const document : Document = {
       id: uuidv4(),
       template_id: template.templateId,
       name: docName,
+      mode: defaultMode,
+      contract: defaultContract,
       created_on: new Date(),
       created_by: userId,
       html,
@@ -54,7 +65,9 @@ export default class DocumentsRepo implements DocumentsInterface {
 
   async getAllDocuments() : Promise<Document[]> {
     let allDocuments : Document[] = [];
-    allDocuments = await this.documentRepository.find();
+    console.log(allDocuments);
+    [allDocuments] = await this.documentRepository.findAndCount();
+    console.log(allDocuments);
     return allDocuments;
   }
 
@@ -94,5 +107,47 @@ export default class DocumentsRepo implements DocumentsInterface {
   async shareDocument(id : string, files : {[fieldname: string]: Express.Multer.File[]} |Express.Multer.File[], emails : string[], template : Template) {
     console.log(files);
     return { success: true };
+  }
+
+  async patchDocumentStatus({
+    envelopeId,
+    dateCreated,
+    documentId,
+    signDate,
+    envelopeStatus,
+    mode,
+    url,
+  }: PatchDocumentStatus) {
+    const documentRes = await this.documentRepository.findOne({ id: documentId });
+    let updatedData: Document;
+    if (mode === 'submit') {
+      updatedData = {
+        ...documentRes,
+        mode,
+      };
+    }
+    const contract: DocumentContractData = {
+      envelopeId,
+      dateCreated,
+      url,
+      signDate,
+      status: envelopeStatus,
+    };
+
+    if (mode === 'submit') {
+      updatedData = {
+        ...documentRes,
+        mode,
+        contract,
+      };
+    }
+    if (mode === 'edit') {
+      updatedData = {
+        ...documentRes,
+        mode,
+      };
+    }
+    const response = await this.documentRepository.save(updatedData);
+    return response;
   }
 }

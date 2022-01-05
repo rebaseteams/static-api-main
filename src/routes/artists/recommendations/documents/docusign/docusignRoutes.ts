@@ -13,11 +13,10 @@ export default class DocusignRoutes {
     this.docusignService = docusignService;
 
     this.router.post('/:id', async (req, res, next) => {
-      const documentId = req.params;
-      console.log(documentId);
+      const documentId = req.params.id;
       const data = JSON.parse(JSON.stringify(req.body));
       try {
-        const response = await this.docusignService.createEnvelope(data);
+        const response = await this.docusignService.createEnvelope(data, documentId);
         res.send(response);
       } catch (err) {
         next(err);
@@ -27,6 +26,15 @@ export default class DocusignRoutes {
     this.router.get('/', async (req, res, next) => {
       try {
         const response = await this.docusignService.getAllEnvelopes();
+        res.send(response);
+      } catch (err) {
+        next(err);
+      }
+    });
+
+    this.router.get('/:id', async (req, res, next) => {
+      try {
+        const response = await this.docusignService.getEnvelopeStatus(req.params.id);
         res.send(response);
       } catch (err) {
         next(err);
