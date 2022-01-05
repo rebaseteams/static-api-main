@@ -12,10 +12,25 @@ export class DocusignService implements DocusignInterface {
     this.DocumentRepo = documentRepo;
   }
 
-  getEnvelopeStatus(envelopeId: string): Promise<any> {
+  getEnvelopeStatus(envelopeId: string, documentId: string): Promise<any> {
     return new Promise((resolve) => {
-      this.DocusignRepo.getEnvelopeStatus(envelopeId).then((response) => {
-        if (response) {
+      this.DocusignRepo.getEnvelopeStatus(envelopeId, documentId).then((response) => {
+        if (!response.success) {
+          resolve(response);
+        }
+        if (response.data.status === 'completed') {
+          const patchData: PatchDocumentStatus = {
+            envelopeId: response.data.envelopeId,
+            mode: 'sign',
+            url: response.data.envelopeUri,
+            dateCreated: response.data.createdDateTime,
+            signDate: response.data.completedDateTime,
+            envelopeStatus: response.data.status,
+            documentId,
+          };
+          this.DocumentRepo.patchDocumentStatus(patchData);
+          resolve(response.data);
+        } else {
           resolve(response.data);
         }
       });

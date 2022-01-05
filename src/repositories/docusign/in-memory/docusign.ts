@@ -75,7 +75,8 @@ export class InMemoryDocusignRep implements DocusignInterface {
     });
   }
 
-  async getEnvelopeStatus(envelopeId: string): Promise<any> {
+  // eslint-disable-next-line no-unused-vars
+  async getEnvelopeStatus(envelopeId: string, documentId: string): Promise<any> {
     const api_call = async () => {
       const apiconfig = {
         headers: {
@@ -83,27 +84,26 @@ export class InMemoryDocusignRep implements DocusignInterface {
           Authorization: `bearer ${process.env.DOCUSIGN_ACCESS_TOKEN}`,
         },
       };
-
       return new Promise((resolve) => axios.get(`${process.env.DOCUSIGN_BASE_URI}/envelopes/${envelopeId}`, apiconfig).then((response) => {
-        resolve(response.data);
+        resolve({ success: true, data: response.data });
       }).catch(async (err) => {
         if (err.response.data.errorCode === 'USER_AUTHENTICATION_FAILED') {
           const result = await updateAccessToken();
           if (result) {
             api_call();
           }
-          resolve('Failed refreshing');
+          resolve({ success: false, data: 'Failed refreshing' });
         }
-        resolve('Somthing went wrong');
+        resolve({ success: false, data: err });
       }));
     };
 
     return new Promise((resolve) => {
       try {
         api_call().then((result) => {
-          resolve({ success: true, data: result });
+          resolve(result);
         }).catch((err) => {
-          resolve({ success: false, data: err });
+          resolve(err);
         });
       } catch (error) {
         resolve({ success: false, error: error.message });
