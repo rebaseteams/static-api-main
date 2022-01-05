@@ -32,9 +32,9 @@ export default class DocusignRoutes {
       }
     });
 
-    this.router.get('/:id', async (req, res, next) => {
+    this.router.get('/:envelopeId/:documentId', async (req, res, next) => {
       try {
-        const response = await this.docusignService.getEnvelopeStatus(req.params.id);
+        const response = await this.docusignService.getEnvelopeStatus(req.params.envelopeId, req.params.documentId);
         res.send(response);
       } catch (err) {
         next(err);

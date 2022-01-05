@@ -87,10 +87,8 @@ export default class DocumentsRepo implements DocumentsInterface {
   }
 
   async editDocument(id : string, html : string) : Promise<{ success : boolean }> {
-    const document = await this.documentRepository.findOne({ id });
-    if (document) {
-      document.html = html;
-      this.documentRepository.save(document);
+    if (fs.existsSync(`${__dirname}/data/${id}.json`) && fs.existsSync(`${__dirname}/data/html/${id}.html`)) {
+      fs.writeFileSync(`${__dirname}/../in-memory/data/html/${id}.html`, html);
       return { success: true };
     }
     const err = { message: `Document not found for id: ${id}`, statusCode: 404 };
@@ -120,12 +118,6 @@ export default class DocumentsRepo implements DocumentsInterface {
   }: PatchDocumentStatus) {
     const documentRes = await this.documentRepository.findOne({ id: documentId });
     let updatedData: Document;
-    if (mode === 'submit') {
-      updatedData = {
-        ...documentRes,
-        mode,
-      };
-    }
     const contract: DocumentContractData = {
       envelopeId,
       dateCreated,
@@ -133,6 +125,13 @@ export default class DocumentsRepo implements DocumentsInterface {
       signDate,
       status: envelopeStatus,
     };
+    if (mode === 'sign') {
+      updatedData = {
+        ...documentRes,
+        mode,
+        contract,
+      };
+    }
 
     if (mode === 'submit') {
       updatedData = {
