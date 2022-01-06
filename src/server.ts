@@ -32,6 +32,9 @@ import GenresRoutes from './routes/genre/genreRoutes';
 import auth0 from './modules/auth0';
 import { DocusignService } from './services/docusign';
 import { InMemoryDocusignRep } from './repositories/docusign/in-memory/docusign';
+import UserRepo from './repositories/user/postgres/user';
+import UsersService from './services/user';
+import UsersRoutes from './routes/user/userRoute';
 
 // to use .environment variable in the project
 require('dotenv').config();
@@ -57,6 +60,8 @@ export default class MainServer {
 
   private genreRepo: GenreRepo;
 
+  private userRepo: UserRepo;
+
   private artistRecommendationRepo: ArtistRecommendationRepo;
 
   private artistService: ArtistService;
@@ -72,6 +77,8 @@ export default class MainServer {
   private venuesService : VenuesService;
 
   private genresService : GenresService;
+
+  private usersService : UsersService;
 
   private docusignService: DocusignService;
 
@@ -95,6 +102,7 @@ export default class MainServer {
     this.brandRepo = new BrandRepo();
     this.venueRepo = new VenueRepo();
     this.genreRepo = new GenreRepo();
+    this.userRepo = new UserRepo();
     this.artistService = new ArtistService(this.inMemoryArtistRepo, this.artistRecommendationRepo);
     this.authService = new AuthService(this.inMemoryAuthRecommendationRepo);
     this.documentsService = new DocumentsService(this.documentsRepo, this.artistRecommendationRepo, this.inMemoryTemplatesRepo);
@@ -102,6 +110,7 @@ export default class MainServer {
     this.brandsService = new BrandsService(this.brandRepo);
     this.venuesService = new VenuesService(this.venueRepo);
     this.genresService = new GenresService(this.genreRepo);
+    this.usersService = new UsersService(this.userRepo);
     auth0.generateToken();
     this.docusignService = new DocusignService(this.inMemoryDocusignRepo, this.documentsService);
     this.app = express();
@@ -116,6 +125,7 @@ export default class MainServer {
     this.app.use('/brands', new BrandsRoutes(this.brandsService).router);
     this.app.use('/venues', new VenuesRoutes(this.venuesService).router);
     this.app.use('/genres', new GenresRoutes(this.genresService).router);
+    this.app.use('/users', new UsersRoutes(this.usersService).router);
     this.app.use(errorHandler);
   }
 }
