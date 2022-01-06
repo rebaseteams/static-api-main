@@ -11,6 +11,7 @@ import { Template } from '../../../models/types/template';
 import Document from '../../../models/entities/Document';
 import { DocumentsInterface } from '../../../models/interfaces/documents';
 import { DocumentContractData, DocumentMode, PatchDocumentStatus } from '../../../models/types/documentContract';
+import fileCheck from '../../../utils/fileCheck';
 
 export default class DocumentsRepo implements DocumentsInterface {
   private documentRepository : Repository<Document>;
@@ -56,6 +57,8 @@ export default class DocumentsRepo implements DocumentsInterface {
       created_by: userId,
       html,
     };
+    fileCheck(`${__dirname}/../in-memory/data`, false);
+    fileCheck(`${__dirname}/../in-memory/data/html`, false);
     const htmlFile = `${__dirname}/../in-memory/data/html/${document.id}.html`;
     fs.writeFileSync(htmlFile, compiledHtml(requiredResources));
     this.documentRepository.save(document);
