@@ -12,6 +12,7 @@ import Brand from '../models/entities/Brand';
 import Venue from '../models/entities/Venue';
 import Genre from '../models/entities/Genre';
 import User from '../models/entities/User';
+import Role from '../models/entities/Role';
 
 export type ConnectionInfo = OmitStrict<DbConfig, 'password'>;
 
@@ -95,6 +96,7 @@ export async function createPgConnection(
         Venue,
         Genre,
         User,
+        Role,
       ],
       migrations,
       database,
