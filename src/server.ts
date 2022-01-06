@@ -38,6 +38,9 @@ import UsersRoutes from './routes/user/userRoute';
 import RoleRepo from './repositories/role/postgres/role';
 import RolesService from './services/role';
 import RolesRoutes from './routes/role/roleRoute';
+import ResourcesService from './services/resource';
+import ResourceRepo from './repositories/resource/postgres/resource';
+import ResourcesRoutes from './routes/resource/resourceRoute';
 
 // to use .environment variable in the project
 require('dotenv').config();
@@ -67,6 +70,8 @@ export default class MainServer {
 
   private roleRepo: RoleRepo;
 
+  private resourceRepo: ResourceRepo;
+
   private artistRecommendationRepo: ArtistRecommendationRepo;
 
   private artistService: ArtistService;
@@ -86,6 +91,8 @@ export default class MainServer {
   private usersService : UsersService;
 
   private rolesService : RolesService;
+
+  private resourcesService : ResourcesService;
 
   private docusignService: DocusignService;
 
@@ -111,6 +118,7 @@ export default class MainServer {
     this.genreRepo = new GenreRepo();
     this.userRepo = new UserRepo();
     this.roleRepo = new RoleRepo();
+    this.resourceRepo = new ResourceRepo();
     this.artistService = new ArtistService(this.inMemoryArtistRepo, this.artistRecommendationRepo);
     this.authService = new AuthService(this.inMemoryAuthRecommendationRepo);
     this.documentsService = new DocumentsService(this.documentsRepo, this.artistRecommendationRepo, this.inMemoryTemplatesRepo);
@@ -120,6 +128,7 @@ export default class MainServer {
     this.genresService = new GenresService(this.genreRepo);
     this.usersService = new UsersService(this.userRepo);
     this.rolesService = new RolesService(this.roleRepo);
+    this.resourcesService = new ResourcesService(this.resourceRepo);
     auth0.generateToken();
     this.docusignService = new DocusignService(this.inMemoryDocusignRepo, this.documentsService);
     this.app = express();
@@ -136,6 +145,7 @@ export default class MainServer {
     this.app.use('/genres', new GenresRoutes(this.genresService).router);
     this.app.use('/users', new UsersRoutes(this.usersService).router);
     this.app.use('/roles', new RolesRoutes(this.rolesService).router);
+    this.app.use('/resources', new ResourcesRoutes(this.resourcesService).router);
     this.app.use(errorHandler);
   }
 }
