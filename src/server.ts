@@ -35,6 +35,9 @@ import { InMemoryDocusignRep } from './repositories/docusign/in-memory/docusign'
 import UserRepo from './repositories/user/postgres/user';
 import UsersService from './services/user';
 import UsersRoutes from './routes/user/userRoute';
+import RoleRepo from './repositories/role/postgres/role';
+import RolesService from './services/role';
+import RolesRoutes from './routes/role/roleRoute';
 
 // to use .environment variable in the project
 require('dotenv').config();
@@ -62,6 +65,8 @@ export default class MainServer {
 
   private userRepo: UserRepo;
 
+  private roleRepo: RoleRepo;
+
   private artistRecommendationRepo: ArtistRecommendationRepo;
 
   private artistService: ArtistService;
@@ -79,6 +84,8 @@ export default class MainServer {
   private genresService : GenresService;
 
   private usersService : UsersService;
+
+  private rolesService : RolesService;
 
   private docusignService: DocusignService;
 
@@ -103,6 +110,7 @@ export default class MainServer {
     this.venueRepo = new VenueRepo();
     this.genreRepo = new GenreRepo();
     this.userRepo = new UserRepo();
+    this.roleRepo = new RoleRepo();
     this.artistService = new ArtistService(this.inMemoryArtistRepo, this.artistRecommendationRepo);
     this.authService = new AuthService(this.inMemoryAuthRecommendationRepo);
     this.documentsService = new DocumentsService(this.documentsRepo, this.artistRecommendationRepo, this.inMemoryTemplatesRepo);
@@ -111,6 +119,7 @@ export default class MainServer {
     this.venuesService = new VenuesService(this.venueRepo);
     this.genresService = new GenresService(this.genreRepo);
     this.usersService = new UsersService(this.userRepo);
+    this.rolesService = new RolesService(this.roleRepo);
     auth0.generateToken();
     this.docusignService = new DocusignService(this.inMemoryDocusignRepo, this.documentsService);
     this.app = express();
@@ -126,6 +135,7 @@ export default class MainServer {
     this.app.use('/venues', new VenuesRoutes(this.venuesService).router);
     this.app.use('/genres', new GenresRoutes(this.genresService).router);
     this.app.use('/users', new UsersRoutes(this.usersService).router);
+    this.app.use('/roles', new RolesRoutes(this.rolesService).router);
     this.app.use(errorHandler);
   }
 }
