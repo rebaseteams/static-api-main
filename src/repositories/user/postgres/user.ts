@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 import { createConnection, Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 import User from '../../../models/entities/User';
 import { UsersInterface } from '../../../models/interfaces/user';
+import auth0 from '../../../modules/auth0';
 
 export default class UserRepo implements UsersInterface {
     private userRepository : Repository<User>;
@@ -13,13 +13,20 @@ export default class UserRepo implements UsersInterface {
       });
     }
 
-    async createUser(name : string, email : string, password : string, roles : string[]) : Promise<{user : User}> {
+    async createUser(name : string, email : string, password : string, role : string) : Promise<{user : User}> {
       console.log(password);
+      const data : any = await auth0.signupUser({
+        userName: name,
+        email,
+        password,
+      });
+      console.log(data);
       const user = new User(
-        uuidv4(),
+        // eslint-disable-next-line no-underscore-dangle
+        data._id,
         name,
         email,
-        roles,
+        [role],
       );
       await this.userRepository.save(user);
       return { user };

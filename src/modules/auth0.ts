@@ -3,6 +3,7 @@ import axios from 'axios';
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import config from '../config';
+import { SignUp } from '../models/types/auth';
 
 // eslint-disable-next-line no-unused-vars
 let tokenGenerated;
@@ -81,6 +82,23 @@ const requireRole = (roles : Array<string>) => async (req : Request, res : Respo
   }
 };
 
+const signupUser = async (data : SignUp) => new Promise((resolve, reject) => {
+  axios.post(`${config.AUTH_DOMAIN}dbconnections/signup`, {
+    client_id: config.AUTH_CLIENT_ID,
+    email: data.email,
+    password: data.password,
+    connection: config.AUTH_CONNECTION,
+    username: data.userName,
+    name: data.userName,
+    nickname: data.userName,
+  }).then((value) => {
+    resolve(value.data);
+  }).catch((err) => {
+    const error = { statusCode: err.response.data.statusCode, message: err.response.data.message || err.response.data.description };
+    reject(error);
+  });
+});
+
 export default {
-  generateToken, requireRole, authenticate, setAuth,
+  generateToken, requireRole, authenticate, setAuth, signupUser,
 };
