@@ -10,8 +10,8 @@ export default class UsersService implements UsersInterface {
     this.userRepo = userRepo;
   }
 
-  async createUser(name : string, email : string, password : string, roles : string[]) : Promise<{user : User}> {
-    return this.userRepo.createUser(name, email, password, roles);
+  async createUser(name : string, email : string, password : string, role : string) : Promise<{user : User}> {
+    return this.userRepo.createUser(name, email, password, role);
   }
 
   async approveUser(id : string, approval : boolean) : Promise<{success : boolean}> {

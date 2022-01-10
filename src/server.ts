@@ -10,9 +10,7 @@ import ArtistRoute from './routes/artists/artistRoutes';
 import ArtistService from './services/artist';
 import errorHandler from './modules/errorHandler';
 import contentType from './modules/contentType';
-import AuthRoutes from './routes/auth/auth-routes';
 import AuthService from './services/auth';
-import InMemoryAuthRepo from './repositories/auth/in-memory/auth';
 import DocumentsService from './services/documents';
 import TemplatesService from './services/templates';
 import InMemoryTemplatesRepo from './repositories/templates/in-memory/templates';
@@ -49,8 +47,6 @@ export default class MainServer {
   private inMemoryArtistRepo: ArtistsRepo;
 
   private inMemoryArtistRecommendationRepo: InMemoryArtistRecommendationRepo;
-
-  private inMemoryAuthRecommendationRepo: InMemoryAuthRepo;
 
   private inMemoryDocumentsRepo: InMemoryDocumentsRepo;
 
@@ -107,7 +103,6 @@ export default class MainServer {
   constructor() {
     this.inMemoryArtistRepo = new ArtistsRepo();
     this.inMemoryArtistRecommendationRepo = new InMemoryArtistRecommendationRepo();
-    this.inMemoryAuthRecommendationRepo = new InMemoryAuthRepo();
     // this.inMemoryDocumentsRepo = new InMemoryDocumentsRepo();
     this.inMemoryTemplatesRepo = new InMemoryTemplatesRepo();
     this.inMemoryDocusignRepo = new InMemoryDocusignRep();
@@ -120,7 +115,6 @@ export default class MainServer {
     this.roleRepo = new RoleRepo();
     this.resourceRepo = new ResourceRepo();
     this.artistService = new ArtistService(this.inMemoryArtistRepo, this.artistRecommendationRepo);
-    this.authService = new AuthService(this.inMemoryAuthRecommendationRepo);
     this.documentsService = new DocumentsService(this.documentsRepo, this.artistRecommendationRepo, this.inMemoryTemplatesRepo);
     this.templatesService = new TemplatesService(this.inMemoryTemplatesRepo);
     this.brandsService = new BrandsService(this.brandRepo);
@@ -139,7 +133,6 @@ export default class MainServer {
     this.app.use(auth0.authenticate);
     this.app.use(auth0.setAuth);
     this.app.use('/artists', auth0.requireRole(['branduser']), new ArtistRoute(this.artistService, this.documentsService, this.templatesService, this.docusignService).router);
-    this.app.use('/auth', new AuthRoutes(this.authService).router);
     this.app.use('/brands', new BrandsRoutes(this.brandsService).router);
     this.app.use('/venues', new VenuesRoutes(this.venuesService).router);
     this.app.use('/genres', new GenresRoutes(this.genresService).router);

@@ -9,7 +9,7 @@ export default class UsersRoutes {
 
     this.router.post('/', async (req, res, next) => {
       try {
-        const data = await usersService.createUser(req.body.name, req.body.email, req.body.password, req.body.roles);
+        const data = await usersService.createUser(req.body.name, req.body.email, req.body.password, req.body.role);
         res.send({ success: true, data });
       } catch (error) {
         next(error);

@@ -4,8 +4,10 @@ password: string;
 }
 
 export type SignUp = {
-    username: string;
-    password: string;
+    email : string,
+    password : string,
+    userName : string,
+    role? : string,
 }
 
 export type SignUpDB = {
