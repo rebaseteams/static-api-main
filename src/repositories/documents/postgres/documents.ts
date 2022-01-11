@@ -90,8 +90,13 @@ export default class DocumentsRepo implements DocumentsInterface {
   }
 
   async editDocument(id : string, html : string) : Promise<{ success : boolean }> {
-    if (fs.existsSync(`${__dirname}/data/${id}.json`) && fs.existsSync(`${__dirname}/data/html/${id}.html`)) {
-      fs.writeFileSync(`${__dirname}/../in-memory/data/html/${id}.html`, html);
+    const document = await this.documentRepository.findOne({ id });
+    if (document) {
+      const newDocument = {
+        ...document,
+        html,
+      };
+      this.documentRepository.save(newDocument);
       return { success: true };
     }
     const err = { message: `Document not found for id: ${id}`, statusCode: 404 };
