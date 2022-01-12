@@ -40,5 +40,18 @@ export default class DocusignRoutes {
         next(err);
       }
     });
+
+    this.router.get('/:envelopeId', async (req, res, next) => {
+      try {
+        const response = await this.docusignService.getSignedPdf(req.params.envelopeId);
+        if (!response.success) {
+          res.send({ success: false, data: response.pdf });
+        } else {
+          res.send({ success: true, data: response.pdf });
+        }
+      } catch (err) {
+        next(err);
+      }
+    });
   }
 }
