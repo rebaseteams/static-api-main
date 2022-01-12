@@ -67,4 +67,12 @@ export class DocusignService implements DocusignInterface {
       resolve(this.DocusignRepo.getAllEnvelopes());
     });
   }
+
+  getSignedPdf(envelopeId: string): Promise<{ success: boolean, pdf: string; }> {
+    return new Promise(
+      (resolve) => {
+        resolve(this.DocusignRepo.getSignedPdf(envelopeId));
+      },
+    );
+  }
 }

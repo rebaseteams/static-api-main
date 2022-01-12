@@ -1,5 +1,6 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import fs from 'fs';
+import path from 'path';
 import { CreateEnvelopeResponseData, DocusignInterface } from '../../../models/interfaces/docusign';
 import { EnvelopeData } from '../../../models/types/docusign';
 import fileCheck from '../../../utils/fileCheck';
@@ -107,6 +108,66 @@ export class InMemoryDocusignRep implements DocusignInterface {
         });
       } catch (error) {
         resolve({ success: false, error: error.message });
+      }
+    });
+  }
+
+  async getSignedPdf(envelopeId: string): Promise<{ success: boolean, pdf: string | null }> {
+    const getSigned = (): Promise<string | null> => {
+      const apiconfig: AxiosRequestConfig = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `bearer ${process.env.DOCUSIGN_ACCESS_TOKEN}`,
+        },
+        responseType: 'stream',
+      };
+      return new Promise((resolve) => axios.get(`${process.env.DOCUSIGN_BASE_URI}/envelopes/${envelopeId}/documents/combined`, apiconfig).then((response) => {
+        //  cheking if the folders are available or not
+        fileCheck(`${__dirname}/data`, false);
+        fileCheck(`${__dirname}/data/signed`, false);
+
+        // file name
+        const filename = `${envelopeId}.pdf`;
+        const tempFile = path.resolve(`${__dirname}/data/signed`, filename); // file path
+
+        // generate a file stream
+        response.data.pipe(fs.createWriteStream(tempFile));
+
+        response.data.on('end', () => {
+          // file has been download
+          const data = fs.readFileSync(tempFile);
+          const signedBase64 = Buffer.from(data).toString('base64');
+          resolve(signedBase64);
+        });
+
+        response.data.on('error', (err) => {
+          // error in download
+          resolve(err);
+        });
+      }).catch(async (err) => {
+        // Updating the access_token
+        const result = await updateAccessToken();
+        if (result) {
+          const data = await getSigned();
+          resolve(data);
+        }
+        resolve(err);
+      }));
+    };
+    return new Promise((resolve) => {
+      // TODO should check if the signed pdf is available on S# bucket
+      // if yes send that in response
+      // else get it using docusign api
+      try {
+        getSigned().then((result) => {
+          resolve({ success: true, pdf: result });
+        }).catch((err) => {
+          if (err.length > 150) err.slice(0, 150);
+          resolve({ success: false, pdf: err });
+        });
+      } catch (error) {
+        if (error.length > 150) error.slice(0, 150);
+        resolve({ success: false, pdf: error });
       }
     });
   }

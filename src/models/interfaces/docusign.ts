@@ -13,4 +13,5 @@ export interface DocusignInterface {
   createEnvelope(envelopeData: EnvelopeData, documentId: string): Promise<{ success: boolean; data?: CreateEnvelopeResponseData }>;
   getEnvelopeStatus(envelopeId: string, documentId: string): Promise<any>;
   getAllEnvelopes(): Promise<Array<any>>;
+  getSignedPdf(envelopeId: string): Promise<{ success: boolean, pdf: string | null }>
 }

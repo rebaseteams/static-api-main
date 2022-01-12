@@ -68,7 +68,6 @@ export default class DocumentsRepo implements DocumentsInterface {
 
   async getAllDocuments() : Promise<Document[]> {
     let allDocuments : Document[] = [];
-    console.log(allDocuments);
     [allDocuments] = await this.documentRepository.findAndCount();
     console.log(allDocuments);
     return allDocuments;
