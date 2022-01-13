@@ -12,14 +12,18 @@ import Document from '../../../models/entities/Document';
 import { DocumentsInterface } from '../../../models/interfaces/documents';
 import { DocumentContractData, DocumentMode, PatchDocumentStatus } from '../../../models/types/documentContract';
 import fileCheck from '../../../utils/fileCheck';
+import { FileManagerInterface } from '../../../models/interfaces/file-manager';
 
 export default class DocumentsRepo implements DocumentsInterface {
   private documentRepository : Repository<Document>;
 
-  constructor() {
+  private fileManagerRepository : FileManagerInterface;
+
+  constructor(fileManagerRepo: FileManagerInterface) {
     createConnection().then((connection) => {
       this.documentRepository = connection.getRepository(Document);
     });
+    this.fileManagerRepository = fileManagerRepo;
   }
 
   async createDocument(data : any, required : any, template : Template, recommendationId : string, docName : string, userId : string) : Promise<{ document : Document }> {
@@ -38,7 +42,14 @@ export default class DocumentsRepo implements DocumentsInterface {
     };
     const { html } = template;
     const templateHtml = `./data/html/${html}`;
-    const compiledHtml = handlebars.compile(fs.readFileSync(templateHtml).toString());
+    const filekey = `concert-templates/${html}`;
+    const downloadedRes = await this.fileManagerRepository.downloadFile(filekey);
+    let compiledHtml;
+    if (downloadedRes.success) {
+      compiledHtml = handlebars.compile(downloadedRes.data.toString());
+    } else {
+      compiledHtml = handlebars.compile(fs.readFileSync(templateHtml).toString());
+    }
     const defaultMode: DocumentMode = 'edit';
     const defaultContract: DocumentContractData = {
       envelopeId: '',

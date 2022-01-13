@@ -39,6 +39,8 @@ import RolesRoutes from './routes/role/roleRoute';
 import ResourcesService from './services/resource';
 import ResourceRepo from './repositories/resource/postgres/resource';
 import ResourcesRoutes from './routes/resource/resourceRoute';
+import { FileManagerService } from './services/file-manager';
+import { FileManagerAWSS3Repo } from './repositories/file-manager/s3-file-manager/awsS3';
 
 // to use .environment variable in the project
 require('dotenv').config();
@@ -92,6 +94,8 @@ export default class MainServer {
 
   private docusignService: DocusignService;
 
+  private fileManagerService: FileManagerService;
+
   app;
 
   corsOptions = {
@@ -106,8 +110,9 @@ export default class MainServer {
     // this.inMemoryDocumentsRepo = new InMemoryDocumentsRepo();
     this.inMemoryTemplatesRepo = new InMemoryTemplatesRepo();
     this.inMemoryDocusignRepo = new InMemoryDocusignRep();
+    this.fileManagerService = new FileManagerService(new FileManagerAWSS3Repo());
     this.artistRecommendationRepo = new ArtistRecommendationRepo();
-    this.documentsRepo = new DocumentsRepo();
+    this.documentsRepo = new DocumentsRepo(this.fileManagerService);
     this.brandRepo = new BrandRepo();
     this.venueRepo = new VenueRepo();
     this.genreRepo = new GenreRepo();
