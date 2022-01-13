@@ -41,15 +41,16 @@ export default class DocumentsRepo implements DocumentsInterface {
       ...data,
     };
     const { html } = template;
-    const templateHtml = `./data/html/${html}`;
-    const filekey = `concert-templates/${html}`;
+    // const templateHtml = `./data/html/${html}`;
+    const filekey = `contract-templates/${html}`;
     const downloadedRes = await this.fileManagerRepository.downloadFile(filekey);
     let compiledHtml;
     if (downloadedRes.success) {
       compiledHtml = handlebars.compile(downloadedRes.data.toString());
-    } else {
-      compiledHtml = handlebars.compile(fs.readFileSync(templateHtml).toString());
     }
+    // else {
+    //   compiledHtml = handlebars.compile(fs.readFileSync(templateHtml).toString());
+    // }
     const defaultMode: DocumentMode = 'edit';
     const defaultContract: DocumentContractData = {
       envelopeId: '',
