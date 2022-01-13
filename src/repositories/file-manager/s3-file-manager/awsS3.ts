@@ -14,10 +14,12 @@ export class FileManagerAWSS3Repo implements FileManagerInterface {
     };
     AWS.config.update(this.config);
 
+    const key = folder.length === 0 ? `${id}.${type}` : `${folder}/${id}.${type}`;
+
     const s3 = new AWS.S3(this.config);
     const params = {
       Bucket: process.env.AWS_S3_BUCKET,
-      Key: `${folder}/${id}.${type}`,
+      Key: key,
       Body: JSON.stringify(data),
       folder,
       type,
@@ -36,7 +38,7 @@ export class FileManagerAWSS3Repo implements FileManagerInterface {
 
   // eslint-disable-next-line no-unused-vars
   downloadFile = async (id: string, folder: string, type: FileType):
-  Promise<{ success: boolean, data: Buffer }> => new Promise((resolve) => {
+  Promise<{ success: boolean, data: Buffer | string }> => new Promise((resolve) => {
     try {
       this.config = {
         accessKeyId: process.env.AWS_ACCESS_KEY,
@@ -58,6 +60,7 @@ export class FileManagerAWSS3Repo implements FileManagerInterface {
         const buf = Buffer.concat(bufs);
         resolve({ success: true, data: buf });
       });
+      fileStream.on('error', (err) => resolve({ success: false, data: err.message }));
     } catch (err) {
       resolve({ success: false, data: null });
     }
