@@ -2,12 +2,15 @@
 import { createConnection, Repository } from 'typeorm';
 import User from '../../../models/entities/User';
 import { UsersInterface } from '../../../models/interfaces/user';
-import auth0 from '../../../modules/auth0';
+import { Auth0 } from '../../auth0/http/auth0';
 
 export default class UserRepo implements UsersInterface {
     private userRepository : Repository<User>;
+    auth0: Auth0;
 
-    constructor() {
+    constructor(auth0: Auth0) {
+      this.auth0 = auth0;
+
       createConnection().then((connection) => {
         this.userRepository = connection.getRepository(User);
       });
@@ -15,7 +18,7 @@ export default class UserRepo implements UsersInterface {
 
     async createUser(name : string, email : string, password : string, role : string) : Promise<{user : User}> {
       console.log(password);
-      const data : any = await auth0.signupUser({
+      const data : any = await this.auth0.signupUser({
         userName: name,
         email,
         password,

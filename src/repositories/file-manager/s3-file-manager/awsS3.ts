@@ -18,6 +18,7 @@ export class FileManagerAWSS3Repo implements FileManagerInterface {
     const params = {
       Bucket: process.env.AWS_S3_BUCKET,
       Key: id,
+      // TODO this is problematic.
       Body: JSON.stringify(data),
     };
 
