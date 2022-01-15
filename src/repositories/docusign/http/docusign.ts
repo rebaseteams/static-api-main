@@ -8,7 +8,7 @@ import updateAccessToken from './regenerateAuthoriztion';
 
 const html_to_pdf = require('html-pdf-node');
 
-export class InMemoryDocusignRep implements DocusignInterface {
+export class DocusignRepo implements DocusignInterface {
   async createEnvelope(envelopeData: EnvelopeData): Promise<{ success: boolean; data?: CreateEnvelopeResponseData }> {
     const api_call = async (): Promise<CreateEnvelopeResponseData | string> => {
       const apiconfig = {
