@@ -36,6 +36,7 @@ export class DevServer {
       AUTH_TOKEN: '',
     };
 
+    Auth0.initAuth(configConstants.AUTH_DOMAIN, configConstants.AUTH_AUDIENCE);
     const auth0 = new Auth0(configConstants);
 
     /** Repositories Initializations: */

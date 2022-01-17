@@ -11,7 +11,7 @@ import { Auth0Interface } from '../../../models/interfaces/auth0';
 export class Auth0 implements Auth0Interface {
   tokenGenerated;
 
-  auth0;
+  static auth0;
 
   AUTH_DOMAIN;
 
@@ -21,13 +21,14 @@ export class Auth0 implements Auth0Interface {
 
   AUTH_CONNECTION;
 
-  constructor(config: ConfigConstants) {
-    console.log(config);
-    this.auth0 = auth({
-      issuerBaseURL: config.AUTH_DOMAIN,
-      audience: config.AUTH_AUDIENCE,
+  static initAuth(AUTH_DOMAIN, AUTH_AUDIENCE) {
+    Auth0.auth0 = auth({
+      issuerBaseURL: AUTH_DOMAIN,
+      audience: AUTH_AUDIENCE,
     });
+  }
 
+  constructor(config: ConfigConstants) {
     this.AUTH_DOMAIN = config.AUTH_DOMAIN;
     this.AUTH_CLIENT_ID = config.AUTH_CLIENT_ID;
     this.AUTH_CONNECTION = config.AUTH_CONNECTION;
@@ -56,8 +57,10 @@ export class Auth0 implements Auth0Interface {
 
   async authenticate(req : Request, res : Response, next : NextFunction) {
     try {
-      if (req.headers.userid === process.env.DEFAULT_USERID) return next();
-      return this.auth0(req, res, next);
+      if (req.headers.userid === process.env.DEFAULT_USERID) {
+        return next();
+      }
+      return Auth0.auth0(req, res, next);
     } catch (err) {
       next(err);
     }
