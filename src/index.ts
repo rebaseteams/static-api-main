@@ -3,8 +3,8 @@ import MainServer from './server';
 
 const PORT = 3000;
 
-const environment: Environment = process.env.ENV === 'production' ? 
-  'production' : 'development';
+const environment: Environment = process.env.ENV === 'production'
+  ? 'production' : 'development';
 
 new MainServer(environment).app.listen(PORT, () => {
   // eslint-disable-next-line no-console

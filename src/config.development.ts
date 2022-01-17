@@ -1,4 +1,3 @@
-
 import { ConfigInterface } from './models/types/config';
 import InMemoryArtistRecommendationRepo from './repositories/artistRecommendations/in-memory/artist-recommendation';
 import ArtistsRepo from './repositories/artists/in-memory/artist';
@@ -25,7 +24,6 @@ import TemplatesService from './services/templates';
 import UsersService from './services/user';
 import VenuesService from './services/venue';
 
-
 export class DevServer {
   config: ConfigInterface;
 
@@ -35,8 +33,8 @@ export class DevServer {
       AUTH_DOMAIN: 'http://localhost:4000',
       AUTH_CLIENT_ID: 'B7hdgDYvx7fyGktJJxxidg9qg0Xvbq0s',
       AUTH_CONNECTION: 'Username-Password-Authentication',
-      AUTH_TOKEN: ''
-    }
+      AUTH_TOKEN: '',
+    };
 
     const auth0 = new Auth0(configConstants);
 
@@ -63,7 +61,7 @@ export class DevServer {
         documentsService: new DocumentsService(documentsRepo, artistRecommendationRepo, templatesRepo),
         templatesService: new TemplatesService(templatesRepo),
         brandsService: new BrandsService(brandRepo),
-        venuesService: new VenuesService(venueRepo), 
+        venuesService: new VenuesService(venueRepo),
         genresService: new GenresService(genreRepo),
         usersService: new UsersService(userRepo),
         rolesService: new RolesService(roleRepo),
@@ -72,8 +70,8 @@ export class DevServer {
         fileManagerService: new FileManagerService(fileManagerRepo),
       },
       providers: {
-        auth0: auth0,
-      }
-    }
+        auth0,
+      },
+    };
   }
 }
