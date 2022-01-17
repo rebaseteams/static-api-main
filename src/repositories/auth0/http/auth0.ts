@@ -9,10 +9,15 @@ import { ConfigConstants } from '../../../models/types/config';
 
 export class Auth0 {
   tokenGenerated;
+
   auth0;
+
   AUTH_DOMAIN;
+
   AUTH_TOKEN;
+
   AUTH_CLIENT_ID;
+
   AUTH_CONNECTION;
 
   constructor(config: ConfigConstants) {
@@ -45,12 +50,12 @@ export class Auth0 {
     } catch (err) {
       return next(err);
     }
-  };
+  }
 
   async authenticate(req : Request, res : Response, next : NextFunction) {
     if (req.headers.userid === process.env.DEFAULT_USERID) return next();
     return this.auth0(req, res, next);
-  };
+  }
 
   async generateToken() {
     try {
@@ -64,7 +69,7 @@ export class Auth0 {
           audience: `${this.AUTH_DOMAIN}api/v2/`,
         },
       };
-  
+
       await axios.post(options.url, options.data, { headers: options.headers }).then((response) => {
         this.AUTH_TOKEN = response.data.access_token;
       });
@@ -72,14 +77,13 @@ export class Auth0 {
     } catch (error) {
       this.tokenGenerated = false;
     }
-  };
+  }
 
   async checkRoles(roles : Array<string>, userId : string | (() => string)) : Promise<boolean> {
     const resp = await axios.get(`${this.AUTH_DOMAIN}api/v2/users/${userId}/roles`, { headers: { Authorization: `Bearer ${this.AUTH_TOKEN}` } });
     const user_roles : Array<{id : string, name : string, description : string}> = resp.data;
     return roles.some((role) => user_roles.map((val) => val.name).includes(role));
-  };
-
+  }
 
   // eslint-disable-next-line consistent-return
   requireRole(roles : Array<string>) {
@@ -115,6 +119,5 @@ export class Auth0 {
         reject(error);
       });
     });
-  } 
-  
+  }
 }

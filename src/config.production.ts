@@ -1,4 +1,3 @@
-
 import { ConfigInterface } from './models/types/config';
 import ArtistRecommendationRepo from './repositories/artistRecommendations/postgres/artistRecommendation';
 import ArtistsRepo from './repositories/artists/postgres/artists';
@@ -25,7 +24,6 @@ import TemplatesService from './services/templates';
 import UsersService from './services/user';
 import VenuesService from './services/venue';
 
-
 export class ProdServer {
   config: ConfigInterface;
 
@@ -35,7 +33,7 @@ export class ProdServer {
       AUTH_DOMAIN: 'http://localhost:4000',
       AUTH_CLIENT_ID: 'B7hdgDYvx7fyGktJJxxidg9qg0Xvbq0s',
       AUTH_CONNECTION: 'Username-Password-Authentication',
-      AUTH_TOKEN: ''
+      AUTH_TOKEN: '',
     };
 
     /** Repositories Initializations: */
@@ -62,7 +60,7 @@ export class ProdServer {
         documentsService: new DocumentsService(documentsRepo, artistRecommendationRepo, templatesRepo),
         templatesService: new TemplatesService(templatesRepo),
         brandsService: new BrandsService(brandRepo),
-        venuesService: new VenuesService(venueRepo), 
+        venuesService: new VenuesService(venueRepo),
         genresService: new GenresService(genreRepo),
         usersService: new UsersService(userRepo),
         rolesService: new RolesService(roleRepo),
@@ -71,10 +69,8 @@ export class ProdServer {
         fileManagerService: new FileManagerService(fileManagerRepo),
       },
       providers: {
-        auth0: auth0,
-      }
-    }
-
+        auth0,
+      },
+    };
   }
-
 }

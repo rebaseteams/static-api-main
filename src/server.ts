@@ -31,7 +31,7 @@ export default class MainServer {
   constructor(environment: Environment) {
     const server = environment === 'production' ? new ProdServer() : new DevServer();
 
-    const { 
+    const {
       artistService,
       documentsService,
       docusignService,
@@ -41,7 +41,7 @@ export default class MainServer {
       usersService,
       rolesService,
       resourcesService,
-      templatesService
+      templatesService,
     } = server.config.services;
 
     const { auth0 } = server.config.providers;

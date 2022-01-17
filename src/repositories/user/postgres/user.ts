@@ -6,6 +6,7 @@ import { Auth0 } from '../../auth0/http/auth0';
 
 export default class UserRepo implements UsersInterface {
     private userRepository : Repository<User>;
+
     auth0: Auth0;
 
     constructor(auth0: Auth0) {
