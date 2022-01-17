@@ -4,10 +4,11 @@ import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { SignUp } from '../../../models/types/auth';
 import { ConfigConstants } from '../../../models/types/config';
+import { Auth0Interface } from '../../../models/interfaces/auth0';
 
 // eslint-disable-next-line no-unused-vars
 
-export class Auth0 {
+export class Auth0 implements Auth0Interface {
   tokenGenerated;
 
   auth0;
@@ -21,6 +22,7 @@ export class Auth0 {
   AUTH_CONNECTION;
 
   constructor(config: ConfigConstants) {
+    console.log(config);
     this.auth0 = auth({
       issuerBaseURL: config.AUTH_DOMAIN,
       audience: config.AUTH_AUDIENCE,
@@ -53,11 +55,16 @@ export class Auth0 {
   }
 
   async authenticate(req : Request, res : Response, next : NextFunction) {
-    if (req.headers.userid === process.env.DEFAULT_USERID) return next();
-    return this.auth0(req, res, next);
+    try {
+      if (req.headers.userid === process.env.DEFAULT_USERID) return next();
+      return this.auth0(req, res, next);
+    } catch (err) {
+      next(err);
+    }
   }
 
   async generateToken() {
+    // console.log('generate token');
     try {
       const options = {
         url: `${this.AUTH_DOMAIN}oauth/token`,
@@ -87,7 +94,7 @@ export class Auth0 {
 
   // eslint-disable-next-line consistent-return
   requireRole(roles : Array<string>) {
-    return async (req : Request, res : Response, next : NextFunction) => {
+    return async (req : Request, res : Response, next : NextFunction): Promise<any> => {
       try {
         if (req.headers.userid === process.env.DEFAULT_USERID) return next();
         const token = req.headers.authorization.split(' ')[1];
@@ -99,6 +106,7 @@ export class Auth0 {
       } catch (err) {
         next(err);
       }
+      return 0;
     };
   }
 
