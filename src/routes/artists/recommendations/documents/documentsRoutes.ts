@@ -28,7 +28,7 @@ export default class DocumentsRoutes {
     this.router.post('/', createDocumentValidator, async (req, res, next) => {
       try {
         const userId: string = req.headers.userId ? String(req.headers.userId) : '';
-        const template = templatesService.getTemplate(req.body.templateId);
+        const template = await templatesService.getTemplate(req.body.templateId);
         const data = await documentsService.createDocument(req.body.fields, req.body.required, template, req.body.recommendationId, req.body.name, userId);
         res.send({ success: true, data });
       } catch (error) {

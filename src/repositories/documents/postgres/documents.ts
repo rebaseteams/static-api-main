@@ -43,7 +43,7 @@ export default class DocumentsRepo implements DocumentsInterface {
     const { html } = template;
     // const templateHtml = `./data/html/${html}`;
     const filekey = `contract-templates/${html}`;
-    const downloadedRes = await this.fileManagerRepository.downloadFile(filekey);
+    const downloadedRes = await this.fileManagerRepository.get(filekey);
     let compiledHtml;
     if (downloadedRes.success) {
       compiledHtml = handlebars.compile(downloadedRes.data.toString());

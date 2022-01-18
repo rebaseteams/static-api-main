@@ -1,55 +1,74 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable consistent-return */
 import { v4 as uuidv4 } from 'uuid';
-import * as fs from 'fs';
 import { ArtistRecommendationInterface } from '../../../models/interfaces/artist-recommendation';
 import { ARec, ArtistRecommendation } from '../../../models/types/artist-recommendation';
 import { ConcertCreationResponse, QuestionsUI } from '../../../models/types/questions';
-import fileCheck from '../../../utils/fileCheck';
 import { Artist } from '../../../models/types/artist';
+import { FileManagerInterface } from '../../../models/interfaces/file-manager';
 
 export default class InMemoryArtistRecommendationRepo implements ArtistRecommendationInterface {
+  fileManager: FileManagerInterface;
+
+  constructor(fileManager: FileManagerInterface) {
+    this.fileManager = fileManager;
+  }
+
   async getRecommendationStatus(id : string) : Promise<{status : boolean}> {
-    if (fs.existsSync(`${__dirname}/data/${id}.json`)) {
-      const readData = fs.readFileSync(`${__dirname}/data/${id}.json`).toString();
-      const data = JSON.parse(readData) as ArtistRecommendation;
+    const res = await this.fileManager.get(`artist-recommendation/${id}.json`);
+    if (res.success) {
+      const data = JSON.parse(res.data.toString()) as ArtistRecommendation;
       return { status: data.status };
     }
+
     const err = { message: `Recommendation not found for id: ${id}`, statusCode: 404 };
     throw err;
   }
 
   async getRecommendation(id : string) : Promise<ArtistRecommendation> {
-    if (fs.existsSync(`${__dirname}/data/${id}.json`)) {
-      const readData = fs.readFileSync(`${__dirname}/data/${id}.json`).toString();
-      const data = JSON.parse(readData) as ArtistRecommendation;
+    const res = await this.fileManager.get(`artist-recommendation/${id}.json`);
+    if (res.success) {
+      const data = JSON.parse(res.data.toString()) as ArtistRecommendation;
       return data;
     }
+
     const err = { message: `Recommendation not found for id: ${id}`, statusCode: 404 };
     throw err;
   }
 
-  async getAllRecommendations() : Promise<ConcertCreationResponse[]> {
-    fileCheck(`${__dirname}/data`, false);
+  async getAllRecommendations(): Promise<ConcertCreationResponse[]> {
+    // fileCheck(`${__dirname}/data`, false);
+
     const allRecommendations : ConcertCreationResponse[] = [];
-    fs.readdirSync(`${__dirname}/data`).forEach((file) => {
-      const toread = fs.readFileSync(`${__dirname}/data/${file}`).toString();
-      const dataJson = JSON.parse(toread) as ArtistRecommendation;
-      const recommendation : ConcertCreationResponse = {
-        id: dataJson.concertData.id,
-        concertName: dataJson.concertData.concertName,
-        status: dataJson.status,
-        dateCreated: dataJson.concertData.dateCreated,
-      };
-      allRecommendations.push(recommendation);
-    });
+    const res = await this.fileManager.list('artist-recommendation');
+
+    if (res.success && res.data.length) {
+      for (let i = 0; i < res.data.length; i++) {
+        const file = res.data[i];
+
+        const toread = await this.fileManager.get(`artist-recommendation/${file}`);
+        if (toread.success) {
+          const dataJson = JSON.parse(toread.data.toString()) as ArtistRecommendation;
+          const recommendation : ConcertCreationResponse = {
+            id: dataJson.concertData.id,
+            concertName: dataJson.concertData.concertName,
+            status: dataJson.status,
+            dateCreated: dataJson.concertData.dateCreated,
+          };
+          allRecommendations.push(recommendation);
+        }
+      }
+    }
+
     return allRecommendations;
   }
 
   async discardArtist(id : string, artistId : string) : Promise<{ success: boolean }> {
-    if (fs.existsSync(`${__dirname}/data/${id}.json`)) {
-      const readData = fs.readFileSync(`${__dirname}/data/${id}.json`).toString();
-      const data = JSON.parse(readData) as ArtistRecommendation;
+    const exists = await this.fileManager.exists(`artist-recommendation/${id}.json`);
+    if (exists) {
+      const readData = await this.fileManager.get(`artist-recommendation/${id}.json`);
+      const data = JSON.parse(readData.data.toString()) as ArtistRecommendation;
+
       let artistsArray = data.artists;
       const discardedArtistArray = data.discardedArtists;
       let found = false;
@@ -66,17 +85,19 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
       }
       data.artists = artistsArray;
       data.discardedArtists = discardedArtistArray;
-      fs.writeFileSync(`${__dirname}/data/${id}.json`, JSON.stringify(data));
-      return { success: true };
+      const writeRes = await this.fileManager.set(`artist-recommendation/${id}.json`, Buffer.from(JSON.stringify(data)));
+      return { success: writeRes.success };
     }
     const err = { message: `Recommendation not found for id: ${id}`, statusCode: 404 };
     throw err;
   }
 
   async deleteRecommendation(id : string) : Promise<{ success: boolean }> {
-    if (fs.existsSync(`${__dirname}/data/${id}.json`)) {
-      fs.unlinkSync(`${__dirname}/data/${id}.json`);
-      return { success: true };
+    const exists = await this.fileManager.exists(`artist-recommendation/${id}.json`);
+
+    if (exists) {
+      const delRes = await this.fileManager.delete(`artist-recommendation/${id}.json`);
+      return { success: delRes };
     }
     const err = { message: `Recommendation not found for id: ${id}`, statusCode: 404 };
     throw err;
@@ -104,21 +125,29 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
       lastChangedUserId: questions.userId,
       status: false,
     };
-    fileCheck(`${__dirname}/data`, false);
-    fs.writeFileSync(`${__dirname}/data/${recommendation.concertData.id}.json`, JSON.stringify(recommendation));
+
+    // fileCheck(`${__dirname}/data`, false);
+    await this.fileManager.set(
+      `artist-recommendation/${recommendation.concertData.id}.json`,
+      Buffer.from(JSON.stringify(recommendation)),
+    );
+
     const data : ConcertCreationResponse = {
       id: recommendation.concertData.id,
       concertName: recommendation.concertData.concertName,
       status: recommendation.status,
       dateCreated: recommendation.concertData.dateCreated,
     };
+
     return data;
   }
 
   async generateRecommendedArtists(id : string, _artists : Artist[]) : Promise<{success : boolean}> {
-    if (fs.existsSync(`${__dirname}/data/${id}.json`)) {
-      const readData = fs.readFileSync(`${__dirname}/data/${id}.json`).toString();
-      const data = JSON.parse(readData) as ArtistRecommendation;
+    const exists = await this.fileManager.exists(`artist-recommendation/${id}.json`);
+
+    if (exists) {
+      const readData = await this.fileManager.get(`artist-recommendation/${id}.json`);
+      const data = JSON.parse(readData.data.toString()) as ArtistRecommendation;
       let { artists } = data;
       const recommendedArtists : ARec[] = [];
       _artists.forEach((element) => {
@@ -198,17 +227,19 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
       artists = artists.concat(recommendedArtists).slice(0, 10);
       data.artists = artists;
       data.status = true;
-      fs.writeFileSync(`${__dirname}/data/${id}.json`, JSON.stringify(data));
-      return { success: true };
+      const writeRes = await this.fileManager.set(`artist-recommendation/${id}.json`, Buffer.from(JSON.stringify(data)));
+      return { success: writeRes.success };
     }
     const err = { message: `Recommendation not found for id: ${id}`, statusCode: 404 };
     throw err;
   }
 
   async getArtistCount(id : string) : Promise<{count : number }> {
-    if (fs.existsSync(`${__dirname}/data/${id}.json`)) {
-      const readData = fs.readFileSync(`${__dirname}/data/${id}.json`).toString();
-      const data = JSON.parse(readData) as ArtistRecommendation;
+    const exists = await this.fileManager.exists(`artist-recommendation/${id}.json`);
+
+    if (exists) {
+      const readData = await this.fileManager.get(`artist-recommendation/${id}.json`);
+      const data = JSON.parse(readData.data.toString()) as ArtistRecommendation;
       const artistsCount = data.artists.length;
       const discardedArtistsCount = data.discardedArtists.length;
       return { count: artistsCount + discardedArtistsCount };
@@ -218,12 +249,14 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
   }
 
   async registerDocument(id : string, docid : string) : Promise<{success : boolean}> {
-    if (fs.existsSync(`${__dirname}/data/${id}.json`)) {
-      const readData = fs.readFileSync(`${__dirname}/data/${id}.json`).toString();
-      const data = JSON.parse(readData) as ArtistRecommendation;
+    const exists = await this.fileManager.exists(`artist-recommendation/${id}.json`);
+
+    if (exists) {
+      const readData = await this.fileManager.get(`artist-recommendation/${id}.json`);
+      const data = JSON.parse(readData.data.toString()) as ArtistRecommendation;
       data.documents.push(docid);
-      fs.writeFileSync(`${__dirname}/data/${id}.json`, JSON.stringify(data));
-      return { success: true };
+      const writeRes = await this.fileManager.set(`artist-recommendation/${id}.json`, Buffer.from(JSON.stringify(data)));
+      return { success: writeRes.success };
     }
     const err = { message: `Recommendation not found for id: ${id}`, statusCode: 404 };
     throw err;

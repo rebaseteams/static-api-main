@@ -5,6 +5,6 @@ import { Template } from '../types/template';
 export interface TemplatesInterface{
   createTemplate() : void;
   editTemplate() : void;
-  getTemplate(id : string) : Template
-  getAllTemplates() : Template[]
+  getTemplate(id : string) : Promise<Template>;
+  getAllTemplates() : Promise<Template[]>;
 }

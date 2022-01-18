@@ -1,12 +1,17 @@
 /* eslint-disable no-console */
 import { v4 as uuidv4 } from 'uuid';
-import * as fs from 'fs';
 import Brand from '../../../models/entities/Brand';
 import { BrandsInterface } from '../../../models/interfaces/brand';
-import fileCheck from '../../../utils/fileCheck';
+import { FileManagerInterface } from '../../../models/interfaces/file-manager';
 
 export default class BrandRepo implements BrandsInterface {
-  async createBrand(name : string, logo : string, website : string, contact : string) : Promise<{brand : Brand}> {
+  fileManager: FileManagerInterface;
+
+  constructor(fileManager: FileManagerInterface) {
+    this.fileManager = fileManager;
+  }
+
+  async createBrand(name: string, logo: string, website: string, contact: string): Promise<{ brand: Brand }> {
     const brand = new Brand(
       uuidv4(),
       name,
@@ -14,57 +19,68 @@ export default class BrandRepo implements BrandsInterface {
       website,
       contact,
     );
-    fileCheck(`${__dirname}/data`, false);
-    fs.writeFileSync(`${__dirname}/data/${brand.id}.json`, JSON.stringify(brand));
+    // fileCheck(`${__dirname}/data`, false);
+    await this.fileManager.set(`brands/${brand.id}.json`, Buffer.from(JSON.stringify(brand)));
     return { brand };
   }
 
-  async getBrand(id : string) : Promise<Brand> {
-    if (fs.existsSync(`${__dirname}/data/${id}.json`)) {
-      const readData = fs.readFileSync(`${__dirname}/data/${id}.json`).toString();
-      const data = JSON.parse(readData) as Brand;
+  async getBrand(id: string): Promise<Brand> {
+    const exists = await this.fileManager.exists(`brands/${id}.json`);
+    if (exists) {
+      const readData = await this.fileManager.get(`brands/${id}.json`);
+      const data = JSON.parse(readData.data.toString()) as Brand;
       return data;
     }
     const err = { message: `Brand not found for id: ${id}`, statusCode: 404 };
     throw err;
   }
 
-  async deleteBrand(id : string) : Promise<{success : boolean}> {
-    if (fs.existsSync(`${__dirname}/data/${id}.json`)) {
-      fs.unlinkSync(`${__dirname}/data/${id}.json`);
-      return { success: true };
+  async deleteBrand(id: string): Promise<{ success: boolean }> {
+    const exists = await this.fileManager.exists(`brands/${id}.json`);
+
+    if (exists) {
+      const deleteRes = await this.fileManager.delete(`brands/${id}.json`);
+      return { success: deleteRes };
     }
     const err = { message: `Brand not found for id: ${id}`, statusCode: 404 };
     throw err;
   }
 
-  async editBrand(id : string, name : string, logo : string, website : string, contact : string) : Promise<{success : boolean}> {
-    if (fs.existsSync(`${__dirname}/data/${id}.json`)) {
-      const readData = fs.readFileSync(`${__dirname}/data/${id}.json`).toString();
-      const data = JSON.parse(readData) as Brand;
+  async editBrand(id: string, name: string, logo: string, website: string, contact: string): Promise<{ success: boolean }> {
+    const exists = await this.fileManager.exists(`brands/${id}.json`);
+
+    if (exists) {
+      const readData = await this.fileManager.get(`brands/${id}.json`);
+      const data = JSON.parse(readData.data.toString()) as Brand;
       data.name = name;
       data.logo = logo;
       data.website = website;
       data.contact = contact;
-      fs.writeFileSync(`${__dirname}/data/${id}.json`, JSON.stringify(data));
-      return { success: true };
+
+      const writeRes = await this.fileManager.set(`brands/${id}.json`, Buffer.from(JSON.stringify(data)));
+      return { success: writeRes.success };
     }
     const err = { message: `Brand not found for id: ${id}`, statusCode: 404 };
     throw err;
   }
 
-  async getBrands(skip : number, limit : number) : Promise<Brand[]> {
+  async getBrands(skip: number, limit: number): Promise<Brand[]> {
     let tracker = 0;
-    fileCheck(`${__dirname}/data`, false);
-    const allBrands : Brand[] = [];
-    fs.readdirSync(`${__dirname}/data`).forEach((file, ind) => {
+    // fileCheck(`${__dirname}/data`, false);
+    const allBrands: Brand[] = [];
+
+    const files = await this.fileManager.list('brands');
+
+    for (let ind = 0; ind < files.data.length; ind++) {
       if (skip - 1 < ind && tracker < limit) {
+        const file = files[ind];
         tracker += 1;
-        const toread = fs.readFileSync(`${__dirname}/data/${file}`).toString();
-        const brand = JSON.parse(toread) as Brand;
+        const toread = await this.fileManager.get(`brands/${file}`);
+        const brand = JSON.parse(toread.data.toString()) as Brand;
         allBrands.push(brand);
       }
-    });
+    }
+
     return allBrands;
   }
 }

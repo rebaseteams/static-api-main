@@ -1,66 +1,85 @@
 /* eslint-disable no-console */
 import { v4 as uuidv4 } from 'uuid';
-import * as fs from 'fs';
 import Genre from '../../../models/entities/Genre';
-import fileCheck from '../../../utils/fileCheck';
+import { FileManagerInterface } from '../../../models/interfaces/file-manager';
 import { GenresInterface } from '../../../models/interfaces/genre';
 
 export default class GenreRepo implements GenresInterface {
-  async createGenre(name : string, description : string) : Promise<{genre : Genre}> {
+  fileManager: FileManagerInterface;
+
+  constructor(fileManager: FileManagerInterface) {
+    this.fileManager = fileManager;
+  }
+
+  async createGenre(name: string, description: string): Promise<{ genre: Genre }> {
     const genre = new Genre(
       uuidv4(),
       name,
       description,
     );
-    fileCheck(`${__dirname}/data`, false);
-    fs.writeFileSync(`${__dirname}/data/${genre.id}.json`, JSON.stringify(genre));
+    // fileCheck(`${__dirname}/data`, false);
+
+    await this.fileManager.set(
+      `genres/${genre.id}.json`, Buffer.from(JSON.stringify(genre)),
+    );
     return { genre };
   }
 
-  async getGenre(id : string) : Promise<Genre> {
-    if (fs.existsSync(`${__dirname}/data/${id}.json`)) {
-      const readData = fs.readFileSync(`${__dirname}/data/${id}.json`).toString();
-      const data = JSON.parse(readData) as Genre;
+  async getGenre(id: string): Promise<Genre> {
+    const exists = await this.fileManager.exists(`genres/${id}.json`);
+
+    if (exists) {
+      const readData = await this.fileManager.get(`genres/${id}.json`);
+      const data = JSON.parse(readData.data.toString()) as Genre;
       return data;
     }
     const err = { message: `Genre not found for id: ${id}`, statusCode: 404 };
     throw err;
   }
 
-  async deleteGenre(id : string) : Promise<{success : boolean}> {
-    if (fs.existsSync(`${__dirname}/data/${id}.json`)) {
-      fs.unlinkSync(`${__dirname}/data/${id}.json`);
-      return { success: true };
+  async deleteGenre(id: string): Promise<{ success: boolean }> {
+    const exists = await this.fileManager.exists(`genres/${id}.json`);
+    if (exists) {
+      const delRes = await this.fileManager.delete(`genres/${id}.json`);
+      return { success: delRes };
     }
     const err = { message: `Genre not found for id: ${id}`, statusCode: 404 };
     throw err;
   }
 
-  async editGenre(id : string, name : string, description : string) : Promise<{success : boolean}> {
-    if (fs.existsSync(`${__dirname}/data/${id}.json`)) {
-      const readData = fs.readFileSync(`${__dirname}/data/${id}.json`).toString();
-      const data = JSON.parse(readData) as Genre;
+  async editGenre(id: string, name: string, description: string): Promise<{ success: boolean }> {
+    const exists = await this.fileManager.exists(`genres/${id}.json`);
+
+    if (exists) {
+      const readData = await this.fileManager.get(`genres/${id}.json`);
+      const data = JSON.parse(readData.data.toString()) as Genre;
       data.name = name;
       data.description = description;
-      fs.writeFileSync(`${__dirname}/data/${id}.json`, JSON.stringify(data));
-      return { success: true };
+
+      const writeRes = await this.fileManager.set(`genres/${id}.json`, Buffer.from(JSON.stringify(data)));
+      return { success: writeRes.success };
     }
     const err = { message: `Genre not found for id: ${id}`, statusCode: 404 };
     throw err;
   }
 
-  async getGenres(skip : number, limit : number) : Promise<Genre[]> {
+  async getGenres(skip: number, limit: number): Promise<Genre[]> {
     let tracker = 0;
-    fileCheck(`${__dirname}/data`, false);
-    const allGenres : Genre[] = [];
-    fs.readdirSync(`${__dirname}/data`).forEach((file, ind) => {
+    // fileCheck(`${__dirname}/data`, false);
+    const allGenres: Genre[] = [];
+
+    const files = await this.fileManager.list('genres');
+
+    for (let ind = 0; ind < files.data.length; ind++) {
       if (skip - 1 < ind && tracker < limit) {
+        const file = files[ind];
         tracker += 1;
-        const toread = fs.readFileSync(`${__dirname}/data/${file}`).toString();
-        const genre = JSON.parse(toread) as Genre;
+        const toread = await this.fileManager.get(`genres/${file}`);
+        const genre = JSON.parse(toread.data.toString()) as Genre;
         allGenres.push(genre);
       }
-    });
+    }
+
     return allGenres;
   }
 }

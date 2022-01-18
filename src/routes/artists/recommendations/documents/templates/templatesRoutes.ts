@@ -11,8 +11,8 @@ export default class TemplatesRoutes {
       res.send('TODO : create new template');
     });
 
-    this.router.get('/', (req, res) => {
-      const data = templatesService.getAllTemplates();
+    this.router.get('/', async (req, res) => {
+      const data = await templatesService.getAllTemplates();
       const toSend = data.map((value) => ({
         templateId: value.templateId,
         templateImg: value.templateImg,
@@ -21,8 +21,8 @@ export default class TemplatesRoutes {
       res.send({ success: true, data: toSend });
     });
 
-    this.router.get('/:tempid', (req, res) => {
-      const data = templatesService.getTemplate(req.params.tempid);
+    this.router.get('/:tempid', async (req, res) => {
+      const data = await templatesService.getTemplate(req.params.tempid);
       res.send({
         success: true,
         data: {
