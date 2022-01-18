@@ -62,7 +62,7 @@ export class Auth0 implements Auth0Interface {
       }
       return Auth0.auth0(req, res, next);
     } catch (err) {
-      next(err);
+      return next(err);
     }
   }
 

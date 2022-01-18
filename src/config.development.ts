@@ -29,8 +29,8 @@ export class DevServer {
 
   constructor() {
     const configConstants = {
-      AUTH_AUDIENCE: 'https://dev-bnfcgcth.us.auth0.com/',
-      AUTH_DOMAIN: 'http://localhost:4000',
+      AUTH_AUDIENCE: 'http://localhost:4000',
+      AUTH_DOMAIN: 'https://dev-bnfcgcth.us.auth0.com/',
       AUTH_CLIENT_ID: 'B7hdgDYvx7fyGktJJxxidg9qg0Xvbq0s',
       AUTH_CONNECTION: 'Username-Password-Authentication',
       AUTH_TOKEN: '',
