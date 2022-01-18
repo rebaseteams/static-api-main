@@ -44,7 +44,7 @@ export class ProdServer {
     const documentsRepo = new DocumentsRepo(fileManagerRepo);
     const docusignRepo = new DocusignRepo();
 
-    const templatesRepo = new InMemoryTemplatesRepo();
+    const templatesRepo = new InMemoryTemplatesRepo(fileManagerRepo);
     const brandRepo = new BrandRepo();
     const venueRepo = new VenueRepo();
     const genreRepo = new GenreRepo();

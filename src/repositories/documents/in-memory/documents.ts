@@ -1,6 +1,5 @@
 import * as handlebars from 'handlebars';
 import { v4 as uuidv4 } from 'uuid';
-import * as fs from 'fs';
 import { Express } from 'express';
 // import axios from 'axios';
 import { AttachmentJSON } from '@sendgrid/helpers/classes/attachment';
@@ -10,8 +9,15 @@ import fileCheck from '../../../utils/fileCheck';
 import Document from '../../../models/entities/Document';
 import sendEmail from '../../../utils/email';
 import { DocumentContractData, DocumentMode, PatchDocumentStatus } from '../../../models/types/documentContract';
+import { FileManagerInterface } from '../../../models/interfaces/file-manager';
 
 export default class InMemoryDocumentsRepo implements DocumentsInterface {
+  fileManager: FileManagerInterface;
+
+  constructor(fileManager: FileManagerInterface) {
+    this.fileManager = fileManager;
+  }
+
   // eslint-disable-next-line no-unused-vars
   async createDocument(data : any, required : any, template : Template, recommendationId : string, docName : string, userId : string) : Promise<{ document : Document }> {
     let requiredResources = {};
@@ -28,8 +34,8 @@ export default class InMemoryDocumentsRepo implements DocumentsInterface {
       ...data,
     };
     const { html } = template;
-    const templateHtml = `./data/html/${html}`;
-    const compiledHtml = handlebars.compile(fs.readFileSync(templateHtml).toString());
+    const readData = await this.fileManager.get(`documents/html/${html}`);
+    const compiledHtml = handlebars.compile(readData.data.toString());
     const defaultMode: DocumentMode = 'edit';
     const defaultContract: DocumentContractData = {
       envelopeId: '',
@@ -48,46 +54,61 @@ export default class InMemoryDocumentsRepo implements DocumentsInterface {
       created_by: userId,
       html,
     };
-    fileCheck(`${__dirname}/data`, false);
-    fileCheck(`${__dirname}/data/html`, false);
-    const htmlFile = `${__dirname}/data/html/${document.id}.html`;
-    fs.writeFileSync(htmlFile, compiledHtml(requiredResources));
-    const documentFile = `${__dirname}/data/${document.id}.json`;
-    fs.writeFileSync(documentFile, JSON.stringify(document));
+
+    await this.fileManager.set(
+      `documents/html/${document.id}.html`, Buffer.from(compiledHtml(requiredResources)),
+    );
+
+    await this.fileManager.set(
+      `documents/${document.id}.json`, Buffer.from(JSON.stringify(document)),
+    );
+
     return { document };
   }
 
   async getAllDocuments() : Promise<Document[]> {
-    fileCheck(`${__dirname}/data`, false);
+    // fileCheck(`${__dirname}/data`, false);
+
     const allDocuments : Document[] = [];
-    fs.readdirSync(`${__dirname}/data`).forEach((file) => {
+    const files = await this.fileManager.list('documents');
+    for (let ind = 0; ind < files.data.length; ind++) {
+      const file = files[ind];
       if (file !== 'html') {
-        const toread = fs.readFileSync(`${__dirname}/data/${file}`).toString();
-        const dataJson = JSON.parse(toread) as Document;
-        allDocuments.push(dataJson);
+        const toread = await this.fileManager.get(`documents/${file}`);
+        const doc = JSON.parse(toread.data.toString()) as Document;
+        allDocuments.push(doc);
       }
-    });
+    }
+
     return allDocuments;
   }
 
   async getDocuments(ids : string[]) : Promise<Document[]> {
     fileCheck(`${__dirname}/data`, false);
     const allDocuments : Document[] = [];
-    fs.readdirSync(`${__dirname}/data`).forEach((file) => {
+    const files = await this.fileManager.list('documents');
+    for (let ind = 0; ind < files.data.length; ind++) {
+      const file = files[ind];
       if (file !== 'html') {
-        const toread = fs.readFileSync(`${__dirname}/data/${file}`).toString();
-        const dataJson = JSON.parse(toread) as Document;
-        if (ids.includes(dataJson.id)) allDocuments.push(dataJson);
+        const toread = await this.fileManager.get(`documents/${file}`);
+        const doc = JSON.parse(toread.data.toString()) as Document;
+        if (ids.includes(doc.id)) allDocuments.push(doc);
       }
-    });
+    }
     return allDocuments;
   }
 
   async getDocument(id : string) : Promise<Document> {
-    if (fs.existsSync(`${__dirname}/data/${id}.json`)) {
-      const readData = fs.readFileSync(`${__dirname}/data/${id}.json`).toString();
-      const data = JSON.parse(readData) as Document;
-      data.html = fs.readFileSync(`${__dirname}/data/html/${id}.html`).toString();
+    const exists = await this.fileManager.get(`documents/${id}.json`);
+
+    if (exists) {
+      const readData = await this.fileManager.get(`documents/${id}.json`);
+
+      const data = JSON.parse(readData.data.toString()) as Document;
+
+      const htmlData = await this.fileManager.get(`documents/html/${id}.html`);
+
+      data.html = htmlData.data.toString();
       return data;
     }
     const err = { message: `Document not found for id: ${id}`, statusCode: 404 };
@@ -95,9 +116,12 @@ export default class InMemoryDocumentsRepo implements DocumentsInterface {
   }
 
   async deleteDocument(id : string) : Promise<{ success : boolean }> {
-    if (fs.existsSync(`${__dirname}/data/${id}.json`) && fs.existsSync(`${__dirname}/data/html/${id}.html`)) {
-      fs.unlinkSync(`${__dirname}/data/${id}.json`);
-      fs.unlinkSync(`${__dirname}/data/html/${id}.html`);
+    const exists = await this.fileManager.exists(`documents/${id}.json`);
+    const htmlExists = await this.fileManager.exists(`documents/html/${id}.html`);
+
+    if (exists && htmlExists) {
+      await this.fileManager.delete(`documents/${id}.json`);
+      await this.fileManager.delete(`documents/html/${id}.html`);
       return { success: true };
     }
     const err = { message: `Document not found for id: ${id}`, statusCode: 404 };
@@ -105,8 +129,11 @@ export default class InMemoryDocumentsRepo implements DocumentsInterface {
   }
 
   async editDocument(id : string, html : string) : Promise<{ success : boolean }> {
-    if (fs.existsSync(`${__dirname}/data/${id}.json`) && fs.existsSync(`${__dirname}/data/html/${id}.html`)) {
-      fs.writeFileSync(`${__dirname}/data/html/${id}.html`, html);
+    const exists = await this.fileManager.exists(`documents/${id}.json`);
+    const htmlExists = await this.fileManager.exists(`documents/html/${id}.html`);
+
+    if (exists && htmlExists) {
+      await this.fileManager.set(`documents/html/${id}.html`, Buffer.from(html));
       return { success: true };
     }
     const err = { message: `Document not found for id: ${id}`, statusCode: 404 };
@@ -114,7 +141,8 @@ export default class InMemoryDocumentsRepo implements DocumentsInterface {
   }
 
   async shareDocument(id : string, files : {[fieldname: string]: Express.Multer.File[]} |Express.Multer.File[], emails : string[], template : Template) : Promise<{success : boolean}> {
-    if (fs.existsSync(`${__dirname}/data/${id}.json`)) {
+    const exists = await this.fileManager.exists(`documents/${id}.json`);
+    if (exists) {
       const attachments :AttachmentJSON[] = [];
       for (let index = 0; index < files.length; index += 1) {
         const file = files[index];

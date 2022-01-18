@@ -57,7 +57,7 @@ export default class DocumentsService implements DocumentsInterface {
 
   async shareDocument(id : string, files : {[fieldname: string]: Express.Multer.File[]} |Express.Multer.File[], emails : [string]) {
     const doc = await this.getDocument(id);
-    const template = this.templateRepo.getTemplate(doc.template_id);
+    const template = await this.templateRepo.getTemplate(doc.template_id);
     return this.documentsRepo.shareDocument(id, files, emails, template);
   }
 }

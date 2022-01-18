@@ -41,15 +41,15 @@ export class DevServer {
 
     /** Repositories Initializations: */
     const artistRepo = new ArtistsRepo();
-    const artistRecommendationRepo = new InMemoryArtistRecommendationRepo();
     const fileManagerRepo = new FileManagerInmemoryRepo();
-    const documentsRepo = new DocumentsRepo();
+    const artistRecommendationRepo = new InMemoryArtistRecommendationRepo(fileManagerRepo);
+    const documentsRepo = new DocumentsRepo(fileManagerRepo);
     const docusignRepo = new DocusignRepo();
 
-    const templatesRepo = new InMemoryTemplatesRepo();
-    const brandRepo = new BrandRepo();
-    const venueRepo = new VenueRepo();
-    const genreRepo = new GenreRepo();
+    const templatesRepo = new InMemoryTemplatesRepo(fileManagerRepo);
+    const brandRepo = new BrandRepo(fileManagerRepo);
+    const venueRepo = new VenueRepo(fileManagerRepo);
+    const genreRepo = new GenreRepo(fileManagerRepo);
     const userRepo = new UserRepo(auth0);
     const roleRepo = new RoleRepo();
     const resourceRepo = new ResourceRepo();

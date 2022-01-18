@@ -1,11 +1,16 @@
 /* eslint-disable no-console */
 /* eslint-disable class-methods-use-this */
-import * as fs from 'fs';
+import { FileManagerInterface } from '../../../models/interfaces/file-manager';
 import { TemplatesInterface } from '../../../models/interfaces/templates';
 import { Template } from '../../../models/types/template';
-import fileCheck from '../../../utils/fileCheck';
 
 export default class InMemoryTemplatesRepo implements TemplatesInterface {
+  fileManager: FileManagerInterface;
+
+  constructor(fileManager: FileManagerInterface) {
+    this.fileManager = fileManager;
+  }
+
   createTemplate() {
     console.log('TODO : Create Template');
   }
@@ -14,26 +19,31 @@ export default class InMemoryTemplatesRepo implements TemplatesInterface {
     console.log('TODO : Edit Template');
   }
 
-  getTemplate(id : string) {
-    if (fs.existsSync(`${__dirname}/data/${id}.json`)) {
-      const readData = fs.readFileSync(`${__dirname}/data/${id}.json`).toString();
-      const data = JSON.parse(readData) as Template;
+  async getTemplate(id : string) {
+    const exists = await this.fileManager.exists(`templates/${id}.json`);
+
+    if (exists) {
+      const readData = await this.fileManager.get(`templates/${id}.json`);
+      const data = JSON.parse(readData.data.toString()) as Template;
       return data;
     }
     const err = { message: `Template not found for id: ${id}`, statusCode: 404 };
     throw err;
   }
 
-  getAllTemplates() {
-    fileCheck(`${__dirname}/data`, false);
+  async getAllTemplates() {
+    // fileCheck(`${__dirname}/data`, false);
+
     const allTemplates : Template[] = [];
-    fs.readdirSync(`${__dirname}/data`).forEach((file) => {
-      if (file !== 'html') {
-        const toread = fs.readFileSync(`${__dirname}/data/${file}`).toString();
-        const dataJson = JSON.parse(toread) as Template;
-        allTemplates.push(dataJson);
-      }
-    });
+    const files = await this.fileManager.list('templates');
+
+    for (let ind = 0; ind < files.data.length; ind++) {
+      const file = files[ind];
+      const toread = await this.fileManager.get(`templates/${file}`);
+      const template = JSON.parse(toread.data.toString()) as Template;
+      allTemplates.push(template);
+    }
+
     return allTemplates;
   }
 }

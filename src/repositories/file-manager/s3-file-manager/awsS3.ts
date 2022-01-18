@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+/* eslint-disable no-unused-vars */
 import AWS from 'aws-sdk';
 import { FileManagerInterface } from '../../../models/interfaces/file-manager';
 import { AWS_S3_CONFIG } from '../../../models/types/file-manager';
@@ -6,7 +7,7 @@ import { AWS_S3_CONFIG } from '../../../models/types/file-manager';
 export class FileManagerAWSS3Repo implements FileManagerInterface {
   private config: AWS_S3_CONFIG;
 
-  uploadFile = async (id: string, data: Buffer): Promise<{ success: boolean, message: string }> => {
+  set = async (id: string, data: Buffer): Promise<{ success: boolean, message: string }> => {
     this.config = {
       accessKeyId: process.env.AWS_ACCESS_KEY,
       secretAccessKey: process.env.AWS_SECRET_KEY,
@@ -34,8 +35,8 @@ export class FileManagerAWSS3Repo implements FileManagerInterface {
   };
 
   // eslint-disable-next-line no-unused-vars
-  downloadFile = async (id: string):
-  Promise<{ success: boolean, data: Buffer | string }> => new Promise((resolve) => {
+  get = async (id: string):
+    Promise<{ success: boolean, data: Buffer | string }> => new Promise((resolve) => {
     try {
       this.config = {
         accessKeyId: process.env.AWS_ACCESS_KEY,
@@ -61,4 +62,11 @@ export class FileManagerAWSS3Repo implements FileManagerInterface {
       resolve({ success: false, data: err });
     }
   })
+
+  // TODO: Implement
+  delete: (id: string) => Promise<boolean>;
+
+  list: (id: string) => Promise<{ success: boolean; data: string[]; }>;
+
+  exists: (id: string) => Promise<boolean>;
 }
