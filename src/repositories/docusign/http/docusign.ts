@@ -151,7 +151,7 @@ export class DocusignRepo implements DocusignInterface {
         response.data.on('end', () => {
           // file has been download
           const data = fs.readFileSync(tempFile);
-          this.fileManagerRepository.uploadFile(`${this.signedPdfPath}/${envelopeId}.pdf`, data).then((res) => {
+          this.fileManagerRepository.set(`${this.signedPdfPath}/${envelopeId}.pdf`, data).then((res) => {
             console.log(res);
           });
           const signedBase64 = Buffer.from(data).toString('base64');
@@ -175,7 +175,7 @@ export class DocusignRepo implements DocusignInterface {
     return new Promise((resolve) => {
       try {
         // checking if the pdf is already available on s3 bucket via filemanager
-        this.fileManagerRepository.downloadFile(`${this.signedPdfPath}/${envelopeId}.pdf`).then((s3file) => {
+        this.fileManagerRepository.get(`${this.signedPdfPath}/${envelopeId}.pdf`).then((s3file) => {
           // Resolving with success: true and data: base64 of the data if the file is available
           if (s3file.success) {
             resolve({ success: true, pdf: Buffer.from(s3file.data).toString('base64') });
