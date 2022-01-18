@@ -1,7 +1,9 @@
+/* eslint-disable no-console */
 import axios, { AxiosRequestConfig } from 'axios';
 import fs from 'fs';
 import path from 'path';
 import { CreateEnvelopeResponseData, DocusignInterface } from '../../../models/interfaces/docusign';
+import { FileManagerInterface } from '../../../models/interfaces/file-manager';
 import { EnvelopeData } from '../../../models/types/docusign';
 import fileCheck from '../../../utils/fileCheck';
 import updateAccessToken from './regenerateAuthoriztion';
@@ -9,6 +11,15 @@ import updateAccessToken from './regenerateAuthoriztion';
 const html_to_pdf = require('html-pdf-node');
 
 export class DocusignRepo implements DocusignInterface {
+  private fileManagerRepository : FileManagerInterface;
+
+  private signedPdfPath : string;
+
+  constructor(fileManagerRepo: FileManagerInterface) {
+    this.fileManagerRepository = fileManagerRepo;
+    this.signedPdfPath = 'contract-signed-pdf';
+  }
+
   async createEnvelope(envelopeData: EnvelopeData): Promise<{ success: boolean; data?: CreateEnvelopeResponseData }> {
     const api_call = async (): Promise<CreateEnvelopeResponseData | string> => {
       const apiconfig = {
@@ -112,8 +123,12 @@ export class DocusignRepo implements DocusignInterface {
     });
   }
 
+  // This method of docusign will check if there exists signed pdf with given envelope id
+  // If present return it if not check on the docusin api
+  // if present in docusign api first upload it via file manager
+  // and send pdf back
   async getSignedPdf(envelopeId: string): Promise<{ success: boolean, pdf: string | null }> {
-    const getSigned = (): Promise<string | null> => {
+    const getSignedFromDocusign = (): Promise<string | null> => {
       const apiconfig: AxiosRequestConfig = {
         headers: {
           'Content-Type': 'application/json',
@@ -136,6 +151,9 @@ export class DocusignRepo implements DocusignInterface {
         response.data.on('end', () => {
           // file has been download
           const data = fs.readFileSync(tempFile);
+          this.fileManagerRepository.uploadFile(`${this.signedPdfPath}/${envelopeId}.pdf`, data).then((res) => {
+            console.log(res);
+          });
           const signedBase64 = Buffer.from(data).toString('base64');
           resolve(signedBase64);
         });
@@ -148,22 +166,28 @@ export class DocusignRepo implements DocusignInterface {
         // Updating the access_token
         const result = await updateAccessToken();
         if (result) {
-          const data = await getSigned();
+          const data = await getSignedFromDocusign();
           resolve(data);
         }
         resolve(err);
       }));
     };
     return new Promise((resolve) => {
-      // TODO should check if the signed pdf is available on S# bucket
-      // if yes send that in response
-      // else get it using docusign api
       try {
-        getSigned().then((result) => {
-          resolve({ success: true, pdf: result });
-        }).catch((err) => {
-          if (err.length > 150) err.slice(0, 150);
-          resolve({ success: false, pdf: err });
+        // checking if the pdf is already available on s3 bucket via filemanager
+        this.fileManagerRepository.downloadFile(`${this.signedPdfPath}/${envelopeId}.pdf`).then((s3file) => {
+          // Resolving with success: true and data: base64 of the data if the file is available
+          if (s3file.success) {
+            resolve({ success: true, pdf: Buffer.from(s3file.data).toString('base64') });
+          } else {
+            // if pdf not available fetch it from docusign
+            getSignedFromDocusign().then((result) => {
+              resolve({ success: true, pdf: result });
+            }).catch((err) => {
+              if (err.length > 150) err.slice(0, 150);
+              resolve({ success: false, pdf: err });
+            });
+          }
         });
       } catch (error) {
         if (error.length > 150) error.slice(0, 150);
