@@ -43,7 +43,7 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
     const res = await this.fileManager.list('artist-recommendation');
 
     if (res.success && res.data.length) {
-      for (let i = 0; i < res.data.length; i++) {
+      for (let i = 0; i < res.data.length; i += 1) {
         const file = res.data[i];
 
         const toread = await this.fileManager.get(`artist-recommendation/${file}`);

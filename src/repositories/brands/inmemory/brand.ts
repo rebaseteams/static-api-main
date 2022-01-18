@@ -71,7 +71,7 @@ export default class BrandRepo implements BrandsInterface {
 
     const files = await this.fileManager.list('brands');
 
-    for (let ind = 0; ind < files.data.length; ind++) {
+    for (let ind = 0; ind < files.data.length; ind += 1) {
       if (skip - 1 < ind && tracker < limit) {
         const file = files[ind];
         tracker += 1;

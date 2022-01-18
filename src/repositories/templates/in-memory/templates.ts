@@ -37,7 +37,7 @@ export default class InMemoryTemplatesRepo implements TemplatesInterface {
     const allTemplates : Template[] = [];
     const files = await this.fileManager.list('templates');
 
-    for (let ind = 0; ind < files.data.length; ind++) {
+    for (let ind = 0; ind < files.data.length; ind += 1) {
       const file = files[ind];
       const toread = await this.fileManager.get(`templates/${file}`);
       const template = JSON.parse(toread.data.toString()) as Template;
