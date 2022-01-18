@@ -71,7 +71,7 @@ export default class InMemoryDocumentsRepo implements DocumentsInterface {
 
     const allDocuments : Document[] = [];
     const files = await this.fileManager.list('documents');
-    for (let ind = 0; ind < files.data.length; ind++) {
+    for (let ind = 0; ind < files.data.length; ind += 1) {
       const file = files[ind];
       if (file !== 'html') {
         const toread = await this.fileManager.get(`documents/${file}`);
@@ -87,7 +87,7 @@ export default class InMemoryDocumentsRepo implements DocumentsInterface {
     fileCheck(`${__dirname}/data`, false);
     const allDocuments : Document[] = [];
     const files = await this.fileManager.list('documents');
-    for (let ind = 0; ind < files.data.length; ind++) {
+    for (let ind = 0; ind < files.data.length; ind += 1) {
       const file = files[ind];
       if (file !== 'html') {
         const toread = await this.fileManager.get(`documents/${file}`);
