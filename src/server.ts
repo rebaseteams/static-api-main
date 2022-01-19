@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import express from 'express';
 import * as swaggerUi from 'swagger-ui-express';
 import cors from 'cors';
@@ -15,6 +16,7 @@ import RolesRoutes from './routes/role/roleRoute';
 import ResourcesRoutes from './routes/resource/resourceRoute';
 import { Environment } from './models/types/config';
 import { ProdServer } from './config.production';
+import setPoll from './utils/handleToken';
 
 // to use .environment variable in the project
 require('dotenv').config();
@@ -46,7 +48,9 @@ export default class MainServer {
 
     const { auth0 } = server.config.providers;
 
+    setPoll(() => console.log('hello'), 2000);
     auth0.generateToken();
+
     this.app = express();
     this.app.use(cors(this.corsOptions));
     this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
