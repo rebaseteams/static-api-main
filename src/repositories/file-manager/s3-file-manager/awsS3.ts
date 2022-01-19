@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import AWS from 'aws-sdk';
+import path from 'path';
 import { FileManagerInterface } from '../../../models/interfaces/file-manager';
 import { AWS_S3_CONFIG } from '../../../models/types/file-manager';
 
@@ -91,7 +92,7 @@ export class FileManagerAWSS3Repo implements FileManagerInterface {
         return { success: false, data: [result.$response.error.message] };
       }
 
-      const keys = result.Contents.map((content) => content.Key);
+      const keys = result.Contents.map((content) => path.parse(content.Key).base);
 
       return { success: true, data: keys };
     } catch (error) {
