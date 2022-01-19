@@ -16,7 +16,7 @@ import RolesRoutes from './routes/role/roleRoute';
 import ResourcesRoutes from './routes/resource/resourceRoute';
 import { Environment } from './models/types/config';
 import { ProdServer } from './config.production';
-import setPoll from './utils/handleToken';
+import setPoll from './utils/setPoll';
 
 // to use .environment variable in the project
 require('dotenv').config();
