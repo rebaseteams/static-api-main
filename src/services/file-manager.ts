@@ -9,7 +9,6 @@ export class FileManagerService implements FileManagerInterface {
     this.fileTransferRepo = fileTransferRepo;
   }
 
-  // TODO
   delete = async (id: string): Promise<{ success: boolean, message: string }> => new Promise((resolve) => {
     this.fileTransferRepo.delete(id).then((data) => {
       resolve(data);
@@ -18,9 +17,23 @@ export class FileManagerService implements FileManagerInterface {
     });
   });
 
-  list: (id: string) => Promise<{ success: boolean; data: string[]; }>;
+  list = async (id: string): Promise<{ success: boolean, data: string[] }> => {
+    try {
+      const result = await this.fileTransferRepo.list(id);
+      return result;
+    } catch (error) {
+      return { success: false, data: [error] };
+    }
+  };
 
-  exists: (id: string) => Promise<boolean>;
+  exists = async (id: string): Promise<boolean> => {
+    try {
+      const result = await this.fileTransferRepo.exists(id);
+      return result;
+    } catch (error) {
+      return false;
+    }
+  };
 
   set = (id: string, data: Buffer):
     Promise<{ success: boolean, message: string }> => new Promise((resolve, reject) => {

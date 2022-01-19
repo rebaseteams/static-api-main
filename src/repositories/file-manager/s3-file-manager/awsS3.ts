@@ -85,15 +85,34 @@ export class FileManagerAWSS3Repo implements FileManagerInterface {
       Prefix: `${id}/`,
     };
 
-    const result = await this.s3.listObjects(params).promise();
-    if (result.$response.error) {
-      return { success: false, data: [result.$response.error.message] };
+    try {
+      const result = await this.s3.listObjects(params).promise();
+      if (result.$response.error) {
+        return { success: false, data: [result.$response.error.message] };
+      }
+
+      const keys = result.Contents.map((content) => content.Key);
+
+      return { success: true, data: keys };
+    } catch (error) {
+      return { success: false, data: [error] };
     }
-
-    const keys = result.Contents.map((content) => content.Key);
-
-    return { success: true, data: keys };
   }
 
-  exists: (id: string) => Promise<boolean>;
+  exists = async (id: string): Promise<boolean> => {
+    const params: AWS.S3.HeadObjectRequest = {
+      Bucket: process.env.AWS_S3_BUCKET,
+      Key: id,
+    };
+
+    try {
+      const result = await this.s3.headObject(params).promise();
+      if (result.$response.error) {
+        return false;
+      }
+      return true;
+    } catch (error) {
+      return false;
+    }
+  };
 }
