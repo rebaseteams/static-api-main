@@ -18,4 +18,12 @@ describe('AWS s3 file manager', () => {
   it.skip('should return success true if the key/ folder present with array of keys in data fields', () => {
 
   });
+
+  it.skip('should return success true if key exists', () => {
+
+  });
+
+  it.skip('should return success false if key does not exists', () => {
+
+  });
 });
