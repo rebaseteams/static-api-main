@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /* eslint-disable class-methods-use-this */
 import { FileManagerInterface } from '../../../models/interfaces/file-manager';
 import { TemplatesInterface } from '../../../models/interfaces/templates';
@@ -7,15 +6,20 @@ import { Template } from '../../../models/types/template';
 export default class InMemoryTemplatesRepo implements TemplatesInterface {
   fileManager: FileManagerInterface;
 
+  templatesDir: string;
+
   constructor(fileManager: FileManagerInterface) {
     this.fileManager = fileManager;
+    this.templatesDir = 'templates';
   }
 
   createTemplate() {
+    // eslint-disable-next-line no-console
     console.log('TODO : Create Template');
   }
 
   editTemplate() {
+    // eslint-disable-next-line no-console
     console.log('TODO : Edit Template');
   }
 
@@ -39,11 +43,10 @@ export default class InMemoryTemplatesRepo implements TemplatesInterface {
 
     try {
       const allTemplates : Template[] = [];
-      const files = await this.fileManager.list('templates');
-
+      const files = await this.fileManager.list(this.templatesDir);
       for (let ind = 0; ind < files.data.length; ind += 1) {
-        const file = files[ind];
-        const toread = await this.fileManager.get(`templates/${file}`);
+        const file = files.data[ind];
+        const toread = await this.fileManager.get(`${this.templatesDir}/${file}`);
         const template = JSON.parse(toread.data.toString()) as Template;
         allTemplates.push(template);
       }
