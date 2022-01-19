@@ -54,7 +54,7 @@ export class DocusignService implements DocusignInterface {
             this.DocumentRepo.patchDocumentStatus(data);
             resolve({ success: true, data: envelopeResponse.data });
           }
-          resolve({ success: false, message: envelopeResponse });
+          resolve({ success: false, message: envelopeResponse.data });
         });
       } catch (err) {
         resolve({ success: false, message: err });

@@ -67,7 +67,7 @@ export class DocusignRepo implements DocusignInterface {
           resolve({ success: false, data: err });
         });
       } catch (error) {
-        resolve({ success: false, data: error.message });
+        resolve({ success: false, data: error });
       }
     });
   }
