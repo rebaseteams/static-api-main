@@ -36,7 +36,11 @@ export class ProdServer {
       AUTH_TOKEN: '',
     };
 
+    // Initializating static variables
     Auth0.initAuth(configConstants.AUTH_DOMAIN, configConstants.AUTH_AUDIENCE);
+    FileManagerAWSS3Repo.initConfig();
+
+    // Creating objects of repo
     const auth0 = new Auth0(configConstants);
     const artistRepo = new ArtistsRepo();
     const artistRecommendationRepo = new ArtistRecommendationRepo();
