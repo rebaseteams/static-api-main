@@ -40,7 +40,7 @@ export default class VenueRepo implements VenuesInterface {
 
     if (exists) {
       const delRes = await this.fileManager.delete(`$venues/${id}.json`);
-      return { success: delRes };
+      return { success: delRes.success };
     }
     const err = { message: `Venue not found for id: ${id}`, statusCode: 404 };
     throw err;

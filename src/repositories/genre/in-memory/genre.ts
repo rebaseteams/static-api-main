@@ -41,7 +41,7 @@ export default class GenreRepo implements GenresInterface {
     const exists = await this.fileManager.exists(`genres/${id}.json`);
     if (exists) {
       const delRes = await this.fileManager.delete(`genres/${id}.json`);
-      return { success: delRes };
+      return { success: delRes.success };
     }
     const err = { message: `Genre not found for id: ${id}`, statusCode: 404 };
     throw err;

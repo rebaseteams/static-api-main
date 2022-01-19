@@ -10,7 +10,13 @@ export class FileManagerService implements FileManagerInterface {
   }
 
   // TODO
-  delete: (id: string) => Promise<boolean>;
+  delete = async (id: string): Promise<{ success: boolean, message: string }> => new Promise((resolve) => {
+    this.fileTransferRepo.delete(id).then((data) => {
+      resolve(data);
+    }).catch((err) => {
+      resolve({ success: false, message: err });
+    });
+  });
 
   list: (id: string) => Promise<{ success: boolean; data: string[]; }>;
 
