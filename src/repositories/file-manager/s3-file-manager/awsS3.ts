@@ -5,11 +5,15 @@ import { FileManagerInterface } from '../../../models/interfaces/file-manager';
 import { AWS_S3_CONFIG } from '../../../models/types/file-manager';
 
 export class FileManagerAWSS3Repo implements FileManagerInterface {
-  static config: AWS_S3_CONFIG = {
-    accessKeyId: process.env.AWS_ACCESS_KEY,
-    secretAccessKey: process.env.AWS_SECRET_KEY,
-    region: 'ap-south-1',
-  };
+  static config: AWS_S3_CONFIG;
+
+  static initConfig = () => {
+    FileManagerAWSS3Repo.config = {
+      accessKeyId: process.env.AWS_ACCESS_KEY,
+      secretAccessKey: process.env.AWS_SECRET_KEY,
+      region: 'ap-south-1',
+    };
+  }
 
   set = async (id: string, data: Buffer): Promise<{ success: boolean, message: string }> => {
     AWS.config.update(FileManagerAWSS3Repo.config);
@@ -77,7 +81,27 @@ export class FileManagerAWSS3Repo implements FileManagerInterface {
     }
   });
 
-  list: (id: string) => Promise<{ success: boolean; data: string[]; }>;
+  list = async (id: string): Promise<{ success: boolean; data: string[]; }> => new Promise((resolve) => {
+    try {
+      console.log(FileManagerAWSS3Repo.config);
+      AWS.config.update(FileManagerAWSS3Repo.config);
+      const s3 = new AWS.S3(FileManagerAWSS3Repo.config);
+      const params: AWS.S3.ListObjectsRequest = {
+        Bucket: process.env.AWS_S3_BUCKET,
+        Prefix: `${id}/`,
+      };
+      s3.listObjects(params, (err, data) => {
+        if (err) {
+          resolve({ success: false, data: [err.message] });
+        } else {
+          const keys: Array<string> = data.Contents.map((content) => content.Key);
+          resolve({ success: true, data: keys });
+        }
+      });
+    } catch (error) {
+      resolve({ success: false, data: [error] });
+    }
+  });
 
   exists: (id: string) => Promise<boolean>;
 }
