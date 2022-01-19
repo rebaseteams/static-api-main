@@ -48,9 +48,7 @@ export default class MainServer {
 
     const { auth0 } = server.config.providers;
 
-    setPoll(() => console.log('hello'), 2000);
-    auth0.generateToken();
-
+    setPoll(() => auth0.generateToken(), 1 * 60 * 60 * 1000);
     this.app = express();
     this.app.use(cors(this.corsOptions));
     this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));

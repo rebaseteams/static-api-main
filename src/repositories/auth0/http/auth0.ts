@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 import { SignUp } from '../../../models/types/auth';
 import { ConfigConstants } from '../../../models/types/config';
 import { Auth0Interface } from '../../../models/interfaces/auth0';
+import tokenValidator from '../../../utils/tokenValidator';
 
 // eslint-disable-next-line no-unused-vars
 
@@ -79,11 +80,12 @@ export class Auth0 implements Auth0Interface {
           audience: `${this.AUTH_DOMAIN}api/v2/`,
         },
       };
-
-      await axios.post(options.url, options.data, { headers: options.headers }).then((response) => {
-        this.AUTH_TOKEN = response.data.access_token;
-      });
-      this.tokenGenerated = true;
+      if (!tokenValidator(this.AUTH_TOKEN)) {
+        await axios.post(options.url, options.data, { headers: options.headers }).then((response) => {
+          this.AUTH_TOKEN = response.data.access_token;
+          this.tokenGenerated = true;
+        });
+      }
     } catch (error) {
       this.tokenGenerated = false;
     }
