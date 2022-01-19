@@ -12,9 +12,13 @@ export class FileManagerInmemoryRepo implements FileManagerInterface {
     return Promise.resolve({ success: true, data });
   }
 
-  delete = async (id: string): Promise<boolean> => {
-    fs.unlinkSync(`${__dirname}/data/${id}`);
-    return true;
+  delete = async (id: string): Promise<{ success: boolean, message: string }> => {
+    try {
+      fs.unlinkSync(`${__dirname}/data/${id}`);
+      return { success: true, message: `deleted file ${__dirname}/data/${id}` };
+    } catch (err) {
+      return { success: false, message: err };
+    }
   }
 
   list = async (id: string): Promise<{ success: boolean; data: string[]; }> => {

@@ -97,7 +97,7 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
 
     if (exists) {
       const delRes = await this.fileManager.delete(`artist-recommendation/${id}.json`);
-      return { success: delRes };
+      return { success: delRes.success };
     }
     const err = { message: `Recommendation not found for id: ${id}`, statusCode: 404 };
     throw err;

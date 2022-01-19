@@ -40,7 +40,7 @@ export default class BrandRepo implements BrandsInterface {
 
     if (exists) {
       const deleteRes = await this.fileManager.delete(`brands/${id}.json`);
-      return { success: deleteRes };
+      return { success: deleteRes.success };
     }
     const err = { message: `Brand not found for id: ${id}`, statusCode: 404 };
     throw err;

@@ -2,6 +2,7 @@
 // import { v4 as uuidv4 } from 'uuid';
 
 import { TemplatesInterface } from '../models/interfaces/templates';
+import { Template } from '../models/types/template';
 
 export default class TemplatesService implements TemplatesInterface {
   private templatesRepo: TemplatesInterface;
@@ -20,11 +21,11 @@ export default class TemplatesService implements TemplatesInterface {
     this.templatesRepo.editTemplate();
   }
 
-  getTemplate(id : string) {
+  getTemplate(id : string): Promise<Template> {
     return this.templatesRepo.getTemplate(id);
   }
 
-  getAllTemplates() {
+  getAllTemplates(): Promise<Template[]> {
     return this.templatesRepo.getAllTemplates();
   }
 }

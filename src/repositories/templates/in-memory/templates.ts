@@ -19,31 +19,38 @@ export default class InMemoryTemplatesRepo implements TemplatesInterface {
     console.log('TODO : Edit Template');
   }
 
-  async getTemplate(id : string) {
-    const exists = await this.fileManager.exists(`templates/${id}.json`);
-
-    if (exists) {
-      const readData = await this.fileManager.get(`templates/${id}.json`);
-      const data = JSON.parse(readData.data.toString()) as Template;
-      return data;
+  async getTemplate(id : string): Promise<Template> {
+    try {
+      const exists = await this.fileManager.exists(`templates/${id}.json`);
+      if (exists) {
+        const readData = await this.fileManager.get(`templates/${id}.json`);
+        const data = JSON.parse(readData.data.toString()) as Template;
+        return data;
+      }
+      const err = { message: `Template not found for id: ${id}`, statusCode: 404 };
+      throw err;
+    } catch (err) {
+      return err;
     }
-    const err = { message: `Template not found for id: ${id}`, statusCode: 404 };
-    throw err;
   }
 
-  async getAllTemplates() {
+  async getAllTemplates(): Promise<Array<Template>> {
     // fileCheck(`${__dirname}/data`, false);
 
-    const allTemplates : Template[] = [];
-    const files = await this.fileManager.list('templates');
+    try {
+      const allTemplates : Template[] = [];
+      const files = await this.fileManager.list('templates');
 
-    for (let ind = 0; ind < files.data.length; ind += 1) {
-      const file = files[ind];
-      const toread = await this.fileManager.get(`templates/${file}`);
-      const template = JSON.parse(toread.data.toString()) as Template;
-      allTemplates.push(template);
+      for (let ind = 0; ind < files.data.length; ind += 1) {
+        const file = files[ind];
+        const toread = await this.fileManager.get(`templates/${file}`);
+        const template = JSON.parse(toread.data.toString()) as Template;
+        allTemplates.push(template);
+      }
+
+      return allTemplates;
+    } catch (err) {
+      return err;
     }
-
-    return allTemplates;
   }
 }
