@@ -81,21 +81,29 @@ export class Auth0 implements Auth0Interface {
           audience: `${this.AUTH_DOMAIN}api/v2/`,
         },
       };
-      if (!tokenValidator(this.AUTH_TOKEN)) {
-        await axios.post(options.url, options.data, { headers: options.headers }).then((response) => {
-          const tokenData : Buffer = Buffer.from(response.data.access_token);
-          // update to use file manager in some other token
-          fs.writeFile('./secrets/auth0.txt', tokenData, (err) => {
-            if (err) {
-              // eslint-disable-next-line no-console
-              console.error(err);
-              return;
-            }
-            this.tokenGenerated = true;
+      fs.readFile('./secrets/auth0.txt', 'utf8', (error, payload) => {
+        if (error) {
+          // eslint-disable-next-line no-console
+          console.error(error);
+        }
+        this.AUTH_TOKEN = payload;
+        const isValid : boolean = tokenValidator(payload);
+        if (!isValid) {
+          axios.post(options.url, options.data, { headers: options.headers }).then((response) => {
+            const tokenData : string = response.data.access_token;
+            // update to use file manager in some other token
+            fs.writeFile('./secrets/auth0.txt', tokenData, (err) => {
+              if (err) {
+                // eslint-disable-next-line no-console
+                console.error(err);
+                return;
+              }
+              this.tokenGenerated = true;
+            });
+            this.AUTH_TOKEN = response.data.access_token;
           });
-          this.AUTH_TOKEN = response.data.access_token;
-        });
-      }
+        }
+      });
     } catch (error) {
       this.tokenGenerated = false;
     }
