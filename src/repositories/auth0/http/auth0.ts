@@ -2,6 +2,7 @@ import { auth } from 'express-oauth2-jwt-bearer';
 import axios from 'axios';
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
+import * as fs from 'fs';
 import { SignUp } from '../../../models/types/auth';
 import { ConfigConstants } from '../../../models/types/config';
 import { Auth0Interface } from '../../../models/interfaces/auth0';
@@ -82,8 +83,17 @@ export class Auth0 implements Auth0Interface {
       };
       if (!tokenValidator(this.AUTH_TOKEN)) {
         await axios.post(options.url, options.data, { headers: options.headers }).then((response) => {
+          const tokenData : Buffer = Buffer.from(response.data.access_token);
+          // update to use file manager in some other token
+          fs.writeFile('./secrets/auth0.txt', tokenData, (err) => {
+            if (err) {
+              // eslint-disable-next-line no-console
+              console.error(err);
+              return;
+            }
+            this.tokenGenerated = true;
+          });
           this.AUTH_TOKEN = response.data.access_token;
-          this.tokenGenerated = true;
         });
       }
     } catch (error) {
