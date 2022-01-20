@@ -5,7 +5,7 @@ const tokenValidator = (token : string) => {
     const payload : any = jwt.decode(token);
     const { exp } = payload;
     const now = new Date();
-    return now.getTime() > exp * 1000;
+    return now.getTime() < exp * 1000;
   }
   return false;
 };
