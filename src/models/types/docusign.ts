@@ -14,10 +14,12 @@ export type DocusignConfig = {
 export type EnvelopeData = {
   emailSubject: string;
   documents: Array<{
-    documentBase64: string;
-    name: string;
-    fileExtension: string;
-    documentId: string;
+    htmlDefinition:
+    {
+        source: string
+    },
+    documentId: string,
+    name: string
   }>;
   recipients: {
     carbonCopies: Array<{

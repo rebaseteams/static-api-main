@@ -21,9 +21,7 @@ const updateAccessToken = (): Promise<string | boolean> => {
     ).then((res) => {
       process.env.DOCUSIGN_ACCESS_TOKEN = res.data.access_token;
       resolve(process.env.DOCUSIGN_ACCESS_TOKEN);
-    }).catch((err) => {
-      // eslint-disable-next-line no-console
-      console.log('Refresh Error', err.response);
+    }).catch(() => {
       resolve(false);
     });
   });

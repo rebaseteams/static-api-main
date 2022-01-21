@@ -1,26 +1,27 @@
-/* eslint-disable no-console */
 import axios, { AxiosRequestConfig } from 'axios';
 import fs from 'fs';
 import path from 'path';
+import { DocumentsInterface } from '../../../models/interfaces/documents';
 import { CreateEnvelopeResponseData, DocusignInterface } from '../../../models/interfaces/docusign';
 import { FileManagerInterface } from '../../../models/interfaces/file-manager';
 import { EnvelopeData } from '../../../models/types/docusign';
 import fileCheck from '../../../utils/fileCheck';
 import updateAccessToken from './regenerateAuthoriztion';
 
-const html_to_pdf = require('html-pdf-node');
-
 export class DocusignRepo implements DocusignInterface {
   private fileManagerRepository : FileManagerInterface;
 
+  private documentsRepo: DocumentsInterface;
+
   private signedPdfPath : string;
 
-  constructor(fileManagerRepo: FileManagerInterface) {
+  constructor(fileManagerRepo: FileManagerInterface, documentsRepo: DocumentsInterface) {
     this.fileManagerRepository = fileManagerRepo;
+    this.documentsRepo = documentsRepo;
     this.signedPdfPath = 'contract-signed-pdf';
   }
 
-  async createEnvelope(envelopeData: EnvelopeData): Promise<{ success: boolean; data?: CreateEnvelopeResponseData }> {
+  async createEnvelope(envelopeData: EnvelopeData, documentId: string): Promise<{ success: boolean; data?: CreateEnvelopeResponseData }> {
     const api_call = async (): Promise<CreateEnvelopeResponseData | string> => {
       const apiconfig = {
         headers: {
@@ -28,33 +29,28 @@ export class DocusignRepo implements DocusignInterface {
           Authorization: `bearer ${process.env.DOCUSIGN_ACCESS_TOKEN}`,
         },
       };
-      const options = { format: 'A4' };
-      const file = { content: envelopeData.documents[0].documentBase64 };
-      const pdfBuffer = await html_to_pdf.generatePdf(file, options);
-      const base64 = pdfBuffer.toString('base64');
-      // eslint-disable-next-line no-param-reassign
-      envelopeData.documents[0].documentBase64 = base64;
 
-      return new Promise((resolve, reject) => axios.post(`${process.env.DOCUSIGN_BASE_URI}/envelopes`, envelopeData, apiconfig).then((response: any) => {
-        fileCheck(`${__dirname}/data`, false);
-        if (!fs.existsSync(`${__dirname}/data/envelopes.json`)) {
-          fs.writeFileSync(`${__dirname}/data/envelopes.json`, '[]');
-        }
-        const envelopes: Array<any> = JSON.parse(fs.readFileSync(`${__dirname}/data/envelopes.json`, 'utf-8'));
-        envelopes.push(response.data);
-        fs.writeFileSync(`${__dirname}/data/envelopes.json`, JSON.stringify(envelopes));
+      // Extracting html content from documentsRepo
+      const { html } = await this.documentsRepo.getDocument(documentId);
+
+      // seting html source in the envelopeData
+      // eslint-disable-next-line no-param-reassign
+      envelopeData.documents[0].htmlDefinition.source = html;
+
+      return new Promise((resolve) => axios.post(`${process.env.DOCUSIGN_BASE_URI}/envelopes`, envelopeData, apiconfig).then((response: any) => {
         resolve(response.data as CreateEnvelopeResponseData);
       }).catch(async (err) => {
-        if (err.response.data.errorCode === 'USER_AUTHENTICATION_FAILED') {
+        if (err && err.response && err.response.data.errorCode === 'USER_AUTHENTICATION_FAILED') {
           const result = await updateAccessToken();
           if (result) {
-            api_call();
-            resolve('Token Refreshed');
+            const data = await api_call();
+            resolve(data as CreateEnvelopeResponseData);
           } else {
             resolve('Failed refresh');
           }
+        } else {
+          resolve(err);
         }
-        reject(err);
       }));
     };
 
@@ -99,12 +95,14 @@ export class DocusignRepo implements DocusignInterface {
       return new Promise((resolve) => axios.get(`${process.env.DOCUSIGN_BASE_URI}/envelopes/${envelopeId}`, apiconfig).then((response) => {
         resolve({ success: true, data: response.data });
       }).catch(async (err) => {
-        if (err.response.data.errorCode === 'USER_AUTHENTICATION_FAILED') {
+        if (err && err.response && err.response.data.errorCode === 'USER_AUTHENTICATION_FAILED') {
           const result = await updateAccessToken();
           if (result) {
-            api_call();
+            const data = await api_call();
+            resolve(data);
+          } else {
+            resolve({ success: false, data: 'Failed refreshing' });
           }
-          resolve({ success: false, data: 'Failed refreshing' });
         }
         resolve({ success: false, data: err });
       }));
@@ -149,11 +147,11 @@ export class DocusignRepo implements DocusignInterface {
         response.data.pipe(fs.createWriteStream(tempFile));
 
         response.data.on('end', () => {
-          // file has been download
           const data = fs.readFileSync(tempFile);
-          this.fileManagerRepository.set(`${this.signedPdfPath}/${envelopeId}.pdf`, data).then((res) => {
-            console.log(res);
-          });
+
+          // Signed pdf has been download
+          // saving signed pdf
+          this.fileManagerRepository.set(`${this.signedPdfPath}/${envelopeId}.pdf`, data);
           const signedBase64 = Buffer.from(data).toString('base64');
           resolve(signedBase64);
         });
