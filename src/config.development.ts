@@ -44,7 +44,7 @@ export class DevServer {
     const fileManagerRepo = new FileManagerInmemoryRepo();
     const artistRecommendationRepo = new InMemoryArtistRecommendationRepo(fileManagerRepo);
     const documentsRepo = new DocumentsRepo(fileManagerRepo);
-    const docusignRepo = new DocusignRepo(fileManagerRepo);
+    const docusignRepo = new DocusignRepo(fileManagerRepo, documentsRepo);
 
     const templatesRepo = new InMemoryTemplatesRepo(fileManagerRepo);
     const brandRepo = new BrandRepo(fileManagerRepo);
