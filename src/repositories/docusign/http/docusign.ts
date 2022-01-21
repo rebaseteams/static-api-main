@@ -1,7 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import fs from 'fs';
 import path from 'path';
-import { DocumentsInterface } from '../../../models/interfaces/documents';
 import { CreateEnvelopeResponseData, DocusignInterface } from '../../../models/interfaces/docusign';
 import { FileManagerInterface } from '../../../models/interfaces/file-manager';
 import { EnvelopeData } from '../../../models/types/docusign';
@@ -11,17 +10,14 @@ import updateAccessToken from './regenerateAuthoriztion';
 export class DocusignRepo implements DocusignInterface {
   private fileManagerRepository : FileManagerInterface;
 
-  private documentsRepo: DocumentsInterface;
-
   private signedPdfPath : string;
 
-  constructor(fileManagerRepo: FileManagerInterface, documentsRepo: DocumentsInterface) {
+  constructor(fileManagerRepo: FileManagerInterface) {
     this.fileManagerRepository = fileManagerRepo;
-    this.documentsRepo = documentsRepo;
     this.signedPdfPath = 'contract-signed-pdf';
   }
 
-  async createEnvelope(envelopeData: EnvelopeData, documentId: string): Promise<{ success: boolean; data?: CreateEnvelopeResponseData }> {
+  async createEnvelope(envelopeData: EnvelopeData): Promise<{ success: boolean; data?: CreateEnvelopeResponseData }> {
     const api_call = async (): Promise<CreateEnvelopeResponseData | string> => {
       const apiconfig = {
         headers: {
@@ -29,13 +25,6 @@ export class DocusignRepo implements DocusignInterface {
           Authorization: `bearer ${process.env.DOCUSIGN_ACCESS_TOKEN}`,
         },
       };
-
-      // Extracting html content from documentsRepo
-      const { html } = await this.documentsRepo.getDocument(documentId);
-
-      // seting html source in the envelopeData
-      // eslint-disable-next-line no-param-reassign
-      envelopeData.documents[0].htmlDefinition.source = html;
 
       return new Promise((resolve) => axios.post(`${process.env.DOCUSIGN_BASE_URI}/envelopes`, envelopeData, apiconfig).then((response: any) => {
         resolve(response.data as CreateEnvelopeResponseData);
