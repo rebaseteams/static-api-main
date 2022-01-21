@@ -1,6 +1,7 @@
 import { DocumentsInterface } from '../models/interfaces/documents';
 import { DocusignInterface } from '../models/interfaces/docusign';
 import { PatchDocumentStatus } from '../models/types/documentContract';
+import { EnvelopeData } from '../models/types/docusign';
 
 export class DocusignService implements DocusignInterface {
   private DocusignRepo: DocusignInterface;
@@ -37,31 +38,26 @@ export class DocusignService implements DocusignInterface {
     });
   }
 
-  createEnvelope(envelopeData: any, documentId: string): Promise<any> {
-    return new Promise((resolve) => {
-      try {
-        this.DocusignRepo.createEnvelope(envelopeData, documentId).then((envelopeResponse) => {
-          if (envelopeResponse.success) {
-            const data: PatchDocumentStatus = {
-              documentId,
-              envelopeId: envelopeResponse.data.envelopeId,
-              dateCreated: envelopeResponse.data.statusDateTime,
-              url: envelopeResponse.data.uri,
-              envelopeStatus: envelopeResponse.data.status,
-              mode: 'submit',
-              signDate: '',
-            };
-            this.DocumentRepo.patchDocumentStatus(data);
-            resolve({ success: true, data: envelopeResponse.data });
-          }
-          resolve({ success: false, message: envelopeResponse.data });
-        }).catch((err) => {
-          resolve({ success: false, message: err });
-        });
-      } catch (err) {
-        resolve({ success: false, message: err });
-      }
-    });
+  async createEnvelope(envelopeData: EnvelopeData, documentId: string): Promise<any> {
+    const { html } = await this.DocumentRepo.getDocument(documentId);
+    // eslint-disable-next-line no-param-reassign
+    envelopeData.documents[0].htmlDefinition.source = html;
+    const envelopeResponse = await this.DocusignRepo.createEnvelope(envelopeData, documentId);
+
+    if (envelopeResponse.success) {
+      const data: PatchDocumentStatus = {
+        documentId,
+        envelopeId: envelopeResponse.data.envelopeId,
+        dateCreated: envelopeResponse.data.statusDateTime,
+        url: envelopeResponse.data.uri,
+        envelopeStatus: envelopeResponse.data.status,
+        mode: 'submit',
+        signDate: '',
+      };
+      this.DocumentRepo.patchDocumentStatus(data);
+      return ({ success: true, data: envelopeResponse.data });
+    }
+    return ({ success: false, message: envelopeResponse.data });
   }
 
   getAllEnvelopes(): Promise<Array<any>> {

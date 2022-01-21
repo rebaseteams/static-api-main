@@ -46,7 +46,7 @@ export class ProdServer {
     const artistRecommendationRepo = new ArtistRecommendationRepo();
     const fileManagerRepo = new FileManagerAWSS3Repo();
     const documentsRepo = new DocumentsRepo(fileManagerRepo);
-    const docusignRepo = new DocusignRepo(fileManagerRepo, documentsRepo);
+    const docusignRepo = new DocusignRepo(fileManagerRepo);
 
     const templatesRepo = new InMemoryTemplatesRepo(fileManagerRepo);
     const brandRepo = new BrandRepo();
