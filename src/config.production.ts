@@ -66,7 +66,7 @@ export class ProdServer {
         brandsService: new BrandsService(brandRepo),
         venuesService: new VenuesService(venueRepo),
         genresService: new GenresService(genreRepo),
-        usersService: new UsersService(userRepo),
+        usersService: new UsersService(userRepo, roleRepo),
         rolesService: new RolesService(roleRepo),
         resourcesService: new ResourcesService(resourceRepo),
         docusignService: new DocusignService(docusignRepo, documentsRepo), // This doesnt look correct.

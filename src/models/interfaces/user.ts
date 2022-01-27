@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import User from '../entities/User';
+import { UserRoleType } from '../types/userRole';
 
 export interface UsersInterface{
   createUser(name : string, email : string, password : string, role : string) : Promise<{ user : User }>;
@@ -9,4 +10,5 @@ export interface UsersInterface{
   updateUsersRole(id : string, roles : string[]) : Promise<{ success : boolean }>;
   getUsers(skip : number, limit : number) : Promise<User[]>;
   getPendingUsers(skip : number, limit : number) : Promise<User[]>
+  getRoles(id: string): Promise<UserRoleType>;
 }
