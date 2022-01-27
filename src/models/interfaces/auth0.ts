@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars */
-import { NextFunction, Request, Response } from 'express';
+import {
+  Handler, NextFunction, Request, Response,
+} from 'express';
 import { SignUp } from '../types/auth';
 
 export interface Auth0Interface {
@@ -10,6 +12,8 @@ export interface Auth0Interface {
   generateToken (): void;
 
   checkRoles (roles : Array<string>, userId : string | (() => string)) : Promise<boolean>;
+
+  checkAuthorization(resource : string, action : string) : Handler;
 
   // eslint-disable-next-line consistent-return
   requireRole (roles : Array<string>): any;
