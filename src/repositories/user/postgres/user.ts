@@ -2,6 +2,7 @@
 import { createConnection, Repository } from 'typeorm';
 import User from '../../../models/entities/User';
 import { UsersInterface } from '../../../models/interfaces/user';
+import { UserRoleType } from '../../../models/types/userRole';
 import { Auth0 } from '../../auth0/http/auth0';
 
 export default class UserRepo implements UsersInterface {
@@ -87,5 +88,28 @@ export default class UserRepo implements UsersInterface {
         skip,
       });
       return users;
+    }
+
+    async getRoles(id: string): Promise<UserRoleType> {
+      return new Promise((resolve) => {
+        resolve({
+          roles: [
+            {
+              name: id,
+              resource: [
+                {
+                  name: 'resource1',
+                  actions: [
+                    {
+                      name: 'action1',
+                      permission: true,
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        });
+      });
     }
 }

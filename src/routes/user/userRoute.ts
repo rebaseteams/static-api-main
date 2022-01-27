@@ -1,11 +1,14 @@
 import * as express from 'express';
 import UsersService from '../../services/user';
+import UserRoleRoute from './role/userRole';
 
 export default class UsersRoutes {
   router: express.Router;
 
   constructor(usersService : UsersService) {
     this.router = express.Router();
+
+    this.router.use('/role', new UserRoleRoute(usersService).router);
 
     this.router.post('/', async (req, res, next) => {
       try {
