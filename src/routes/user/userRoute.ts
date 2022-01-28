@@ -27,6 +27,16 @@ export default class UsersRoutes {
       }
     });
 
+    this.router.get('/count', auth0.checkAuthorization('users', 'view'), async (req, res, next) => {
+      try {
+        const { getPending } = req.query;
+        const data = await usersService.getUsersCount(getPending ? true : undefined);
+        res.send({ data, success: true });
+      } catch (error) {
+        next(error);
+      }
+    });
+
     this.router.get('/:id', auth0.checkAuthorization('user', 'view'), async (req, res, next) => {
       try {
         const { id } = req.params;

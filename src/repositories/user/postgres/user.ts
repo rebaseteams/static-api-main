@@ -114,4 +114,13 @@ export default class UserRepo implements UsersInterface {
         });
       });
     }
+
+    async getUsersCount(getPending: boolean) : Promise<{count: number}> {
+      if (getPending) {
+        const count = await this.userRepository.count({ where: { approved: null } });
+        return { count };
+      }
+      const count = await this.userRepository.count();
+      return { count };
+    }
 }
