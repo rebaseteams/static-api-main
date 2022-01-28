@@ -4,11 +4,13 @@ export type Action = {
 }
 
 export type Resource = {
+  id: string;
   name: string;
   actions: Array<Action>
 }
 
 export type Role = {
+  id: string;
   name: string;
   resource: Array<Resource>;
 }

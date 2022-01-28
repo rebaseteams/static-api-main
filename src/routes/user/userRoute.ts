@@ -1,7 +1,6 @@
 import * as express from 'express';
 import { Auth0Interface } from '../../models/interfaces/auth0';
 import UsersService from '../../services/user';
-import UserRoleRoute from './role/userRole';
 
 export default class UsersRoutes {
   router: express.Router;
@@ -9,7 +8,15 @@ export default class UsersRoutes {
   constructor(auth0 : Auth0Interface, usersService : UsersService) {
     this.router = express.Router();
 
-    this.router.use('/role', new UserRoleRoute(usersService).router);
+    this.router.get('/roles', async (req, res, next) => {
+      try {
+        const { userId } = req.body.auth;
+        const data = await usersService.getRoles(userId);
+        res.send(data);
+      } catch (error) {
+        next(error);
+      }
+    });
 
     this.router.post('/', async (req, res, next) => {
       try {
@@ -25,6 +32,15 @@ export default class UsersRoutes {
         const { id } = req.params;
         const data = await usersService.getUser(id);
         res.send({ data, success: true });
+      } catch (error) {
+        next(error);
+      }
+    });
+
+    this.router.delete('/:id', auth0.checkAuthorization('user', 'delete'), async (req, res, next) => {
+      try {
+        const data = await usersService.deleteUser(req.params.id);
+        res.send({ success: data.success });
       } catch (error) {
         next(error);
       }
@@ -60,15 +76,6 @@ export default class UsersRoutes {
     this.router.patch('/roles', auth0.checkAuthorization('user', 'update'), async (req, res, next) => {
       try {
         const data = await usersService.updateUsersRole(req.body.id, req.body.roles);
-        res.send({ success: data.success });
-      } catch (error) {
-        next(error);
-      }
-    });
-
-    this.router.delete('/:id', auth0.checkAuthorization('user', 'delete'), async (req, res, next) => {
-      try {
-        const data = await usersService.deleteUser(req.params.id);
         res.send({ success: data.success });
       } catch (error) {
         next(error);

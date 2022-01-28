@@ -62,7 +62,7 @@ export class Auth0 implements Auth0Interface {
       if (token) {
         const payload = await jwt.decode(token);
         if (payload) {
-          req.body.auth = { userId: payload.sub };
+          req.body.auth = { userId: payload.sub.toString().split('|')[1] };
         }
         return next();
       }
