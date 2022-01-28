@@ -16,6 +16,15 @@ export default class RolesRoutes {
       }
     });
 
+    this.router.get('/count', async (req, res, next) => {
+      try {
+        const data = await rolesService.getRolesCount();
+        res.send({ data, success: true });
+      } catch (error) {
+        next(error);
+      }
+    });
+
     this.router.get('/:id', async (req, res, next) => {
       try {
         const { id } = req.params;
