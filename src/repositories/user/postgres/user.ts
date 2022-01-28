@@ -95,9 +95,11 @@ export default class UserRepo implements UsersInterface {
         resolve({
           roles: [
             {
+              id,
               name: id,
               resource: [
                 {
+                  id: 'res',
                   name: 'resource1',
                   actions: [
                     {
