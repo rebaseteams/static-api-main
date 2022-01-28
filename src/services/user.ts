@@ -65,4 +65,8 @@ export default class UsersService implements UsersInterface {
     }
     return result;
   }
+
+  async getUsersCount(getPending: boolean) : Promise<{count: number}> {
+    return this.userRepo.getUsersCount(getPending);
+  }
 }

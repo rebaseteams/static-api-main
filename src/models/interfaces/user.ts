@@ -11,4 +11,5 @@ export interface UsersInterface{
   getUsers(skip : number, limit : number) : Promise<User[]>;
   getPendingUsers(skip : number, limit : number) : Promise<User[]>
   getRoles(id: string): Promise<UserRoleType>;
+  getUsersCount(getPending: boolean) : Promise<{count: number}>;
 }
