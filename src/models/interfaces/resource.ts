@@ -7,4 +7,5 @@ export interface ResourcesInterface{
   deleteResource(id : string) : Promise<{ success : boolean }>;
   editResource(id : string, name : string, actions : string[]) : Promise<{ success : boolean }>;
   getResources(skip : number, limit : number) : Promise<Resource[]>;
+  getResourcesCount() : Promise<{count: number}>;
 }
