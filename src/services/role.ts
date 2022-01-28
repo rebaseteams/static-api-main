@@ -30,4 +30,8 @@ export default class RolesService implements RolesInterface {
   async deleteRole(id : string) : Promise<{success : boolean}> {
     return this.roleRepo.deleteRole(id);
   }
+
+  async getRolesCount() : Promise<{count: number}> {
+    return this.roleRepo.getRolesCount();
+  }
 }

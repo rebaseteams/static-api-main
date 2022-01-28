@@ -8,4 +8,6 @@ export interface RolesInterface{
   deleteRole(id : string) : Promise<{ success : boolean }>;
   editRole(id : string, name : string, resourceActions : ResourceActions) : Promise<{ success : boolean }>;
   getRoles(skip : number, limit : number) : Promise<Role[]>;
+  getRolesCount() : Promise<{count: number}>;
+
 }
