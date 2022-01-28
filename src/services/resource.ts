@@ -29,4 +29,8 @@ export default class ResourcesService implements ResourcesInterface {
   async deleteResource(id : string) : Promise<{success : boolean}> {
     return this.resourceRepo.deleteResource(id);
   }
+
+  async getResourcesCount() : Promise<{count: number}> {
+    return this.resourceRepo.getResourcesCount();
+  }
 }

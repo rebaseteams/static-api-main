@@ -16,6 +16,15 @@ export default class ResourcesRoutes {
       }
     });
 
+    this.router.get('/count', async (req, res, next) => {
+      try {
+        const data = await resourcesService.getResourcesCount();
+        res.send({ data, success: true });
+      } catch (error) {
+        next(error);
+      }
+    });
+
     this.router.get('/:id', async (req, res, next) => {
       try {
         const { id } = req.params;

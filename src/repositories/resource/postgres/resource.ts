@@ -56,4 +56,11 @@ export default class ResourceRepo implements ResourcesInterface {
       });
       return resources;
     }
+
+    async getResourcesCount() : Promise<{count: number}> {
+      const count = await this.resourceRepository.count();
+      if (count) return { count };
+      const err = { message: 'Cannot get Resources count', statusCode: 404 };
+      throw err;
+    }
 }
