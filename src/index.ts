@@ -1,7 +1,7 @@
 import { Environment } from './models/types/config';
 import MainServer from './server';
 
-const PORT = 4000;
+const PORT = 3000;
 
 const environment: Environment = process.env.ENV === 'production'
   ? 'production' : 'development';
