@@ -1,7 +1,9 @@
 /* eslint-disable no-underscore-dangle */
 import { auth } from 'express-oauth2-jwt-bearer';
 import axios from 'axios';
-import { NextFunction, Request, Response } from 'express';
+import {
+  Handler, NextFunction, Request, Response,
+} from 'express';
 import jwt from 'jsonwebtoken';
 import * as fs from 'fs';
 import { createConnection, Repository } from 'typeorm';
@@ -129,8 +131,8 @@ export class Auth0 implements Auth0Interface {
     return roles.some((role) => user_roles.map((val) => val.name).includes(role));
   }
 
-  checkAuthorization(resource: string, action: string) {
-    return async (req : Request, res : Response, next : NextFunction) => {
+  checkAuthorization(resource: string, action: string) : Array<Handler> {
+    return [this.authenticate, this.setAuth, async (req : Request, res : Response, next : NextFunction) => {
       try {
         if (req.headers.userid === process.env.DEFAULT_USERID) return next();
         const token = req.headers.authorization.split(' ')[1];
@@ -143,13 +145,17 @@ export class Auth0 implements Auth0Interface {
         const err = { message: 'Unauthorized', statusCode: 401 };
         return next(err);
       } catch (err) {
-        next(err);
+        return next(err);
       }
-    };
+    }];
   }
 
   getRoles = async (id : string) : Promise<Role[]> => {
     const user : User = await this.userRepository.findOne({ id });
+    if (!user.approved) {
+      const err = { message: 'Your approval is pending', statusCode: 401 };
+      throw err;
+    }
     const roles : Role[] = [];
     for (let index = 0; index < user.roles.length; index += 1) {
       const _role : Role = await this.roleRepository.findOne({ id: user.roles[index] });
