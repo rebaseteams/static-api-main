@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { createConnection, Repository } from 'typeorm';
+import { Connection, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import Genre from '../../../models/entities/Genre';
 import { GenresInterface } from '../../../models/interfaces/genre';
@@ -7,10 +7,8 @@ import { GenresInterface } from '../../../models/interfaces/genre';
 export default class GenreRepo implements GenresInterface {
     private genreRepository : Repository<Genre>;
 
-    constructor() {
-      createConnection().then((connection) => {
-        this.genreRepository = connection.getRepository(Genre);
-      });
+    constructor(connection: Connection) {
+      this.genreRepository = connection.getRepository(Genre);
     }
 
     async createGenre(name : string, description : string) : Promise<{genre : Genre}> {

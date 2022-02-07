@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { createConnection, Repository } from 'typeorm';
+import { Connection, Repository } from 'typeorm';
 import User from '../../../models/entities/User';
 import { UsersInterface } from '../../../models/interfaces/user';
 import { UserRoleType } from '../../../models/types/userRole';
@@ -10,12 +10,10 @@ export default class UserRepo implements UsersInterface {
 
     auth0: Auth0;
 
-    constructor(auth0: Auth0) {
+    constructor(connection: Connection, auth0: Auth0) {
       this.auth0 = auth0;
 
-      createConnection().then((connection) => {
-        this.userRepository = connection.getRepository(User);
-      });
+      this.userRepository = connection.getRepository(User);
     }
 
     async createUser(name : string, email : string, password : string, role : string) : Promise<{user : User}> {

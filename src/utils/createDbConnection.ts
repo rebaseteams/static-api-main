@@ -5,18 +5,13 @@ require('dotenv').config();
 export class DBConnection {
     private static instance: DBConnection
 
-    public connection: Promise<Connection>
+    public connection: Connection
 
     constructor() {
       if (DBConnection.instance) {
         return DBConnection.instance;
       }
-      this.connection = this.createConnection();
-      DBConnection.instance = this;
-    }
-
-    private async createConnection(): Promise<Connection> {
-      const connection: Connection = await createConnection({
+      createConnection({
         type: 'postgres',
         host: process.env.DB_HOST,
         port: parseInt(process.env.DB_PORT, 10),
@@ -39,7 +34,9 @@ export class DBConnection {
           migrationsDir: 'src/models/migration',
           subscribersDir: 'src/models/subscriber',
         },
+      }).then((connection) => {
+        this.connection = connection;
       });
-      return connection;
+      DBConnection.instance = this;
     }
 }

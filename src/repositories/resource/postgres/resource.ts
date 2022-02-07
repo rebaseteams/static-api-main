@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { createConnection, Repository } from 'typeorm';
+import { Connection, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import Resource from '../../../models/entities/Resource';
 import { ResourcesInterface } from '../../../models/interfaces/resource';
@@ -7,10 +7,8 @@ import { ResourcesInterface } from '../../../models/interfaces/resource';
 export default class ResourceRepo implements ResourcesInterface {
     private resourceRepository : Repository<Resource>;
 
-    constructor() {
-      createConnection().then((connection) => {
-        this.resourceRepository = connection.getRepository(Resource);
-      });
+    constructor(connection: Connection) {
+      this.resourceRepository = connection.getRepository(Resource);
     }
 
     async createResource(name : string, actions : string[]) : Promise<{resource : Resource}> {

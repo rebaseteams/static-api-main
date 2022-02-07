@@ -23,58 +23,66 @@ import RolesService from './services/role';
 import TemplatesService from './services/templates';
 import UsersService from './services/user';
 import VenuesService from './services/venue';
+import { DBConnection } from './utils/createDbConnection';
 
 export class ProdServer {
   config: ConfigInterface;
 
   constructor() {
-    const configConstants = {
-      AUTH_AUDIENCE: 'http://localhost:4000',
-      AUTH_DOMAIN: 'https://dev-bnfcgcth.us.auth0.com/',
-      AUTH_CLIENT_ID: 'B7hdgDYvx7fyGktJJxxidg9qg0Xvbq0s',
-      AUTH_CONNECTION: 'Username-Password-Authentication',
-      AUTH_TOKEN: '',
-    };
+    const conn = new DBConnection();
+    const timeout = setTimeout(() => {
+      if (conn) {
+        const { connection } = conn;
+        const configConstants = {
+          AUTH_AUDIENCE: 'http://localhost:4000',
+          AUTH_DOMAIN: 'https://dev-bnfcgcth.us.auth0.com/',
+          AUTH_CLIENT_ID: 'B7hdgDYvx7fyGktJJxxidg9qg0Xvbq0s',
+          AUTH_CONNECTION: 'Username-Password-Authentication',
+          AUTH_TOKEN: '',
+        };
 
-    // Initializating static variables
-    Auth0.initAuth(configConstants.AUTH_DOMAIN, configConstants.AUTH_AUDIENCE);
-    FileManagerAWSS3Repo.initConfig();
+        // Initializating static variables
+        Auth0.initAuth(configConstants.AUTH_DOMAIN, configConstants.AUTH_AUDIENCE);
+        FileManagerAWSS3Repo.initConfig();
 
-    // Creating objects of repo
-    const auth0 = new Auth0(configConstants);
-    const artistRepo = new ArtistsRepo();
-    const artistRecommendationRepo = new ArtistRecommendationRepo();
-    const fileManagerRepo = new FileManagerAWSS3Repo();
-    const documentsRepo = new DocumentsRepo(fileManagerRepo);
-    const docusignRepo = new DocusignRepo(fileManagerRepo);
+        // Creating objects of repo
+        const auth0 = new Auth0(connection, configConstants);
+        const artistRepo = new ArtistsRepo(connection);
+        const artistRecommendationRepo = new ArtistRecommendationRepo(connection);
+        const fileManagerRepo = new FileManagerAWSS3Repo();
+        const documentsRepo = new DocumentsRepo(connection, fileManagerRepo);
+        const docusignRepo = new DocusignRepo(fileManagerRepo);
 
-    const templatesRepo = new InMemoryTemplatesRepo(fileManagerRepo);
-    const brandRepo = new BrandRepo();
-    const venueRepo = new VenueRepo();
-    const genreRepo = new GenreRepo();
-    const userRepo = new UserRepo(auth0);
-    const roleRepo = new RoleRepo();
-    const resourceRepo = new ResourceRepo();
+        const templatesRepo = new InMemoryTemplatesRepo(fileManagerRepo);
+        const brandRepo = new BrandRepo(connection);
+        const venueRepo = new VenueRepo(connection);
+        const genreRepo = new GenreRepo(connection);
+        const userRepo = new UserRepo(connection, auth0);
+        const roleRepo = new RoleRepo(connection);
+        const resourceRepo = new ResourceRepo(connection);
 
-    this.config = {
-      constants: configConstants,
-      services: {
-        artistService: new ArtistService(artistRepo, artistRecommendationRepo),
-        // authService: new AuthService();
-        documentsService: new DocumentsService(documentsRepo, artistRecommendationRepo, templatesRepo),
-        templatesService: new TemplatesService(templatesRepo),
-        brandsService: new BrandsService(brandRepo),
-        venuesService: new VenuesService(venueRepo),
-        genresService: new GenresService(genreRepo),
-        usersService: new UsersService(userRepo, roleRepo, resourceRepo),
-        rolesService: new RolesService(roleRepo),
-        resourcesService: new ResourcesService(resourceRepo),
-        docusignService: new DocusignService(docusignRepo, documentsRepo), // This doesnt look correct.
-        fileManagerService: new FileManagerService(fileManagerRepo),
-      },
-      providers: {
-        auth0,
-      },
-    };
+        this.config = {
+          constants: configConstants,
+          services: {
+            artistService: new ArtistService(artistRepo, artistRecommendationRepo),
+            // authService: new AuthService();
+            documentsService: new DocumentsService(documentsRepo, artistRecommendationRepo, templatesRepo),
+            templatesService: new TemplatesService(templatesRepo),
+            brandsService: new BrandsService(brandRepo),
+            venuesService: new VenuesService(venueRepo),
+            genresService: new GenresService(genreRepo),
+            usersService: new UsersService(userRepo, roleRepo, resourceRepo),
+            rolesService: new RolesService(roleRepo),
+            resourcesService: new ResourcesService(resourceRepo),
+            docusignService: new DocusignService(docusignRepo, documentsRepo), // This doesnt look correct.
+            fileManagerService: new FileManagerService(fileManagerRepo),
+          },
+          providers: {
+            auth0,
+          },
+        };
+        clearTimeout(timeout);
+      }
+    }, 1000);
   }
 }

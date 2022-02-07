@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { createConnection, Repository } from 'typeorm';
+import { Connection, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import Venue from '../../../models/entities/Venue';
 import { VenuesInterface } from '../../../models/interfaces/venue';
@@ -8,10 +8,8 @@ import { Address } from '../../../models/types/address';
 export default class VenueRepo implements VenuesInterface {
     private venueRepository : Repository<Venue>;
 
-    constructor() {
-      createConnection().then((connection) => {
-        this.venueRepository = connection.getRepository(Venue);
-      });
+    constructor(connection: Connection) {
+      this.venueRepository = connection.getRepository(Venue);
     }
 
     async createVenue(name : string, address : Address, capacity : number) : Promise<{venue : Venue}> {

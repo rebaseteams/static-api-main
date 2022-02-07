@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { createConnection, Repository } from 'typeorm';
+import { Connection, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import Brand from '../../../models/entities/Brand';
 import { BrandsInterface } from '../../../models/interfaces/brand';
@@ -7,10 +7,8 @@ import { BrandsInterface } from '../../../models/interfaces/brand';
 export default class BrandRepo implements BrandsInterface {
     private brandRepository : Repository<Brand>;
 
-    constructor() {
-      createConnection().then((connection) => {
-        this.brandRepository = connection.getRepository(Brand);
-      });
+    constructor(connection: Connection) {
+      this.brandRepository = connection.getRepository(Brand);
     }
 
     async createBrand(name : string, logo : string, website : string, contact : string) : Promise<{brand : Brand}> {

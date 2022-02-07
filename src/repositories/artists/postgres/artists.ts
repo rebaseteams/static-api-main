@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { createConnection, Repository } from 'typeorm';
+import { Connection, Repository } from 'typeorm';
 import { Artist as TypeArtist } from '../../../models/types/artist';
 import { ArtistInterface } from '../../../models/interfaces/artist';
 import Artist from '../../../models/entities/Artist';
@@ -7,10 +7,8 @@ import Artist from '../../../models/entities/Artist';
 export default class ArtistsRepo implements ArtistInterface {
   private artistRepository : Repository<Artist>;
 
-  constructor() {
-    createConnection().then((connection) => {
-      this.artistRepository = connection.getRepository(Artist);
-    });
+  constructor(connection: Connection) {
+    this.artistRepository = connection.getRepository(Artist);
   }
 
   async getArtist(id : string) : Promise<TypeArtist> {
