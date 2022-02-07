@@ -6,7 +6,7 @@ import {
 } from 'express';
 import jwt from 'jsonwebtoken';
 import * as fs from 'fs';
-import { createConnection, Repository } from 'typeorm';
+import { Connection, Repository } from 'typeorm';
 import { SignUp } from '../../../models/types/auth';
 import { ConfigConstants } from '../../../models/types/config';
 import { Auth0Interface } from '../../../models/interfaces/auth0';
@@ -41,15 +41,13 @@ export class Auth0 implements Auth0Interface {
     });
   }
 
-  constructor(config: ConfigConstants) {
+  constructor(connection: Connection, config: ConfigConstants) {
     this.AUTH_DOMAIN = config.AUTH_DOMAIN;
     this.AUTH_CLIENT_ID = config.AUTH_CLIENT_ID;
     this.AUTH_CONNECTION = config.AUTH_CONNECTION;
-    createConnection().then((connection) => {
-      this.userRepository = connection.getRepository(User);
-      this.roleRepository = connection.getRepository(Role);
-      this.resourceRepository = connection.getRepository(Resource);
-    });
+    this.userRepository = connection.getRepository(User);
+    this.roleRepository = connection.getRepository(Role);
+    this.resourceRepository = connection.getRepository(Resource);
   }
 
   async setAuth(req: Request, res: Response, next: NextFunction) {

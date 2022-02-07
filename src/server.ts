@@ -33,36 +33,41 @@ export default class MainServer {
   constructor(environment: Environment) {
     const server = environment === 'production' ? new ProdServer() : new DevServer();
 
-    const {
-      artistService,
-      documentsService,
-      docusignService,
-      brandsService,
-      venuesService,
-      genresService,
-      usersService,
-      rolesService,
-      resourcesService,
-      templatesService,
-    } = server.config.services;
+    const timeout = setTimeout(() => {
+      if (server.config.services) {
+        const {
+          artistService,
+          documentsService,
+          docusignService,
+          brandsService,
+          venuesService,
+          genresService,
+          usersService,
+          rolesService,
+          resourcesService,
+          templatesService,
+        } = server.config.services;
 
-    const { auth0 } = server.config.providers;
+        const { auth0 } = server.config.providers;
 
-    setPoll(() => auth0.generateToken(), 1 * 60 * 60 * 1000);
-    this.app = express();
-    this.app.use(cors(this.corsOptions));
-    this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
-    this.app.use(contentType);
-    this.app.use(express.json());
-    this.app.use('/users', new UsersRoutes(auth0, usersService).router);
-    this.app.use(auth0.authenticate);
-    this.app.use(auth0.setAuth);
-    this.app.use('/artists', new ArtistRoute(artistService, documentsService, templatesService, docusignService).router);
-    this.app.use('/brands', new BrandsRoutes(brandsService).router);
-    this.app.use('/venues', new VenuesRoutes(venuesService).router);
-    this.app.use('/genres', new GenresRoutes(genresService).router);
-    this.app.use('/roles', new RolesRoutes(rolesService).router);
-    this.app.use('/resources', new ResourcesRoutes(resourcesService).router);
-    this.app.use(errorHandler);
+        setPoll(() => auth0.generateToken(), 1 * 60 * 60 * 1000);
+        this.app = express();
+        this.app.use(cors(this.corsOptions));
+        this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
+        this.app.use(contentType);
+        this.app.use(express.json());
+        this.app.use('/users', new UsersRoutes(auth0, usersService).router);
+        this.app.use(auth0.authenticate);
+        this.app.use(auth0.setAuth);
+        this.app.use('/artists', new ArtistRoute(artistService, documentsService, templatesService, docusignService).router);
+        this.app.use('/brands', new BrandsRoutes(brandsService).router);
+        this.app.use('/venues', new VenuesRoutes(venuesService).router);
+        this.app.use('/genres', new GenresRoutes(genresService).router);
+        this.app.use('/roles', new RolesRoutes(rolesService).router);
+        this.app.use('/resources', new ResourcesRoutes(resourcesService).router);
+        this.app.use(errorHandler);
+        clearTimeout(timeout);
+      }
+    }, 1000);
   }
 }

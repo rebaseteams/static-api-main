@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 /* eslint-disable array-callback-return */
 import { v4 as uuidv4 } from 'uuid';
-import { createConnection, Repository } from 'typeorm';
+import { Connection, Repository } from 'typeorm';
 import ArtistRecommendation from '../../../models/entities/ArtistRecommendation';
 import { ArtistRecommendation as ARecommendation, ARec } from '../../../models/types/artist-recommendation';
 import { ConcertCreationResponse, QuestionsUI } from '../../../models/types/questions';
@@ -11,10 +11,8 @@ import { ArtistRecommendationInterface } from '../../../models/interfaces/artist
 export default class ArtistRecommendationRepo implements ArtistRecommendationInterface {
   private artistRecommendationRepository : Repository<ArtistRecommendation>;
 
-  constructor() {
-    createConnection().then((connection) => {
-      this.artistRecommendationRepository = connection.getRepository(ArtistRecommendation);
-    });
+  constructor(connection: Connection) {
+    this.artistRecommendationRepository = connection.getRepository(ArtistRecommendation);
   }
 
   async getRecommendationStatus(id : string) : Promise<{status : boolean}> {

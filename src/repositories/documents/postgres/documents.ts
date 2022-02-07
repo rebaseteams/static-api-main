@@ -6,7 +6,7 @@ import * as _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { Express } from 'express';
 import * as fs from 'fs';
-import { createConnection, In, Repository } from 'typeorm';
+import { Connection, In, Repository } from 'typeorm';
 import { Template } from '../../../models/types/template';
 import Document from '../../../models/entities/Document';
 import { DocumentsInterface } from '../../../models/interfaces/documents';
@@ -19,10 +19,8 @@ export default class DocumentsRepo implements DocumentsInterface {
 
   private fileManagerRepository : FileManagerInterface;
 
-  constructor(fileManagerRepo: FileManagerInterface) {
-    createConnection().then((connection) => {
-      this.documentRepository = connection.getRepository(Document);
-    });
+  constructor(connection: Connection, fileManagerRepo: FileManagerInterface) {
+    this.documentRepository = connection.getRepository(Document);
     this.fileManagerRepository = fileManagerRepo;
   }
 

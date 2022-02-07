@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { createConnection, Repository } from 'typeorm';
+import { Connection, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import Role from '../../../models/entities/Role';
 import { RolesInterface } from '../../../models/interfaces/role';
@@ -8,10 +8,8 @@ import { ResourceActions } from '../../../models/types/resource-actions';
 export default class RoleRepo implements RolesInterface {
     private roleRepository : Repository<Role>;
 
-    constructor() {
-      createConnection().then((connection) => {
-        this.roleRepository = connection.getRepository(Role);
-      });
+    constructor(connection: Connection) {
+      this.roleRepository = connection.getRepository(Role);
     }
 
     async createRole(name : string, resourceActions : ResourceActions) : Promise<{role : Role}> {
