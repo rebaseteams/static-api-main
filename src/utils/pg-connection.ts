@@ -14,6 +14,7 @@ import Genre from '../models/entities/Genre';
 import User from '../models/entities/User';
 import Role from '../models/entities/Role';
 import Resource from '../models/entities/Resource';
+import { PgActionEntity } from '../models/entities/pg-actions';
 
 export type ConnectionInfo = OmitStrict<DbConfig, 'password'>;
 
@@ -91,6 +92,7 @@ export async function createPgConnection(
       entities: [
         PgArtistEntity,
         Artist,
+        PgActionEntity,
         Document,
         ArtistRecommendation,
         Brand,

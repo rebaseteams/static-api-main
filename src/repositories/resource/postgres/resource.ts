@@ -1,21 +1,31 @@
 /* eslint-disable no-console */
 import { Connection, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
+import { PgActionEntity } from '../../../models/entities/pg-actions';
 import Resource from '../../../models/entities/Resource';
 import { ResourcesInterface } from '../../../models/interfaces/resource';
 
 export default class ResourceRepo implements ResourcesInterface {
     private resourceRepository : Repository<Resource>;
 
+    private actionRepository: Repository<PgActionEntity>;
+
     constructor(connection: Connection) {
       this.resourceRepository = connection.getRepository(Resource);
     }
 
     async createResource(name : string, actions : string[]) : Promise<{resource : Resource}> {
+      const pgActions: PgActionEntity[] = [];
+      for (let i = 0; i < actions.length; i += 1) {
+        const a = await this.actionRepository.findOne(actions[i]);
+        if (a) {
+          pgActions.push(a);
+        }
+      }
       const resource = new Resource(
         uuidv4(),
         name,
-        actions,
+        pgActions,
       );
       await this.resourceRepository.save(resource);
       return { resource };
@@ -37,14 +47,25 @@ export default class ResourceRepo implements ResourcesInterface {
 
     async editResource(id : string, name : string, actions : string[]) : Promise<{success : boolean}> {
       const resource = await this.resourceRepository.findOne({ id });
-      if (resource) {
-        resource.name = name;
-        resource.actions = actions;
-        this.resourceRepository.save(resource);
-        return { success: true };
+
+      if (!resource) {
+        const err = { message: `Resource not found for id: ${id}`, statusCode: 404 };
+        throw err;
       }
-      const err = { message: `Resource not found for id: ${id}`, statusCode: 404 };
-      throw err;
+
+      const pgActions: PgActionEntity[] = [];
+
+      for (let i = 0; i < actions.length; i += 1) {
+        const ac = await this.actionRepository.findOne(actions[i]);
+        if (ac) {
+          pgActions.push(ac);
+        }
+      }
+      resource.name = name;
+      resource.actions = pgActions;
+      this.resourceRepository.save(resource);
+
+      return { success: true };
     }
 
     async getResources(skip : number, limit : number) : Promise<Resource[]> {

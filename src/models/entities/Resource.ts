@@ -1,8 +1,11 @@
-import { Entity, Column, PrimaryColumn } from 'typeorm';
+import {
+  Entity, Column, PrimaryColumn, ManyToMany, JoinTable,
+} from 'typeorm';
+import { PgActionEntity } from './pg-actions';
 
 @Entity()
 export default class Resource {
-  constructor(id: string, name: string, actions: string[]) {
+  constructor(id: string, name: string, actions: PgActionEntity[]) {
     this.id = id;
     this.name = name;
     this.actions = actions;
@@ -14,6 +17,6 @@ export default class Resource {
   @Column()
   name: string;
 
-  @Column('text', { array: true })
-  actions: string[];
+  @ManyToMany(() => PgActionEntity) @JoinTable()
+  actions: PgActionEntity[];
 }

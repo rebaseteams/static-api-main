@@ -7,6 +7,7 @@ import { Auth0 } from '../../auth0/http/auth0';
 
 export default class UserRepo implements UsersInterface {
     private userRepository : Repository<User>;
+
     private roleRepository: Repository<Role>;
 
     auth0: Auth0;
@@ -69,7 +70,7 @@ export default class UserRepo implements UsersInterface {
     async updateUsersRole(id : string, roles : string[]) : Promise<{success : boolean}> {
       const user = await this.userRepository.findOne({ id });
       const pgRoles = [];
-      for (let i = 0; i < roles.length; i+=1) {
+      for (let i = 0; i < roles.length; i += 1) {
         const r = await this.roleRepository.findOne({ id: roles[i] });
         if (r) {
           pgRoles.push(r);
