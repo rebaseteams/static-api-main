@@ -1,5 +1,5 @@
 import { ConfigInterface } from './models/types/config';
-import ArtistRecommendationRepo from './repositories/artistRecommendations/postgres/artistRecommendation';
+import ArtistRecommendationRepo from './repositories/artistRecommendations/lambda/artistRecommendation';
 import ArtistsRepo from './repositories/artists/postgres/artists';
 import { Auth0 } from './repositories/auth0/http/auth0';
 import BrandRepo from './repositories/brands/postgres/brand';
