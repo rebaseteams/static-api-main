@@ -1,9 +1,8 @@
-/* eslint-disable no-console */
 /* eslint-disable consistent-return */
 /* eslint-disable array-callback-return */
 import { v4 as uuidv4 } from 'uuid';
 import * as AWS from 'aws-sdk';
-import { createConnection, Repository } from 'typeorm';
+import { Connection, Repository } from 'typeorm';
 import ArtistRecommendation from '../../../models/entities/ArtistRecommendation';
 import { ArtistRecommendation as ARecommendation } from '../../../models/types/artist-recommendation';
 import { ConcertCreationResponse, QuestionsUI } from '../../../models/types/questions';
@@ -15,10 +14,8 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
 
   private lambda : AWS.Lambda;
 
-  constructor() {
-    createConnection().then((connection) => {
-      this.artistRecommendationRepository = connection.getRepository(ArtistRecommendation);
-    });
+  constructor(connection: Connection) {
+    this.artistRecommendationRepository = connection.getRepository(ArtistRecommendation);
     AWS.config.update({
       accessKeyId: process.env.AWS_ACCESS_KEY,
       secretAccessKey: process.env.AWS_SECRET_KEY,
@@ -142,7 +139,7 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
   async generateRecommendedArtists(id : string, _artists : Artist[]) : Promise<{ success: boolean }> {
     const artistRecommendation = await this.artistRecommendationRepository.findOne(id);
 
-    const Payload = JSON.stringify({ artistRecommendation, _artists });
+    const Payload = JSON.stringify({ id, _artists });
 
     const params = {
       FunctionName: 'recommendation', /* required */
@@ -150,14 +147,10 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
     };
     if (artistRecommendation) {
       try {
-        const response = await this.lambda.invoke(params).promise();
-        const data = JSON.parse(JSON.stringify(response));
-        console.log(data);
-        await this.artistRecommendationRepository.save(JSON.parse(data.Payload.recommendation));
+        await this.lambda.invoke(params).promise();
         return { success: true };
       } catch (error) {
-        console.log('Error catched', error);
-        return { success: false };
+        throw JSON.parse(error);
       }
     }
     const err = { message: `Recommendation not found for id: ${id}`, statusCode: 404 };
