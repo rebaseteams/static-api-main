@@ -56,11 +56,10 @@ export default class UsersService implements UsersInterface {
 
     // Getting actions against roles
     for (let i = 0; i < roles.length; i += 1) {
-      const role = await this.rolesRepo.getRole(roles[i]);
-      result.roles[i] = { id: role.id, name: role.name, resource: [] };
-      for (let j = 0; j < role.resource_actions.length; j += 1) {
-        const resource = await this.resourceRepo.getResource(role.resource_actions[j].resourceId);
-        result.roles[i].resource[j] = { id: resource.id, name: resource.name, actions: role.resource_actions[j].actions };
+      result.roles[i] = { id: roles[i].id, name: roles[i].name, resource: [] };
+      for (let j = 0; j < roles[i].resource_actions.length; j += 1) {
+        const resource = await this.resourceRepo.getResource(roles[i].resource_actions[j].resourceId);
+        result.roles[i].resource[j] = { id: resource.id, name: resource.name, actions: roles[i].resource_actions[j].actions };
       }
     }
     return result;

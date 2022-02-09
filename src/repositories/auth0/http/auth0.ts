@@ -154,12 +154,8 @@ export class Auth0 implements Auth0Interface {
       const err = { message: 'Your approval is pending', statusCode: 401 };
       throw err;
     }
-    const roles : Role[] = [];
-    for (let index = 0; index < user.roles.length; index += 1) {
-      const _role : Role = await this.roleRepository.findOne({ id: user.roles[index] });
-      roles.push(_role);
-    }
-    return roles;
+
+    return user.roles;
   }
 
   checkResourceAction = async (userRoles : Role[], resource : string, action : string) : Promise<boolean> => {
