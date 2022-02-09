@@ -1,8 +1,11 @@
-import { Entity, Column, PrimaryColumn } from 'typeorm';
+import {
+  Entity, Column, PrimaryColumn, ManyToMany, JoinTable,
+} from 'typeorm';
+import Role from './Role';
 
 @Entity()
 export default class User {
-  constructor(id: string, name: string, email: string, roles: string[] = [], approved: boolean = null) {
+  constructor(id: string, name: string, email: string, roles: Role[] = [], approved: boolean = null) {
     this.id = id;
     this.name = name;
     this.email = email;
@@ -19,9 +22,9 @@ export default class User {
   @Column()
   email: string
 
-  @Column('text', { array: true })
-  roles: string[]
-
   @Column({ nullable: true })
   approved: boolean;
+
+  @ManyToMany(() => Role) @JoinTable()
+  roles: Role[];
 }
