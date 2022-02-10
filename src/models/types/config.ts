@@ -1,3 +1,4 @@
+import ActionsService from '../../services/actions';
 import ArtistService from '../../services/artist';
 // eslint-disable-next-line no-unused-vars
 import AuthService from '../../services/auth';
@@ -36,6 +37,7 @@ export type ConfigServices = {
   resourcesService: ResourcesService;
   docusignService: DocusignService;
   fileManagerService: FileManagerService;
+  actionService: ActionsService;
 }
 
 export type ConfigProviders = {

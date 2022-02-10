@@ -1,4 +1,5 @@
 import { ConfigInterface } from './models/types/config';
+import ActionsRepo from './repositories/actions/postgres/actions';
 import ArtistRecommendationRepo from './repositories/artistRecommendations/lambda/artistRecommendation';
 import ArtistsRepo from './repositories/artists/postgres/artists';
 import { Auth0 } from './repositories/auth0/http/auth0';
@@ -12,6 +13,7 @@ import RoleRepo from './repositories/role/postgres/role';
 import InMemoryTemplatesRepo from './repositories/templates/in-memory/templates'; // TODO: THis has to postgres
 import UserRepo from './repositories/user/postgres/user';
 import VenueRepo from './repositories/venues/postgres/venue';
+import ActionsService from './services/actions';
 import ArtistService from './services/artist';
 import BrandsService from './services/brand';
 import DocumentsService from './services/documents';
@@ -60,6 +62,7 @@ export class ProdServer {
         const userRepo = new UserRepo(connection, auth0);
         const roleRepo = new RoleRepo(connection);
         const resourceRepo = new ResourceRepo(connection);
+        const actionsRepo = new ActionsRepo(connection, 'PgActionEntity');
 
         this.config = {
           constants: configConstants,
@@ -76,6 +79,8 @@ export class ProdServer {
             resourcesService: new ResourcesService(resourceRepo),
             docusignService: new DocusignService(docusignRepo, documentsRepo), // This doesnt look correct.
             fileManagerService: new FileManagerService(fileManagerRepo),
+            actionService: new ActionsService(actionsRepo),
+
           },
           providers: {
             auth0,
