@@ -2,13 +2,13 @@
 import { Connection, Repository } from 'typeorm';
 import { Artist as TypeArtist } from '../../../models/types/artist';
 import { ArtistInterface } from '../../../models/interfaces/artist';
-import Artist from '../../../models/entities/Artist';
+import { PgArtistEntity } from '../../../models/entities/pg-artist';
 
 export default class ArtistsRepo implements ArtistInterface {
-  private artistRepository : Repository<Artist>;
+  private artistRepository : Repository<PgArtistEntity>;
 
   constructor(connection: Connection) {
-    this.artistRepository = connection.getRepository(Artist);
+    this.artistRepository = connection.getRepository(PgArtistEntity);
   }
 
   async getArtist(id : string) : Promise<TypeArtist> {
@@ -38,7 +38,7 @@ export default class ArtistsRepo implements ArtistInterface {
   }
 
   async getArtists(skip: number, limit : number) : Promise<TypeArtist[]> {
-    const artists : Artist [] = await this.artistRepository.find({
+    const artists : PgArtistEntity [] = await this.artistRepository.find({
       order: {
         popularity: 'ASC',
       },

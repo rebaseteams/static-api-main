@@ -1,4 +1,4 @@
-import Role from '../models/entities/Role';
+import { Role } from '../models/types/role';
 import { RolesInterface } from '../models/interfaces/role';
 import { ResourceActions } from '../models/types/resource-actions';
 

@@ -1,22 +1,28 @@
 import { Connection, Repository } from 'typeorm';
-import Role from '../../../models/entities/Role';
-import User from '../../../models/entities/User';
+import { v4 as uuidv4 } from 'uuid';
+import { PgRoleEntity } from '../../../models/entities/pg-role';
+import { PgUserEntity } from '../../../models/entities/pg-user';
 import { UsersInterface } from '../../../models/interfaces/user';
 import { UserRoleType } from '../../../models/types/userRole';
 import { Auth0 } from '../../auth0/http/auth0';
+import { User } from '../../../models/types/user';
+import { mapUser } from '../../../utils/pg-to-type-mapper';
+import { PgActionPermissionsEntity } from '../../../models/entities/pg-action-permissions';
 
 export default class UserRepo implements UsersInterface {
-    private userRepository : Repository<User>;
+    private userRepository : Repository<PgUserEntity>;
 
-    private roleRepository: Repository<Role>;
+    private roleRepository: Repository<PgRoleEntity>;
+
+    private actionPermissionsRepository: Repository<PgActionPermissionsEntity>;
 
     auth0: Auth0;
 
     constructor(connection: Connection, auth0: Auth0) {
       this.auth0 = auth0;
 
-      this.userRepository = connection.getRepository(User);
-      this.roleRepository = connection.getRepository(Role);
+      this.userRepository = connection.getRepository(PgUserEntity);
+      this.roleRepository = connection.getRepository(PgRoleEntity);
     }
 
     async createUser(name : string, email : string, password : string, role : string) : Promise<{user : User}> {
@@ -31,20 +37,55 @@ export default class UserRepo implements UsersInterface {
         email,
         password,
       });
-      const user = new User(
-        // eslint-disable-next-line no-underscore-dangle
-        data._id,
+      const user: PgUserEntity = {
+        id: data.id,
         name,
         email,
-        [pgRole],
-      );
-      await this.userRepository.save(user);
-      return { user };
+        roles: [pgRole],
+        approved: false,
+      };
+
+      const res = await this.userRepository.save(user);
+
+      for (let i = 0; i < user.roles.length; i += 1) {
+        const userRole = user.roles[i];
+        for (let j = 0; j < userRole.resources.length; j += 1) {
+          const resource = userRole.resources[j];
+          for (let k = 0; k < resource.actions.length; k += 1) {
+            const action = resource.actions[k];
+            const actionPermission: PgActionPermissionsEntity = {
+              id: uuidv4(),
+              user,
+              user_id: user.id,
+              action_id: action.id,
+              action,
+              role_id: userRole.id,
+              resource_id: resource.id,
+              resource,
+              role: userRole,
+              permission: false,
+            };
+            await this.actionPermissionsRepository.save(actionPermission);
+          }
+        }
+      }
+
+      const pgActionPermissions = await this.actionPermissionsRepository
+        .find({ user });
+
+      const mapperUser: User = mapUser(res, pgActionPermissions);
+
+      return { user: mapperUser };
     }
 
     async getUser(id : string) : Promise<User> {
       const user = await this.userRepository.findOne({ id });
-      if (user) return user;
+      const pgActionPermissions = await this.actionPermissionsRepository
+        .find({ user });
+
+      if (user) {
+        return mapUser(user, pgActionPermissions);
+      }
       const err = { message: `User not found for id: ${id}`, statusCode: 404 };
       throw err;
     }
@@ -87,22 +128,39 @@ export default class UserRepo implements UsersInterface {
     }
 
     async getPendingUsers(skip : number, limit : number) : Promise<User[]> {
-      const users : User[] = await this.userRepository.find({
+      const pendingUsers: User[] = [];
+      const users : PgUserEntity[] = await this.userRepository.find({
         where: { approved: null },
         take: limit,
         skip,
       });
-      return users;
+
+      for (let i = 0; i < users.length; i += 1) {
+        const user = users[i];
+        const pgActionPermissions = await this.actionPermissionsRepository
+          .find({ user });
+        pendingUsers.push(mapUser(user, pgActionPermissions));
+      }
+      return pendingUsers;
     }
 
     async getUsers(skip : number, limit : number) : Promise<User[]> {
-      const users : User[] = await this.userRepository.find({
+      const resUsers: User[] = [];
+      const users : PgUserEntity[] = await this.userRepository.find({
         take: limit,
         skip,
       });
-      return users;
+
+      for (let i = 0; i < users.length; i += 1) {
+        const user = users[i];
+        const pgActionPermissions = await this.actionPermissionsRepository
+          .find({ user });
+        resUsers.push(mapUser(user, pgActionPermissions));
+      }
+      return resUsers;
     }
 
+    // TODO: This doesnt look correct.
     async getRoles(id: string): Promise<UserRoleType> {
       return new Promise((resolve) => {
         resolve({
@@ -110,12 +168,13 @@ export default class UserRepo implements UsersInterface {
             {
               id,
               name: id,
-              resource: [
+              resources: [
                 {
                   id: 'res',
                   name: 'resource1',
                   actions: [
                     {
+                      id: 'action1',
                       name: 'action1',
                       permission: true,
                     },

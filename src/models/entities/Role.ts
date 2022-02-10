@@ -15,6 +15,5 @@ export default class Role {
   @Column()
   name: string;
 
-  @Column({ type: 'jsonb' })
   resource_actions: ResourceActions;
 }

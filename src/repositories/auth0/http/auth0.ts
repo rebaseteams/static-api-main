@@ -11,10 +11,14 @@ import { SignUp } from '../../../models/types/auth';
 import { ConfigConstants } from '../../../models/types/config';
 import { Auth0Interface } from '../../../models/interfaces/auth0';
 import tokenValidator from '../../../utils/tokenValidator';
-import User from '../../../models/entities/User';
-import Role from '../../../models/entities/Role';
-import Resource from '../../../models/entities/Resource';
+import { PgUserEntity } from '../../../models/entities/pg-user';
+import { PgRoleEntity } from '../../../models/entities/pg-role';
+import { PgResourceEntity } from '../../../models/entities/pg-resource';
+import { mapUserRole } from '../../../utils/pg-to-type-mapper';
+import { PgActionPermissionsEntity } from '../../../models/entities/pg-action-permissions';
+import { UserRole } from '../../../models/types/userRole';
 
+// TODO: This needs to be looked upon
 export class Auth0 implements Auth0Interface {
   tokenGenerated;
 
@@ -28,11 +32,13 @@ export class Auth0 implements Auth0Interface {
 
   AUTH_CONNECTION;
 
-  userRepository : Repository<User>;
+  userRepository : Repository<PgUserEntity>;
 
-  roleRepository : Repository<Role>;
+  roleRepository : Repository<PgRoleEntity>;
 
-  resourceRepository : Repository<Resource>;
+  resourceRepository : Repository<PgResourceEntity>;
+
+  actionPermissionRepository: Repository<PgActionPermissionsEntity>;
 
   static initAuth(AUTH_DOMAIN, AUTH_AUDIENCE) {
     Auth0.auth0 = auth({
@@ -45,9 +51,9 @@ export class Auth0 implements Auth0Interface {
     this.AUTH_DOMAIN = config.AUTH_DOMAIN;
     this.AUTH_CLIENT_ID = config.AUTH_CLIENT_ID;
     this.AUTH_CONNECTION = config.AUTH_CONNECTION;
-    this.userRepository = connection.getRepository(User);
-    this.roleRepository = connection.getRepository(Role);
-    this.resourceRepository = connection.getRepository(Resource);
+    this.userRepository = connection.getRepository(PgUserEntity);
+    this.roleRepository = connection.getRepository(PgRoleEntity);
+    this.resourceRepository = connection.getRepository(PgResourceEntity);
   }
 
   async setAuth(req: Request, res: Response, next: NextFunction) {
@@ -138,8 +144,22 @@ export class Auth0 implements Auth0Interface {
         let id : any = payload.sub;
         // eslint-disable-next-line prefer-destructuring
         id = id.split('|')[1];
-        const roles = await this.getRoles(id);
-        if (await this.checkResourceAction(roles, resource, action)) return next();
+
+        const user = await this.userRepository.findOne({ id });
+        if (!user.approved) {
+          const err = { message: 'Your approval is pending', statusCode: 401 };
+          throw err;
+        }
+
+        const actionPermission = await this.actionPermissionRepository.find({
+          user,
+          action_id: action,
+        });
+
+        if (actionPermission.find((a) => a.permission === true)) {
+          return next();
+        }
+
         const err = { message: 'Unauthorized', statusCode: 401 };
         return next(err);
       } catch (err) {
@@ -148,41 +168,17 @@ export class Auth0 implements Auth0Interface {
     }];
   }
 
-  getRoles = async (id : string) : Promise<Role[]> => {
-    const user : User = await this.userRepository.findOne({ id });
+  getRoles = async (id : string) : Promise<UserRole[]> => {
+    const user: PgUserEntity = await this.userRepository.findOne({ id });
     if (!user.approved) {
       const err = { message: 'Your approval is pending', statusCode: 401 };
       throw err;
     }
 
-    return user.roles;
-  }
+    const pgActionPermissions = await this.actionPermissionRepository
+      .find({ user });
 
-  checkResourceAction = async (userRoles : Role[], resource : string, action : string) : Promise<boolean> => {
-    const resourceId = (await this.resourceRepository.findOne({ name: resource })).id;
-    let allowed : boolean;
-    for (let index = 0; index < userRoles.length; index += 1) {
-      const role = userRoles[index];
-      for (let j = 0; j < role.resource_actions.length; j += 1) {
-        const _resource = role.resource_actions[j];
-        if (_resource.resourceId === resourceId) {
-          for (let i = 0; i < _resource.actions.length; i += 1) {
-            if (action === _resource.actions[i].name) {
-              allowed = _resource.actions[i].permission;
-              if (allowed === false) break;
-            }
-          }
-          if (allowed === false) break;
-        }
-      }
-      if (allowed === false) break;
-    }
-    if (allowed) return true; return false;
-  }
-
-  checkAction = (action : string) : boolean => {
-    if (action === 'view') return true;
-    return false;
+    return user.roles.map((r) => mapUserRole(r, pgActionPermissions, r.id));
   }
 
   // eslint-disable-next-line consistent-return

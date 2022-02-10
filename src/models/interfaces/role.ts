@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import Role from '../entities/Role';
+import { Role } from '../types/role';
 import { ResourceActions } from '../types/resource-actions';
 
 export interface RolesInterface{
@@ -9,5 +9,4 @@ export interface RolesInterface{
   editRole(id : string, name : string, resourceActions : ResourceActions) : Promise<{ success : boolean }>;
   getRoles(skip : number, limit : number) : Promise<Role[]>;
   getRolesCount() : Promise<{count: number}>;
-
 }

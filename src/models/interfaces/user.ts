@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import User from '../entities/User';
+import { User } from '../types/user';
 import { UserRoleType } from '../types/userRole';
 
 export interface UsersInterface{

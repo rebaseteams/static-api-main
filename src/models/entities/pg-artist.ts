@@ -1,37 +1,50 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  Index,
-  PrimaryColumn,
-} from 'typeorm';
+import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { audience, media_handles } from '../types/artist';
 
-@Entity({ name: 'artists' })
+@Entity({ name: 'artist' })
 export class PgArtistEntity {
-  @PrimaryColumn({ type: 'uuid' })
-  id!: string;
+  @PrimaryColumn()
+  id: string;
 
-  @Index()
-  @Column({
-    type: 'varchar',
-    name: 'name',
-    nullable: false,
-  })
-  name!: string;
+  @Column()
+  name: string;
 
-  @Index()
-  @CreateDateColumn({
-    type: 'timestamp',
-    name: 'created_at',
-    nullable: false,
-  })
-  createdAt!: Date;
+  @Column()
+  gender: string;
 
-  @Index()
-  @CreateDateColumn({
-    type: 'timestamp',
-    name: 'updated_at',
-    nullable: false,
-  })
-  updatedAt!: Date;
+  @Column('text', { array: true })
+  associated_brands: string[];
+
+  @Column('text', { array: true })
+  venues: string[];
+
+  @Column()
+  country: string;
+
+  @Column()
+  image: string;
+
+  @Column()
+  cover_image: string;
+
+  @Column()
+  bio: string;
+
+  @Column()
+  manager: string;
+
+  @Column()
+  contact: string;
+
+  @Column({ type: 'text' })
+  address: string;
+
+  @Column()
+  popularity: number;
+
+  @Column('jsonb')
+  audience: audience;
+
+  @Column('jsonb')
+  media_handles: media_handles;
 }

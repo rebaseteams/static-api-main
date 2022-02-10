@@ -1,20 +1,21 @@
 /* eslint-disable class-methods-use-this */
 import { Connection, createConnection, Table } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
-import { PgArtistEntity } from '../models/entities/pg-artist';
+// import { PgArtistEntity } from '../models/entities/pg-artist-deprecated';
 import { InvalidConfigurationError, TypedError } from '../models/types/errors';
 import { DbConfig } from '../providers/db-config.provider';
 import { OmitStrict } from './omit';
-import Artist from '../models/entities/Artist';
+import { PgArtistEntity } from '../models/entities/pg-artist';
 import Document from '../models/entities/Document';
 import ArtistRecommendation from '../models/entities/ArtistRecommendation';
 import Brand from '../models/entities/Brand';
 import Venue from '../models/entities/Venue';
 import Genre from '../models/entities/Genre';
-import User from '../models/entities/User';
-import Role from '../models/entities/Role';
-import Resource from '../models/entities/Resource';
+import { PgUserEntity } from '../models/entities/pg-user';
+import { PgRoleEntity } from '../models/entities/pg-role';
+import { PgResourceEntity } from '../models/entities/pg-resource';
 import { PgActionEntity } from '../models/entities/pg-actions';
+import { PgActionPermissionsEntity } from '../models/entities/pg-action-permissions';
 
 export type ConnectionInfo = OmitStrict<DbConfig, 'password'>;
 
@@ -91,16 +92,16 @@ export async function createPgConnection(
       type: 'postgres',
       entities: [
         PgArtistEntity,
-        Artist,
         PgActionEntity,
         Document,
         ArtistRecommendation,
         Brand,
         Venue,
         Genre,
-        User,
-        Role,
-        Resource,
+        PgUserEntity,
+        PgRoleEntity,
+        PgResourceEntity,
+        PgActionPermissionsEntity,
       ],
       migrations,
       database,

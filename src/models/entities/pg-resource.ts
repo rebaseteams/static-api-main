@@ -4,13 +4,7 @@ import {
 import { PgActionEntity } from './pg-actions';
 
 @Entity()
-export default class Resource {
-  constructor(id: string, name: string, actions: PgActionEntity[]) {
-    this.id = id;
-    this.name = name;
-    this.actions = actions;
-  }
-
+export class PgResourceEntity {
   @PrimaryColumn()
   id: string;
 

@@ -1,4 +1,4 @@
-import Resource from '../models/entities/Resource';
+import { Resource } from '../models/types/role';
 import { ResourcesInterface } from '../models/interfaces/resource';
 
 export default class ResourcesService implements ResourcesInterface {
