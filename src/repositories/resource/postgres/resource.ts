@@ -1,39 +1,46 @@
 /* eslint-disable no-console */
 import { Connection, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
+import { PgActionPermissionsEntity } from '../../../models/entities/pg-action-permissions';
 import { PgActionEntity } from '../../../models/entities/pg-actions';
-import Resource from '../../../models/entities/Resource';
+import { PgResourceEntity } from '../../../models/entities/pg-resource';
 import { ResourcesInterface } from '../../../models/interfaces/resource';
+import { Resource } from '../../../models/types/role';
+import { mapResource } from '../../../utils/pg-to-type-mapper';
 
 export default class ResourceRepo implements ResourcesInterface {
-    private resourceRepository : Repository<Resource>;
+    private resourceRepository : Repository<PgResourceEntity>;
 
     private actionRepository: Repository<PgActionEntity>;
 
+    private actionPermissionRepository: Repository<PgActionPermissionsEntity>;
+
     constructor(connection: Connection) {
-      this.resourceRepository = connection.getRepository(Resource);
+      this.resourceRepository = connection.getRepository(PgResourceEntity);
     }
 
     async createResource(name : string, actions : string[]) : Promise<{resource : Resource}> {
-      const pgActions: PgActionEntity[] = [];
-      for (let i = 0; i < actions.length; i += 1) {
-        const a = await this.actionRepository.findOne(actions[i]);
-        if (a) {
-          pgActions.push(a);
-        }
-      }
-      const resource = new Resource(
-        uuidv4(),
+      const resourceId = uuidv4();
+
+      const pgActions = await this.actionRepository.findByIds(actions);
+
+      const resource: PgResourceEntity = {
+        id: resourceId,
         name,
-        pgActions,
-      );
-      await this.resourceRepository.save(resource);
-      return { resource };
+        actions: pgActions,
+      };
+
+      let pgResource = await this.resourceRepository.save(resource);
+
+      pgResource = await this.resourceRepository.findOne(resourceId);
+      return { resource: mapResource(pgResource) };
     }
 
     async getResource(id : string) : Promise<Resource> {
       const resource = await this.resourceRepository.findOne({ id });
-      if (resource) return resource;
+      if (resource) {
+        return mapResource(resource);
+      }
       const err = { message: `Resource not found for id: ${id}`, statusCode: 404 };
       throw err;
     }
@@ -53,27 +60,28 @@ export default class ResourceRepo implements ResourcesInterface {
         throw err;
       }
 
-      const pgActions: PgActionEntity[] = [];
+      const pgActionPermissions: PgActionPermissionsEntity[] = [];
 
       for (let i = 0; i < actions.length; i += 1) {
         const ac = await this.actionRepository.findOne(actions[i]);
         if (ac) {
-          pgActions.push(ac);
+          const ap = await this.actionPermissionRepository.findOne({ action: ac, resource_id: id });
+          pgActionPermissions.push(ap);
         }
       }
       resource.name = name;
-      resource.actions = pgActions;
+
       this.resourceRepository.save(resource);
 
       return { success: true };
     }
 
     async getResources(skip : number, limit : number) : Promise<Resource[]> {
-      const resources : Resource[] = await this.resourceRepository.find({
+      const resources : PgResourceEntity[] = await this.resourceRepository.find({
         take: limit,
         skip,
       });
-      return resources;
+      return resources.map((r) => mapResource(r));
     }
 
     async getResourcesCount() : Promise<{count: number}> {

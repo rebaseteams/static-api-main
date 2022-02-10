@@ -1,4 +1,4 @@
-import User from '../models/entities/User';
+import { User } from '../models/types/user';
 import { ResourcesInterface } from '../models/interfaces/resource';
 import { RolesInterface } from '../models/interfaces/role';
 import { UsersInterface } from '../models/interfaces/user';
@@ -56,10 +56,10 @@ export default class UsersService implements UsersInterface {
 
     // Getting actions against roles
     for (let i = 0; i < roles.length; i += 1) {
-      result.roles[i] = { id: roles[i].id, name: roles[i].name, resource: [] };
-      for (let j = 0; j < roles[i].resource_actions.length; j += 1) {
-        const resource = await this.resourceRepo.getResource(roles[i].resource_actions[j].resourceId);
-        result.roles[i].resource[j] = { id: resource.id, name: resource.name, actions: roles[i].resource_actions[j].actions };
+      result.roles[i] = { id: roles[i].id, name: roles[i].name, resources: [] };
+      for (let j = 0; j < roles[i].resources.length; j += 1) {
+        const resource = await this.resourceRepo.getResource(roles[i].resources[j].id);
+        result.roles[i].resources[j] = { id: resource.id, name: resource.name, actions: roles[i].resources[j].actions };
       }
     }
     return result;

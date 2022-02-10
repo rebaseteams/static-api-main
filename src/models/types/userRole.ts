@@ -1,19 +1,21 @@
-export type Action = {
+export type UserAction = {
+  id: string;
   name: string;
   permission: boolean;
 }
 
-export type Resource = {
+export type UserResource = {
   id: string;
   name: string;
-  actions: Array<Action>
+  actions: Array<UserAction>
 }
 
-export type Role = {
+export type UserRole = {
   id: string;
   name: string;
-  resource: Array<Resource>;
+  resources: Array<UserResource>;
 }
+
 export type UserRoleType = {
-  roles: Array<Role>
+  roles: Array<UserRole>
 };

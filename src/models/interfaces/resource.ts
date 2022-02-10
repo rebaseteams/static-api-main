@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import Resource from '../entities/Resource';
+import { Resource } from '../types/role';
 
 export interface ResourcesInterface{
   createResource(name : string, actions: string[]) : Promise<{ resource : Resource }>;
