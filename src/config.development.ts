@@ -1,4 +1,5 @@
 import { ConfigInterface } from './models/types/config';
+import ActionsRepo from './repositories/actions/postgres/actions';
 import InMemoryArtistRecommendationRepo from './repositories/artistRecommendations/in-memory/artist-recommendation';
 import ArtistsRepo from './repositories/artists/in-memory/artist';
 import { Auth0 } from './repositories/auth0/http/auth0';
@@ -12,6 +13,7 @@ import RoleRepo from './repositories/role/postgres/role'; // TODO: This has to b
 import InMemoryTemplatesRepo from './repositories/templates/in-memory/templates';
 import UserRepo from './repositories/user/postgres/user'; // TODO: This has to be in-memory
 import VenueRepo from './repositories/venues/inmemory/venue';
+import ActionsService from './services/actions';
 import ArtistService from './services/artist';
 import BrandsService from './services/brand';
 import DocumentsService from './services/documents';
@@ -61,6 +63,7 @@ export class DevServer {
         const userRepo = new UserRepo(connection, auth0);
         const roleRepo = new RoleRepo(connection);
         const resourceRepo = new ResourceRepo(connection);
+        const actionsRepo = new ActionsRepo(connection, 'PgActionEntity');
 
         this.config = {
           constants: configConstants,
@@ -77,6 +80,7 @@ export class DevServer {
             resourcesService: new ResourcesService(resourceRepo),
             docusignService: new DocusignService(docusignRepo, documentsRepo), // This doesnt look correct.
             fileManagerService: new FileManagerService(fileManagerRepo),
+            actionService: new ActionsService(actionsRepo),
           },
           providers: {
             auth0,
