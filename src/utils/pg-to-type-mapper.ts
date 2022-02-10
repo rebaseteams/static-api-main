@@ -57,7 +57,7 @@ export function mapUser(pgUser: PgUserEntity, pgActionPermissions: PgActionPermi
     id: pgUser.id,
     name: pgUser.name,
     email: pgUser.email,
-    roles: pgUser.roles.map((r) => mapUserRole(r, pgActionPermissions, pgUser.id)),
+    roles: pgUser.roles ? pgUser.roles.map((r) => mapUserRole(r, pgActionPermissions, pgUser.id)) : [],
   };
 
   return mapperUser;

@@ -54,6 +54,7 @@ export class Auth0 implements Auth0Interface {
     this.userRepository = connection.getRepository(PgUserEntity);
     this.roleRepository = connection.getRepository(PgRoleEntity);
     this.resourceRepository = connection.getRepository(PgResourceEntity);
+    this.actionPermissionRepository = connection.getRepository(PgActionPermissionsEntity);
   }
 
   async setAuth(req: Request, res: Response, next: NextFunction) {
@@ -152,7 +153,7 @@ export class Auth0 implements Auth0Interface {
         }
 
         const actionPermission = await this.actionPermissionRepository.find({
-          user,
+          user_id: user.id,
           action_id: action,
         });
 
@@ -175,8 +176,7 @@ export class Auth0 implements Auth0Interface {
       throw err;
     }
 
-    const pgActionPermissions = await this.actionPermissionRepository
-      .find({ user });
+    const pgActionPermissions = await this.actionPermissionRepository.find({ user_id: user.id });
 
     return user.roles.map((r) => mapUserRole(r, pgActionPermissions, r.id));
   }
