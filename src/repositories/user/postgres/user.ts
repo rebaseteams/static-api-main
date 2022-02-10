@@ -23,6 +23,7 @@ export default class UserRepo implements UsersInterface {
 
       this.userRepository = connection.getRepository(PgUserEntity);
       this.roleRepository = connection.getRepository(PgRoleEntity);
+      this.actionPermissionsRepository = connection.getRepository(PgActionPermissionsEntity);
     }
 
     async createUser(name : string, email : string, password : string, role : string) : Promise<{user : User}> {
@@ -80,8 +81,7 @@ export default class UserRepo implements UsersInterface {
 
     async getUser(id : string) : Promise<User> {
       const user = await this.userRepository.findOne({ id });
-      const pgActionPermissions = await this.actionPermissionsRepository
-        .find({ user });
+      const pgActionPermissions = await this.actionPermissionsRepository.find({ user_id: user.id });
 
       if (user) {
         return mapUser(user, pgActionPermissions);
@@ -160,31 +160,9 @@ export default class UserRepo implements UsersInterface {
       return resUsers;
     }
 
-    // TODO: This doesnt look correct.
-    async getRoles(id: string): Promise<UserRoleType> {
-      return new Promise((resolve) => {
-        resolve({
-          roles: [
-            {
-              id,
-              name: id,
-              resources: [
-                {
-                  id: 'res',
-                  name: 'resource1',
-                  actions: [
-                    {
-                      id: 'action1',
-                      name: 'action1',
-                      permission: true,
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        });
-      });
+    // eslint-disable-next-line no-unused-vars
+    getRoles(id: string): Promise<UserRoleType> {
+      throw new Error('Method not implemented.');
     }
 
     async getUsersCount(getPending: boolean) : Promise<{count: number}> {
