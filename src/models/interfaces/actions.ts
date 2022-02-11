@@ -1,4 +1,7 @@
+/* eslint-disable no-unused-vars */
 import { RepoInterface } from '@rebaseitlabs/typeorm-generic';
-import { PgActionEntity } from '../entities/pg-actions';
+import { Action } from '../types/role';
 
-export interface ActionInterface extends RepoInterface<PgActionEntity>{}
+export interface ActionInterface extends RepoInterface<Action>{
+    createAction(name: string): Promise<{action: Action}>
+}

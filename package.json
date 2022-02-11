@@ -20,7 +20,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@rebaseitlabs/typeorm-generic": "^0.0.7",
+    "@rebaseitlabs/typeorm-generic": "^0.0.8",
     "@sendgrid/helpers": "^7.6.0",
     "@sendgrid/mail": "^7.6.0",
     "@types/axios": "^0.14.0",
