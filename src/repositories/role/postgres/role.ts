@@ -65,7 +65,7 @@ export default class RoleRepo implements RolesInterface {
 
     async getRolesCount() : Promise<{count: number}> {
       const count = await this.roleRepository.count();
-      if (count) return { count };
+      if (count >= 0) return { count };
       const err = { message: 'Cannot get Roles count', statusCode: 404 };
       throw err;
     }

@@ -17,6 +17,7 @@ export default class ResourceRepo implements ResourcesInterface {
 
     constructor(connection: Connection) {
       this.resourceRepository = connection.getRepository(PgResourceEntity);
+      this.actionRepository = connection.getRepository(PgActionEntity);
     }
 
     async createResource(name : string, actions : string[]) : Promise<{resource : Resource}> {
@@ -86,7 +87,7 @@ export default class ResourceRepo implements ResourcesInterface {
 
     async getResourcesCount() : Promise<{count: number}> {
       const count = await this.resourceRepository.count();
-      if (count) return { count };
+      if (count >= 0) return { count };
       const err = { message: 'Cannot get Resources count', statusCode: 404 };
       throw err;
     }

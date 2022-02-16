@@ -14,7 +14,7 @@ export class PgUserEntity {
   @Column()
   email: string
 
-  @Column({ default: false })
+  @Column({ nullable: true, default: false })
   approved: boolean;
 
   @ManyToMany(() => PgRoleEntity) @JoinTable()
