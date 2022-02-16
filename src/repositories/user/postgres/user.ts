@@ -154,7 +154,7 @@ export default class UserRepo implements UsersInterface {
       for (let i = 0; i < users.length; i += 1) {
         const user = users[i];
         const pgActionPermissions = await this.actionPermissionsRepository
-          .find({ user });
+          .find({ user_id: user.id });
         resUsers.push(mapUser(user, pgActionPermissions));
       }
       return resUsers;
