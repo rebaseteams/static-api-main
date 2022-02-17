@@ -106,7 +106,7 @@ jobs:
         ECR_REGISTRY: ${{ secrets.ECR_URI }}
         IMAGE_TAG: latest
       run: |
-        docker tag $REPO:latest $ECR_REGISTRY:$IMAGE_TAG .
+        docker tag $REPO:latest $ECR_REGISTRY:$IMAGE_TAG
         docker push $ECR_REGISTRY:$IMAGE_TAG
     - name: Publish Docker image
       run: docker push $REPO
