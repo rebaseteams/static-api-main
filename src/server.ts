@@ -55,7 +55,7 @@ export default class MainServer {
         setPoll(() => auth0.generateToken(), 1 * 60 * 60 * 1000);
         this.app = express();
         this.app.use(cors(this.corsOptions));
-        this.app.use('/healtcheck', (req : Request, res : Response) => res.status(200).send('OK'));
+        this.app.use('/healthcheck', (req : Request, res : Response) => res.status(200).send('OK'));
         this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
         this.app.use(contentType);
         this.app.use(express.json());
