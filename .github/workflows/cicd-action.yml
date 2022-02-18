@@ -72,9 +72,9 @@ jobs:
       run: |
         npm run build
   
-  docker:
+  deploy:
     if: github.ref == 'refs/heads/master'
-    name: Publish - Docker Hub
+    name: Deploy on ECS
     runs-on: ubuntu-18.04
     needs: [build]
     env:
@@ -85,8 +85,6 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: Login to Docker Hub
-      run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
     - name: Build Docker image
       run: |
         npm install
@@ -108,17 +106,3 @@ jobs:
       run: |
         docker tag $REPO:latest $ECR_REGISTRY:$IMAGE_TAG
         docker push $ECR_REGISTRY:$IMAGE_TAG
-    - name: Publish Docker image
-      run: docker push $REPO
-
-  webhookDeploy:
-    if: github.ref == 'refs/heads/master'
-    name: Trigger webhook on AWS instance 
-    runs-on: ubuntu-18.04
-    needs: [docker]
-    steps:
-      - name: Deploy docker container webhook
-        uses: joelwmale/webhook-action@master
-        env:
-          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL  }}
-          data: "{ 'myField': 'myFieldValue'}"
