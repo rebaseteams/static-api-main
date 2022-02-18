@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import express, { Request, Response } from 'express';
+import express, { Request, Response, Router } from 'express';
 import * as swaggerUi from 'swagger-ui-express';
 import cors from 'cors';
 import * as swaggerDoc from './swagger/swagger.json';
@@ -23,7 +23,9 @@ import ActionsRoutes from './routes/actions/actionsRoures';
 require('dotenv').config();
 
 export default class MainServer {
-  app;
+  app : Router;
+
+  expressApp;
 
   corsOptions = {
     origin: '*',
@@ -53,7 +55,9 @@ export default class MainServer {
         const { auth0 } = server.config.providers;
 
         setPoll(() => auth0.generateToken(), 1 * 60 * 60 * 1000);
-        this.app = express();
+        this.expressApp = express();
+        this.app = Router();
+        this.expressApp.use('/cc-bff', this.app);
         this.app.use(cors(this.corsOptions));
         this.app.use('/healthcheck', (req : Request, res : Response) => res.status(200).send('OK'));
         this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
@@ -69,7 +73,6 @@ export default class MainServer {
         this.app.use('/roles', new RolesRoutes(rolesService).router);
         this.app.use('/resources', new ResourcesRoutes(resourcesService).router);
         this.app.use('/actions', new ActionsRoutes(actionService).router);
-
         this.app.use(errorHandler);
         clearTimeout(timeout);
       }
