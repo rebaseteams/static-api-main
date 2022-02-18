@@ -57,6 +57,7 @@ export default class DocumentsRoutes {
           id: value.id,
           name: value.name,
           createdOn: value.created_on,
+          mode: value.mode,
         }));
         res.send({ success: true, data: resp });
       } catch (error) {
