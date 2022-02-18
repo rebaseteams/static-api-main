@@ -11,8 +11,8 @@ const main = new MainServer(environment);
 const timeout = setTimeout(() => {
   if (main) {
     const t2 = setTimeout(() => {
-      if (main.app) {
-        main.app.listen(PORT, () => {
+      if (main.expressApp) {
+        main.expressApp.listen(PORT, () => {
           // eslint-disable-next-line no-console
           console.log(`Server running on port ${PORT} in ${environment} environment`);
         });
