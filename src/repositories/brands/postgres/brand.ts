@@ -1,24 +1,25 @@
 /* eslint-disable no-console */
 import { Connection, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import Brand from '../../../models/entities/Brand';
+import PgBrandEntity from '../../../models/entities/pg-brand';
+import { Brand } from '../../../models/types/brand';
 import { BrandsInterface } from '../../../models/interfaces/brand';
 
 export default class BrandRepo implements BrandsInterface {
-    private brandRepository : Repository<Brand>;
+    private brandRepository : Repository<PgBrandEntity>;
 
     constructor(connection: Connection) {
-      this.brandRepository = connection.getRepository(Brand);
+      this.brandRepository = connection.getRepository(PgBrandEntity);
     }
 
     async createBrand(name : string, logo : string, website : string, contact : string) : Promise<{brand : Brand}> {
-      const brand = new Brand(
-        uuidv4(),
+      const brand: PgBrandEntity = {
+        id: uuidv4(),
         name,
         logo,
         website,
         contact,
-      );
+      };
       await this.brandRepository.save(brand);
       return { brand };
     }

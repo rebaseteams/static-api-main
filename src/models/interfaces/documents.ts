@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { Express } from 'express';
-import Document from '../entities/Document';
+import { Document } from '../types/document';
 import { PatchDocumentStatus } from '../types/documentContract';
 import { Template } from '../types/template';
 

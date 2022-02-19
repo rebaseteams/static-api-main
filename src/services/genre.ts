@@ -1,4 +1,4 @@
-import Genre from '../models/entities/Genre';
+import { Genre } from '../models/types/genre';
 import { GenresInterface } from '../models/interfaces/genre';
 
 export default class GenresService implements GenresInterface {

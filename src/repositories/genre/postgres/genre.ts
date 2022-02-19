@@ -1,22 +1,23 @@
 /* eslint-disable no-console */
 import { Connection, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import Genre from '../../../models/entities/Genre';
+import { Genre } from '../../../models/types/genre';
 import { GenresInterface } from '../../../models/interfaces/genre';
+import PgGenreEntity from '../../../models/entities/pg-genre';
 
 export default class GenreRepo implements GenresInterface {
     private genreRepository : Repository<Genre>;
 
     constructor(connection: Connection) {
-      this.genreRepository = connection.getRepository(Genre);
+      this.genreRepository = connection.getRepository(PgGenreEntity);
     }
 
     async createGenre(name : string, description : string) : Promise<{genre : Genre}> {
-      const genre = new Genre(
-        uuidv4(),
+      const genre: PgGenreEntity = {
+        id: uuidv4(),
         name,
         description,
-      );
+      };
       await this.genreRepository.save(genre);
       return { genre };
     }

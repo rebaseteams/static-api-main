@@ -64,13 +64,13 @@ export default class MainServer {
         this.app.use(contentType);
         this.app.use(express.json());
         this.app.use('/users', new UsersRoutes(auth0, usersService).router);
+        this.app.use('/roles', new RolesRoutes(rolesService).router);
         this.app.use(auth0.authenticate);
         this.app.use(auth0.setAuth);
         this.app.use('/artists', new ArtistRoute(artistService, documentsService, templatesService, docusignService).router);
         this.app.use('/brands', new BrandsRoutes(brandsService).router);
         this.app.use('/venues', new VenuesRoutes(venuesService).router);
         this.app.use('/genres', new GenresRoutes(genresService).router);
-        this.app.use('/roles', new RolesRoutes(rolesService).router);
         this.app.use('/resources', new ResourcesRoutes(resourcesService).router);
         this.app.use('/actions', new ActionsRoutes(actionService).router);
         this.app.use(errorHandler);

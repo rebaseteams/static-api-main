@@ -3,14 +3,27 @@ import {
 } from 'typeorm';
 import { PgResourceEntity } from './pg-resource';
 
-@Entity()
+@Entity({ name: 'role' })
 export class PgRoleEntity {
-  @PrimaryColumn()
+  @PrimaryColumn({ type: 'uuid' })
   id: string;
 
   @Column()
   name: string;
 
-  @ManyToMany(() => PgResourceEntity) @JoinTable()
-  resources: PgResourceEntity[];
+  @ManyToMany(() => PgResourceEntity)
+  @JoinTable(
+    {
+      name: 'role_resources_resource',
+      joinColumn: {
+        name: 'role_id',
+        referencedColumnName: 'id',
+      },
+      inverseJoinColumn: {
+        name: 'resource_id',
+        referencedColumnName: 'id',
+      },
+    },
+  )
+  resources: Promise<PgResourceEntity[]>;
 }

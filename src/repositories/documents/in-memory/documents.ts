@@ -6,7 +6,7 @@ import { AttachmentJSON } from '@sendgrid/helpers/classes/attachment';
 import { DocumentsInterface } from '../../../models/interfaces/documents';
 import { Template } from '../../../models/types/template';
 import fileCheck from '../../../utils/fileCheck';
-import Document from '../../../models/entities/Document';
+import { Document } from '../../../models/types/document';
 import sendEmail from '../../../utils/email';
 import { DocumentContractData, DocumentMode, PatchDocumentStatus } from '../../../models/types/documentContract';
 import { FileManagerInterface } from '../../../models/interfaces/file-manager';
@@ -46,12 +46,12 @@ export default class InMemoryDocumentsRepo implements DocumentsInterface {
     };
     const document : Document = {
       id: uuidv4(),
-      template_id: template.templateId,
+      templateId: template.templateId,
       name: docName,
       mode: defaultMode,
       contract: defaultContract,
-      created_on: new Date(),
-      created_by: userId,
+      createdOn: new Date(),
+      createdBy: userId,
       html,
     };
 

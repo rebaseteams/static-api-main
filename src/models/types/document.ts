@@ -1,7 +1,13 @@
+import { DocumentContractData, DocumentMode } from './documentContract';
+
 export type Document = {
-    id : string,
-    name : string,
-    createdOn : string,
-    recommendationId : string,
-    html : string
+
+  id: string;
+  templateId?: string;
+  name: string;
+  createdBy?: string;
+  createdOn: Date;
+  mode?: DocumentMode;
+  html?: string;
+  contract?: DocumentContractData;
 };

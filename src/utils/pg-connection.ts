@@ -6,16 +6,17 @@ import { InvalidConfigurationError, TypedError } from '../models/types/errors';
 import { DbConfig } from '../providers/db-config.provider';
 import { OmitStrict } from './omit';
 import { PgArtistEntity } from '../models/entities/pg-artist';
-import Document from '../models/entities/Document';
-import ArtistRecommendation from '../models/entities/ArtistRecommendation';
-import Brand from '../models/entities/Brand';
-import Venue from '../models/entities/Venue';
-import Genre from '../models/entities/Genre';
+import ArtistRecommendation from '../models/entities/pg-artist-recommendation';
 import { PgUserEntity } from '../models/entities/pg-user';
 import { PgRoleEntity } from '../models/entities/pg-role';
 import { PgResourceEntity } from '../models/entities/pg-resource';
 import { PgActionEntity } from '../models/entities/pg-actions';
 import { PgActionPermissionsEntity } from '../models/entities/pg-action-permissions';
+import PgBrandEntity from '../models/entities/pg-brand';
+import PgDocumentEntity from '../models/entities/pg-document';
+import PgVenueEntity from '../models/entities/pg-venue';
+import PgGenreEntity from '../models/entities/pg-genre';
+import { PgRolePermissionsEntity } from '../models/entities/pg-role-permissions';
 
 export type ConnectionInfo = OmitStrict<DbConfig, 'password'>;
 
@@ -93,15 +94,16 @@ export async function createPgConnection(
       entities: [
         PgArtistEntity,
         PgActionEntity,
-        Document,
+        PgDocumentEntity,
         ArtistRecommendation,
-        Brand,
-        Venue,
-        Genre,
+        PgBrandEntity,
+        PgVenueEntity,
+        PgGenreEntity,
         PgUserEntity,
         PgRoleEntity,
         PgResourceEntity,
         PgActionPermissionsEntity,
+        PgRolePermissionsEntity,
       ],
       migrations,
       database,

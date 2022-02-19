@@ -52,16 +52,8 @@ export default class UsersService implements UsersInterface {
   async getRoles(id: string): Promise<UserRoleType> {
     const result: UserRoleType = { roles: [] };
     // Geting roles
-    const { roles } = await this.userRepo.getUser(id); // TODO: Here fond that userRepo is storing role name but should store role id
-
-    // Getting actions against roles
-    for (let i = 0; i < roles.length; i += 1) {
-      result.roles[i] = { id: roles[i].id, name: roles[i].name, resources: [] };
-      for (let j = 0; j < roles[i].resources.length; j += 1) {
-        const resource = await this.resourceRepo.getResource(roles[i].resources[j].id);
-        result.roles[i].resources[j] = { id: resource.id, name: resource.name, actions: roles[i].resources[j].actions };
-      }
-    }
+    const user = await this.userRepo.getUser(id);
+    result.roles = user.roles;
     return result;
   }
 

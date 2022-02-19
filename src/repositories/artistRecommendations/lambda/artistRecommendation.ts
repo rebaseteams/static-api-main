@@ -3,19 +3,19 @@
 import { v4 as uuidv4 } from 'uuid';
 import * as AWS from 'aws-sdk';
 import { Connection, Repository } from 'typeorm';
-import ArtistRecommendation from '../../../models/entities/ArtistRecommendation';
-import { ArtistRecommendation as ARecommendation } from '../../../models/types/artist-recommendation';
+import { ArtistRecommendation } from '../../../models/types/artist-recommendation';
 import { ConcertCreationResponse, QuestionsUI } from '../../../models/types/questions';
 import { Artist } from '../../../models/types/artist';
 import { ArtistRecommendationInterface } from '../../../models/interfaces/artist-recommendation';
+import PgArtistRecommendationEntity from '../../../models/entities/pg-artist-recommendation';
 
 export default class ArtistRecommendationRepo implements ArtistRecommendationInterface {
-  private artistRecommendationRepository : Repository<ArtistRecommendation>;
+  private artistRecommendationRepository : Repository<PgArtistRecommendationEntity>;
 
   private lambda : AWS.Lambda;
 
   constructor(connection: Connection) {
-    this.artistRecommendationRepository = connection.getRepository(ArtistRecommendation);
+    this.artistRecommendationRepository = connection.getRepository(PgArtistRecommendationEntity);
     AWS.config.update({
       accessKeyId: process.env.AWS_ACCESS_KEY,
       secretAccessKey: process.env.AWS_SECRET_KEY,
@@ -33,10 +33,10 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
     throw err;
   }
 
-  async getRecommendation(id : string) : Promise<ARecommendation> {
+  async getRecommendation(id : string) : Promise<ArtistRecommendation> {
     const recommendation = await this.artistRecommendationRepository.findOne(id);
     if (recommendation) {
-      const aRecommendation : ARecommendation = {
+      const aRecommendation : ArtistRecommendation = {
         concertData: {
           id: recommendation.id,
           userId: recommendation.user_id,
@@ -64,7 +64,7 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
   }
 
   async getAllRecommendations() : Promise<ConcertCreationResponse[]> {
-    let allRecommendations : ArtistRecommendation[] = [];
+    let allRecommendations : PgArtistRecommendationEntity[] = [];
     allRecommendations = await this.artistRecommendationRepository.find();
     const allARecommendations : ConcertCreationResponse[] = allRecommendations.map((recommendation) => {
       const aRecommendation : ConcertCreationResponse = {
@@ -112,20 +112,24 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
   }
 
   async createRecommendation(questions: QuestionsUI) : Promise<ConcertCreationResponse> {
-    const recommendation = new ArtistRecommendation(
-      uuidv4(),
-      questions.concertName,
-      new Date(),
-      questions.userId,
-      questions.eventType,
-      questions.venue,
-      questions.artistBudget,
-      questions.sponsorshipType,
-      questions.wantedBrands,
-      questions.unwantedBrands,
-      questions.targetAudience,
-      questions.whatSellsMost,
-    );
+    const recommendation: PgArtistRecommendationEntity = {
+      id: uuidv4(),
+      name: questions.concertName,
+      date_created: new Date(),
+      user_id: questions.userId,
+      event_type: questions.eventType,
+      venue: questions.venue,
+      artist_budget: questions.artistBudget,
+      sponsorship_type: questions.sponsorshipType,
+      wanted_brands: questions.wantedBrands,
+      unwanted_brands: questions.unwantedBrands,
+      target_audience: questions.targetAudience,
+      what_sells_most: questions.whatSellsMost,
+      artists: [],
+      discarded_artists: [],
+      documents: [],
+      status: false,
+    };
     await this.artistRecommendationRepository.save(recommendation);
     const data : ConcertCreationResponse = {
       id: recommendation.id,

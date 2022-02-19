@@ -1,4 +1,4 @@
-import Venue from '../models/entities/Venue';
+import { Venue } from '../models/types/venue';
 import { VenuesInterface } from '../models/interfaces/venue';
 import { Address } from '../models/types/address';
 

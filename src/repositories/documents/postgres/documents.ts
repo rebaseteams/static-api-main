@@ -1,26 +1,28 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
 /* eslint-disable class-methods-use-this */
+import { Express } from 'express';
 import * as handlebars from 'handlebars';
 import * as _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
-import { Express } from 'express';
 import * as fs from 'fs';
 import { Connection, In, Repository } from 'typeorm';
 import { Template } from '../../../models/types/template';
-import Document from '../../../models/entities/Document';
+import { Document } from '../../../models/types/document';
 import { DocumentsInterface } from '../../../models/interfaces/documents';
 import { DocumentContractData, DocumentMode, PatchDocumentStatus } from '../../../models/types/documentContract';
 import fileCheck from '../../../utils/fileCheck';
 import { FileManagerInterface } from '../../../models/interfaces/file-manager';
+import PgDocumentEntity from '../../../models/entities/pg-document';
+import { mapDocument } from '../../../utils/pg-to-type-mapper';
 
 export default class DocumentsRepo implements DocumentsInterface {
-  private documentRepository : Repository<Document>;
+  private documentRepository : Repository<PgDocumentEntity>;
 
   private fileManagerRepository : FileManagerInterface;
 
   constructor(connection: Connection, fileManagerRepo: FileManagerInterface) {
-    this.documentRepository = connection.getRepository(Document);
+    this.documentRepository = connection.getRepository(PgDocumentEntity);
     this.fileManagerRepository = fileManagerRepo;
   }
 
@@ -57,7 +59,7 @@ export default class DocumentsRepo implements DocumentsInterface {
       signDate: '',
       status: '',
     };
-    const document : Document = {
+    const document : PgDocumentEntity = {
       id: uuidv4(),
       template_id: template.templateId,
       name: docName,
@@ -73,26 +75,27 @@ export default class DocumentsRepo implements DocumentsInterface {
     fs.writeFileSync(htmlFile, compiledHtml(requiredResources));
     this.documentRepository.save(document);
     document.html = compiledHtml(requiredResources);
-    return { document };
+
+    return { document: mapDocument(document) };
   }
 
   async getAllDocuments() : Promise<Document[]> {
-    let allDocuments : Document[] = [];
+    let allDocuments : PgDocumentEntity[] = [];
     [allDocuments] = await this.documentRepository.findAndCount();
-    return allDocuments;
+    return allDocuments.map((d) => mapDocument(d));
   }
 
   async getDocuments(ids : string[]) : Promise<Document[]> {
-    let allDocuments : Document[] = [];
+    let allDocuments : PgDocumentEntity[] = [];
     allDocuments = await this.documentRepository.find({
       where: { id: In(ids) },
     });
-    return allDocuments;
+    return allDocuments.map((d) => mapDocument(d));
   }
 
   async getDocument(id : string) : Promise<Document> {
     const document = await this.documentRepository.findOne({ id });
-    if (document) return document;
+    if (document) return mapDocument(document);
     const err = { message: `Document not found for id: ${id}`, statusCode: 404 };
     throw err;
   }
@@ -143,7 +146,7 @@ export default class DocumentsRepo implements DocumentsInterface {
     };
     if (mode === 'sign') {
       updatedData = {
-        ...documentRes,
+        ...mapDocument(documentRes),
         mode,
         contract,
       };
@@ -151,14 +154,14 @@ export default class DocumentsRepo implements DocumentsInterface {
 
     if (mode === 'submit') {
       updatedData = {
-        ...documentRes,
+        ...mapDocument(documentRes),
         mode,
         contract,
       };
     }
     if (mode === 'edit') {
       updatedData = {
-        ...documentRes,
+        ...mapDocument(documentRes),
         mode,
       };
     }

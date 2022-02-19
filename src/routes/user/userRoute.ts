@@ -8,7 +8,7 @@ export default class UsersRoutes {
   constructor(auth0 : Auth0Interface, usersService : UsersService) {
     this.router = express.Router();
 
-    this.router.get('/roles', auth0.checkAuthorization('user', 'view'), async (req, res, next) => {
+    this.router.get('/roles', auth0.checkAuthorization('user', '6f9c0db4-3340-4880-98d8-00288afa4300'), async (req, res, next) => {
       try {
         const { userId } = req.body.auth;
         const data = await usersService.getRoles(userId);

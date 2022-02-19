@@ -1,30 +1,12 @@
 import { Entity, Column, PrimaryColumn } from 'typeorm';
 import { DocumentContractData, DocumentMode } from '../types/documentContract';
 
-@Entity()
-export default class Document {
-  constructor(id: string,
-    template_id: string,
-    name: string,
-    createdBy: string,
-    createdOn: Date,
-    mode: DocumentMode,
-    html: string,
-    contract: DocumentContractData) {
-    this.id = id;
-    this.template_id = template_id;
-    this.name = name;
-    this.created_by = createdBy;
-    this.created_on = createdOn;
-    this.mode = mode;
-    this.html = html;
-    this.contract = contract;
-  }
-
-  @PrimaryColumn()
+@Entity({ name: 'document' })
+export default class PgDocumentEntity {
+  @PrimaryColumn({ type: 'uuid' })
   id: string;
 
-  @Column({ default: '1234' })
+  @Column({ type: 'uuid' })
   template_id: string;
 
   @Column()

@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import Venue from '../entities/Venue';
+import { Venue } from '../types/venue';
 import { Address } from '../types/address';
 /* The repositories are supposed to implement this interface */
 export interface VenuesInterface{
