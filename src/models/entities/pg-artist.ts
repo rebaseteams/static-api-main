@@ -3,7 +3,7 @@ import { audience, media_handles } from '../types/artist';
 
 @Entity({ name: 'artist' })
 export class PgArtistEntity {
-  @PrimaryColumn()
+  @PrimaryColumn({ type: 'uuid' })
   id: string;
 
   @Column()

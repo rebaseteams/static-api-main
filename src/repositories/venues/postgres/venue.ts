@@ -1,24 +1,25 @@
 /* eslint-disable no-console */
 import { Connection, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import Venue from '../../../models/entities/Venue';
+import { Venue } from '../../../models/types/venue';
 import { VenuesInterface } from '../../../models/interfaces/venue';
 import { Address } from '../../../models/types/address';
+import PgVenueEntity from '../../../models/entities/pg-venue';
 
 export default class VenueRepo implements VenuesInterface {
-    private venueRepository : Repository<Venue>;
+    private venueRepository : Repository<PgVenueEntity>;
 
     constructor(connection: Connection) {
-      this.venueRepository = connection.getRepository(Venue);
+      this.venueRepository = connection.getRepository(PgVenueEntity);
     }
 
     async createVenue(name : string, address : Address, capacity : number) : Promise<{venue : Venue}> {
-      const venue = new Venue(
-        uuidv4(),
+      const venue = {
+        id: uuidv4(),
         name,
         address,
         capacity,
-      );
+      };
       await this.venueRepository.save(venue);
       return { venue };
     }

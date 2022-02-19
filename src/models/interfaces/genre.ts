@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import Genre from '../entities/Genre';
+import { Genre } from '../types/genre';
 
 export interface GenresInterface{
   createGenre(name : string, description: string) : Promise<{ genre : Genre }>;

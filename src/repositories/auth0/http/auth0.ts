@@ -147,17 +147,24 @@ export class Auth0 implements Auth0Interface {
         id = id.split('|')[1];
 
         const user = await this.userRepository.findOne({ id });
+        if (!user) {
+          const err = { message: 'User does not exist', statusCode: 404 };
+          throw err;
+        }
         if (!user.approved) {
           const err = { message: 'Your approval is pending', statusCode: 401 };
           throw err;
         }
 
-        const actionPermission = await this.actionPermissionRepository.find({
-          user_id: user.id,
-          action_id: action,
+        const actionPermissions = await this.actionPermissionRepository.find({
+          relations: ['role'],
+          where: {
+            user_id: user.id,
+            action_id: action,
+          },
         });
 
-        if (actionPermission.find((a) => a.permission === true)) {
+        if (actionPermissions.find((a) => a.permission === true)) {
           return next();
         }
 
@@ -178,7 +185,14 @@ export class Auth0 implements Auth0Interface {
 
     const pgActionPermissions = await this.actionPermissionRepository.find({ user_id: user.id });
 
-    return user.roles.map((r) => mapUserRole(r, pgActionPermissions, r.id));
+    const mappedUserRoles: UserRole[] = [];
+    for (let i = 0; i < pgActionPermissions.length; i += 1) {
+      const role = await pgActionPermissions[i].role;
+      const mappedUser = await mapUserRole(role, pgActionPermissions, role.id);
+      mappedUserRoles.push(mappedUser);
+    }
+
+    return mappedUserRoles;
   }
 
   // eslint-disable-next-line consistent-return

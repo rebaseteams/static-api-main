@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import Brand from '../entities/Brand';
+import Brand from '../entities/pg-brand';
 
 export interface BrandsInterface{
   createBrand(name : string, logo : string, website : string, contact : string) : Promise<{ brand : Brand }>;

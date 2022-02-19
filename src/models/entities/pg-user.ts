@@ -1,11 +1,10 @@
 import {
-  Entity, Column, PrimaryColumn, ManyToMany, JoinTable,
+  Entity, Column, PrimaryColumn,
 } from 'typeorm';
-import { PgRoleEntity } from './pg-role';
 
 @Entity('user')
 export class PgUserEntity {
-  @PrimaryColumn()
+  @PrimaryColumn({ type: 'varchar' })
   id: string;
 
   @Column()
@@ -16,7 +15,4 @@ export class PgUserEntity {
 
   @Column({ nullable: true, default: false })
   approved: boolean;
-
-  @ManyToMany(() => PgRoleEntity) @JoinTable()
-  roles: PgRoleEntity[];
 }

@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { v4 as uuidv4 } from 'uuid';
-import Venue from '../../../models/entities/Venue';
+import { Venue } from '../../../models/types/venue';
 import { VenuesInterface } from '../../../models/interfaces/venue';
 import { Address } from '../../../models/types/address';
 import { FileManagerInterface } from '../../../models/interfaces/file-manager';
@@ -13,12 +13,12 @@ export default class VenueRepo implements VenuesInterface {
   }
 
   async createVenue(name : string, address : Address, capacity : number) : Promise<{venue : Venue}> {
-    const venue = new Venue(
-      uuidv4(),
+    const venue: Venue = {
+      id: uuidv4(),
       name,
       address,
       capacity,
-    );
+    };
     await this.fileManager.set(`venues/${venue.id}.json`, Buffer.from(JSON.stringify(venue)));
     return { venue };
   }

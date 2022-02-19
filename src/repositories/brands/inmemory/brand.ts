@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { v4 as uuidv4 } from 'uuid';
-import Brand from '../../../models/entities/Brand';
+import { Brand } from '../../../models/types/brand';
 import { BrandsInterface } from '../../../models/interfaces/brand';
 import { FileManagerInterface } from '../../../models/interfaces/file-manager';
 
@@ -12,13 +12,13 @@ export default class BrandRepo implements BrandsInterface {
   }
 
   async createBrand(name: string, logo: string, website: string, contact: string): Promise<{ brand: Brand }> {
-    const brand = new Brand(
-      uuidv4(),
+    const brand = {
+      id: uuidv4(),
       name,
       logo,
       website,
       contact,
-    );
+    };
     // fileCheck(`${__dirname}/data`, false);
     await this.fileManager.set(`brands/${brand.id}.json`, Buffer.from(JSON.stringify(brand)));
     return { brand };

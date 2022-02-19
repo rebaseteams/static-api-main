@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { Express } from 'express';
-import Document from '../models/entities/Document';
+import { Document } from '../models/types/document';
 import { ArtistRecommendationInterface } from '../models/interfaces/artist-recommendation';
 import { DocumentsInterface } from '../models/interfaces/documents';
 import { TemplatesInterface } from '../models/interfaces/templates';
@@ -57,7 +57,7 @@ export default class DocumentsService implements DocumentsInterface {
 
   async shareDocument(id : string, files : {[fieldname: string]: Express.Multer.File[]} |Express.Multer.File[], emails : [string]) {
     const doc = await this.getDocument(id);
-    const template = await this.templateRepo.getTemplate(doc.template_id);
+    const template = await this.templateRepo.getTemplate(doc.templateId);
     return this.documentsRepo.shareDocument(id, files, emails, template);
   }
 }

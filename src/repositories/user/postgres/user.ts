@@ -8,6 +8,9 @@ import { Auth0 } from '../../auth0/http/auth0';
 import { User } from '../../../models/types/user';
 import { mapUser } from '../../../utils/pg-to-type-mapper';
 import { PgActionPermissionsEntity } from '../../../models/entities/pg-action-permissions';
+import { PgActionEntity } from '../../../models/entities/pg-actions';
+import { PgResourceEntity } from '../../../models/entities/pg-resource';
+import { PgRolePermissionsEntity } from '../../../models/entities/pg-role-permissions';
 
 export default class UserRepo implements UsersInterface {
     private userRepository : Repository<PgUserEntity>;
@@ -15,6 +18,12 @@ export default class UserRepo implements UsersInterface {
     private roleRepository: Repository<PgRoleEntity>;
 
     private actionPermissionsRepository: Repository<PgActionPermissionsEntity>;
+
+    private rolePermissionsRepository: Repository<PgRolePermissionsEntity>;
+
+    private actionRepository: Repository<PgActionEntity>;
+
+    private resourceRepository: Repository<PgResourceEntity>;
 
     auth0: Auth0;
 
@@ -24,6 +33,9 @@ export default class UserRepo implements UsersInterface {
       this.userRepository = connection.getRepository(PgUserEntity);
       this.roleRepository = connection.getRepository(PgRoleEntity);
       this.actionPermissionsRepository = connection.getRepository(PgActionPermissionsEntity);
+      this.actionRepository = connection.getRepository(PgActionEntity);
+      this.resourceRepository = connection.getRepository(PgResourceEntity);
+      this.rolePermissionsRepository = connection.getRepository(PgRolePermissionsEntity);
     }
 
     async createUser(name : string, email : string, password : string, role : string) : Promise<{user : User}> {
@@ -42,49 +54,61 @@ export default class UserRepo implements UsersInterface {
         id: data.id,
         name,
         email,
-        roles: [pgRole],
         approved: false,
       };
 
       const res = await this.userRepository.save(user);
 
-      for (let i = 0; i < user.roles.length; i += 1) {
-        const userRole = user.roles[i];
-        for (let j = 0; j < userRole.resources.length; j += 1) {
-          const resource = userRole.resources[j];
-          for (let k = 0; k < resource.actions.length; k += 1) {
-            const action = resource.actions[k];
-            const actionPermission: PgActionPermissionsEntity = {
-              id: uuidv4(),
-              user,
-              user_id: user.id,
-              action_id: action.id,
-              action,
-              role_id: userRole.id,
-              resource_id: resource.id,
-              resource,
-              role: userRole,
-              permission: false,
-            };
-            await this.actionPermissionsRepository.save(actionPermission);
-          }
+      const userPromise = this.userRepository.findOne({ id: user.id });
+      const resources = await pgRole.resources;
+      for (let j = 0; j < resources.length; j += 1) {
+        const resource = resources[j];
+        const actions = await resource.actions;
+        for (let k = 0; k < actions.length; k += 1) {
+          const action = actions[k];
+          const rolePermissionId = await this.rolePermissionsRepository
+            .findOne({ role_id: role, action_id: action.id, resource_id: resource.id });
+          const actionPermission: PgActionPermissionsEntity = {
+            id: uuidv4(),
+            user: userPromise,
+            user_id: user.id,
+            action_id: action.id,
+            action: this.actionRepository.findOne({ id: action.id }),
+            role_id: pgRole.id,
+            resource_id: resource.id,
+            resource: this.resourceRepository.findOne({ id: resource.id }),
+            role: this.roleRepository.findOne({ id: role }),
+            permission: rolePermissionId.permission,
+            role_permission: this.rolePermissionsRepository
+              .findOne({ role_id: role, action_id: action.id, resource_id: resource.id }),
+            role_permission_id: rolePermissionId.id,
+          };
+          await this.actionPermissionsRepository.save(actionPermission);
         }
       }
 
       const pgActionPermissions = await this.actionPermissionsRepository
         .find({ user });
 
-      const mapperUser: User = mapUser(res, pgActionPermissions);
+      const mapperUser: User = await mapUser(res, pgActionPermissions);
 
       return { user: mapperUser };
     }
 
     async getUser(id : string) : Promise<User> {
       const user = await this.userRepository.findOne({ id });
-      const pgActionPermissions = await this.actionPermissionsRepository.find({ user_id: user.id });
+      const pgActionPermissions = await this.actionPermissionsRepository.find(
+        {
+          relations: ['role', 'resource', 'action'],
+          where: {
+            user_id: user.id,
+          },
+        },
+      );
 
-      if (user) {
-        return mapUser(user, pgActionPermissions);
+      const mappedUser = await mapUser(user, pgActionPermissions);
+      if (mappedUser) {
+        return mappedUser;
       }
       const err = { message: `User not found for id: ${id}`, statusCode: 404 };
       throw err;
@@ -119,7 +143,6 @@ export default class UserRepo implements UsersInterface {
       }
 
       if (user) {
-        user.roles = pgRoles;
         this.userRepository.save(user);
         return { success: true };
       }
@@ -139,7 +162,8 @@ export default class UserRepo implements UsersInterface {
         const user = users[i];
         const pgActionPermissions = await this.actionPermissionsRepository
           .find({ user });
-        pendingUsers.push(mapUser(user, pgActionPermissions));
+        const mappedUser = await mapUser(user, pgActionPermissions);
+        pendingUsers.push(mappedUser);
       }
       return pendingUsers;
     }
@@ -155,7 +179,8 @@ export default class UserRepo implements UsersInterface {
         const user = users[i];
         const pgActionPermissions = await this.actionPermissionsRepository
           .find({ user_id: user.id });
-        resUsers.push(mapUser(user, pgActionPermissions));
+        const mappedUser = await mapUser(user, pgActionPermissions);
+        resUsers.push(mappedUser);
       }
       return resUsers;
     }

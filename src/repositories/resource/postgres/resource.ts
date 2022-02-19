@@ -23,7 +23,7 @@ export default class ResourceRepo implements ResourcesInterface {
     async createResource(name : string, actions : string[]) : Promise<{resource : Resource}> {
       const resourceId = uuidv4();
 
-      const pgActions = await this.actionRepository.findByIds(actions);
+      const pgActions = this.actionRepository.findByIds(actions);
 
       const resource: PgResourceEntity = {
         id: resourceId,
@@ -34,7 +34,7 @@ export default class ResourceRepo implements ResourcesInterface {
       let pgResource = await this.resourceRepository.save(resource);
 
       pgResource = await this.resourceRepository.findOne(resourceId);
-      return { resource: mapResource(pgResource) };
+      return { resource: await mapResource(pgResource) };
     }
 
     async getResource(id : string) : Promise<Resource> {
@@ -81,8 +81,15 @@ export default class ResourceRepo implements ResourcesInterface {
       const resources : PgResourceEntity[] = await this.resourceRepository.find({
         take: limit,
         skip,
+        relations: ['actions'],
       });
-      return resources.map((r) => mapResource(r));
+
+      const mappedResources:Resource[] = [];
+      for (let i = 0; i < resources.length; i += 1) {
+        const resource = await mapResource(resources[i]);
+        mappedResources.push(resource);
+      }
+      return mappedResources;
     }
 
     async getResourcesCount() : Promise<{count: number}> {

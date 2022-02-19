@@ -2,13 +2,14 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToMany,
+  OneToOne,
   PrimaryColumn,
   Unique,
 } from 'typeorm';
 import { PgActionEntity } from './pg-actions';
 import { PgResourceEntity } from './pg-resource';
 import { PgRoleEntity } from './pg-role';
+import { PgRolePermissionsEntity } from './pg-role-permissions';
 import { PgUserEntity } from './pg-user';
 
 // This table will have a primary column
@@ -22,30 +23,37 @@ export class PgActionPermissionsEntity {
       @Column({ type: 'varchar', name: 'user_id' })
       user_id!: string;
 
-      @Column({ type: 'varchar', name: 'role_id' })
+      @Column({ type: 'uuid', name: 'role_id' })
       role_id!: string;
 
-      @Column({ type: 'varchar', name: 'resource_id' })
+      @Column({ type: 'uuid', name: 'resource_id' })
       resource_id!: string;
 
-      @Column({ type: 'varchar', name: 'action_id' })
+      @Column({ type: 'uuid', name: 'action_id' })
       action_id!: string;
 
-      @ManyToMany(() => PgActionEntity, (action) => action.id)
-      @JoinColumn({ name: 'action_id' })
-      public action!: PgActionEntity;
+      @Column({ type: 'uuid', name: 'role_permission_id' })
+      role_permission_id!: string;
 
-      @ManyToMany(() => PgResourceEntity, (resource) => resource.id)
-      @JoinColumn({ name: 'resource_id' })
-      public resource!: PgResourceEntity;
+      @OneToOne(() => PgActionEntity, (action) => action.id)
+      @JoinColumn({ name: 'action_id', referencedColumnName: 'id' })
+      public action!: Promise<PgActionEntity>;
 
-      @ManyToMany(() => PgRoleEntity, (role) => role.id)
-      @JoinColumn({ name: 'role_id' })
-      public role!: PgRoleEntity;
+      @OneToOne(() => PgResourceEntity, (resource) => resource.id)
+      @JoinColumn({ name: 'resource_id', referencedColumnName: 'id' })
+      public resource!: Promise<PgResourceEntity>;
 
-      @ManyToMany(() => PgUserEntity, (user) => user.id)
-      @JoinColumn({ name: 'user_id' })
-      public user!: PgUserEntity;
+      @OneToOne(() => PgRoleEntity, (role) => role.id)
+      @JoinColumn({ name: 'role_id', referencedColumnName: 'id' })
+      public role!: Promise<PgRoleEntity>;
+
+      @OneToOne(() => PgUserEntity, (user) => user.id)
+      @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
+      public user!: Promise<PgUserEntity>;
+
+      @OneToOne(() => PgRolePermissionsEntity, (rp) => rp.id)
+      @JoinColumn({ name: 'role_permission_id', referencedColumnName: 'id' })
+      public role_permission!: Promise<PgRolePermissionsEntity>;
 
       @Column({
         type: 'boolean',

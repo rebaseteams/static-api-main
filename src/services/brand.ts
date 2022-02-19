@@ -1,4 +1,4 @@
-import Brand from '../models/entities/Brand';
+import Brand from '../models/entities/pg-brand';
 import { BrandsInterface } from '../models/interfaces/brand';
 
 export default class BrandsService implements BrandsInterface {

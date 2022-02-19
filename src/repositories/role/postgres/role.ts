@@ -3,11 +3,12 @@
 
 import { Connection, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
+import { PgResourceEntity } from '../../../models/entities/pg-resource';
 import { PgRoleEntity } from '../../../models/entities/pg-role';
 import { RolesInterface } from '../../../models/interfaces/role';
 import { ResourceActions } from '../../../models/types/resource-actions';
 import { Role } from '../../../models/types/role';
-import { mapRole } from '../../../utils/pg-to-type-mapper';
+import { mapResource, mapRole } from '../../../utils/pg-to-type-mapper';
 
 export default class RoleRepo implements RolesInterface {
     private roleRepository : Repository<PgRoleEntity>;
@@ -17,14 +18,15 @@ export default class RoleRepo implements RolesInterface {
     }
 
     async createRole(name : string, resourceActions : ResourceActions) : Promise<{role : Role}> {
+      const pgResources: Promise<PgResourceEntity[]> = new Promise<PgResourceEntity[]>(() => []);
       const role:PgRoleEntity = {
         id: uuidv4(),
         name,
-        resources: [], // TODO: figure out how to use resourceActions,
+        resources: pgResources, // TODO: figure out how to use resourceActions,
       };
 
       await this.roleRepository.save(role);
-      return { role: mapRole(role) };
+      return { role: await mapRole(role) };
     }
 
     async getRole(id : string) : Promise<Role> {
@@ -59,8 +61,16 @@ export default class RoleRepo implements RolesInterface {
       const roles : PgRoleEntity[] = await this.roleRepository.find({
         take: limit,
         skip,
+        relations: ['resources'],
       });
-      return roles.map((r) => mapRole(r));
+
+      const mappedRoles = [];
+      for (let i = 0; i < roles.length; i += 1) {
+        const mappedRole = await mapRole(roles[i]);
+        mappedRoles.push(mappedRole);
+      }
+
+      return mappedRoles;
     }
 
     async getRolesCount() : Promise<{count: number}> {

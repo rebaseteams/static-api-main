@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { v4 as uuidv4 } from 'uuid';
-import Genre from '../../../models/entities/Genre';
+import { Genre } from '../../../models/types/genre';
 import { FileManagerInterface } from '../../../models/interfaces/file-manager';
 import { GenresInterface } from '../../../models/interfaces/genre';
 
@@ -12,11 +12,11 @@ export default class GenreRepo implements GenresInterface {
   }
 
   async createGenre(name: string, description: string): Promise<{ genre: Genre }> {
-    const genre = new Genre(
-      uuidv4(),
+    const genre: Genre = {
+      id: uuidv4(),
       name,
       description,
-    );
+    };
     // fileCheck(`${__dirname}/data`, false);
 
     await this.fileManager.set(
