@@ -1,5 +1,7 @@
 import * as express from 'express';
 import GenresService from '../../services/genre';
+import createGenreValidator from './validators/createGenreValidator';
+import editGenreValidator from './validators/editGenreValidator';
 
 export default class GenresRoutes {
   router: express.Router;
@@ -7,7 +9,7 @@ export default class GenresRoutes {
   constructor(genresService : GenresService) {
     this.router = express.Router();
 
-    this.router.post('/', async (req, res, next) => {
+    this.router.post('/', createGenreValidator, async (req, res, next) => {
       try {
         const data = await genresService.createGenre(req.body.name, req.body.description);
         res.send({ success: true, data });
@@ -35,7 +37,7 @@ export default class GenresRoutes {
       }
     });
 
-    this.router.patch('/', async (req, res, next) => {
+    this.router.patch('/', editGenreValidator, async (req, res, next) => {
       try {
         const data = await genresService.editGenre(req.body.id, req.body.name, req.body.description);
         res.send({ success: data.success });
