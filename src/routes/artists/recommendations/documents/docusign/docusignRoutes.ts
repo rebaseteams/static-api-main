@@ -1,5 +1,6 @@
 import * as express from 'express';
 import { DocusignInterface } from '../../../../../models/interfaces/docusign';
+import createEnvelopeValidator from './validators/createEnvelopeValidator';
 
 export default class DocusignRoutes {
   router: express.Router;
@@ -11,7 +12,7 @@ export default class DocusignRoutes {
     this.router = express.Router();
     this.docusignService = docusignService;
 
-    this.router.post('/:id', async (req, res, next) => {
+    this.router.post('/:id', createEnvelopeValidator, async (req, res, next) => {
       const documentId = req.params.id;
       const data = JSON.parse(JSON.stringify(req.body));
       try {
