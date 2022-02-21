@@ -1,5 +1,7 @@
 import * as express from 'express';
 import BrandsService from '../../services/brand';
+import createBrandValidator from './validators/createBrandValidator';
+import editBrandValidator from './validators/editBrandValidator';
 
 export default class BrandsRoutes {
   router: express.Router;
@@ -7,7 +9,7 @@ export default class BrandsRoutes {
   constructor(brandsService : BrandsService) {
     this.router = express.Router();
 
-    this.router.post('/', async (req, res, next) => {
+    this.router.post('/', createBrandValidator, async (req, res, next) => {
       try {
         const data = await brandsService.createBrand(req.body.name, req.body.logo, req.body.website, req.body.contact);
         res.send({ success: true, data });
@@ -35,7 +37,7 @@ export default class BrandsRoutes {
       }
     });
 
-    this.router.patch('/', async (req, res, next) => {
+    this.router.patch('/', editBrandValidator, async (req, res, next) => {
       try {
         const data = await brandsService.editBrand(req.body.id, req.body.name, req.body.logo, req.body.website, req.body.contact);
         res.send({ success: data.success });
