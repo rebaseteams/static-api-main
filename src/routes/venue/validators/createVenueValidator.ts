@@ -2,6 +2,9 @@ import { NextFunction, Request, Response } from 'express';
 import * as Joi from 'joi';
 
 const schema = Joi.object({
+  auth: Joi.object({
+    userId: Joi.string().required(),
+  }).required(),
   name: Joi.string().required(),
   address: Joi.object({
     pincode: Joi.number().required(),

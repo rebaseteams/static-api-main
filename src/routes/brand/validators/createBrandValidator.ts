@@ -6,10 +6,13 @@ const schema = Joi.object({
     userId: Joi.string().required(),
   }).required(),
   name: Joi.string().required(),
-  description: Joi.string().required(),
+  logo: Joi.string().uri().required(),
+  website: Joi.string().uri().required(),
+  contact: Joi.number().integer().min(10 ** (8 - 1)).max(10 ** 15 - 1)
+    .required(),
 });
 
-const createGenreValidator = (req : Request, res : Response, next : NextFunction) => {
+const createBrandValidator = (req : Request, res : Response, next : NextFunction) => {
   const val = schema.validate(req.body);
   if (val.error) {
     const err = { message: val.error.message, statusCode: 400 };
@@ -18,4 +21,4 @@ const createGenreValidator = (req : Request, res : Response, next : NextFunction
   next();
 };
 
-export default createGenreValidator;
+export default createBrandValidator;
