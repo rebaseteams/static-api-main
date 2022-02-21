@@ -1,5 +1,7 @@
 import * as express from 'express';
 import VenuesService from '../../services/venue';
+import createVenueValidator from './validators/createVenueValidator';
+import editVenueValidator from './validators/editVenueValidator';
 
 export default class VenuesRoutes {
   router: express.Router;
@@ -7,7 +9,7 @@ export default class VenuesRoutes {
   constructor(venuesService : VenuesService) {
     this.router = express.Router();
 
-    this.router.post('/', async (req, res, next) => {
+    this.router.post('/', createVenueValidator, async (req, res, next) => {
       try {
         const data = await venuesService.createVenue(req.body.name, req.body.address, req.body.capacity);
         res.send({ success: true, data });
@@ -35,7 +37,7 @@ export default class VenuesRoutes {
       }
     });
 
-    this.router.patch('/', async (req, res, next) => {
+    this.router.patch('/', editVenueValidator, async (req, res, next) => {
       try {
         const data = await venuesService.editVenue(req.body.id, req.body.name, req.body.address, req.body.capacity);
         res.send({ success: data.success });
