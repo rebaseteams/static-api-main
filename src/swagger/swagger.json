@@ -788,29 +788,7 @@
                     "type": "string"
                   },
                   "address": {
-                    "type": "object",
-                    "properties": {
-                      "pincode": {
-                        "type": "number"
-                      },
-                      "country": {
-                        "type":"string"
-                      },
-                      "city": {
-                        "type":"string"
-                      },
-                      "geoLocation": {
-                        "type":"object",
-                        "properties":{
-                          "lat":{
-                            "type":"number"
-                          },
-                          "long":{
-                            "type":"number"
-                          }
-                        }
-                      }
-                    }
+                    "$ref": "#/components/schemas/Address"
                   },
                   "capacity":{
                     "type":"number"
@@ -832,45 +810,276 @@
                       "type":"boolean"
                     },
                     "data":{
+                      "$ref": "#/components/schemas/NewVenue"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "venues"
+        ],
+        "description": "update the venue",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "userid",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewVenue"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated venue",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type":"object",
+                  "properties":{
+                    "success":{
+                      "type":"boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/venues/{id}":{
+      "get": {
+        "tags": [
+          "venues"
+        ],
+        "description": "get venue by id",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "userid",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns venue of respective id sucessfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type":"object",
+                  "properties":{
+                    "success":{
+                      "type":"boolean"
+                    },
+                    "data":{
+                      "$ref": "#/components/schemas/NewVenue"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete":{
+        "tags": [
+          "venues"
+        ],
+        "description": "Delete venue by id.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "userid",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted venue by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type":"object",
+                  "properties":{
+                    "success":{
+                      "type":"boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/venues/{skip}/{limit}":{
+      "get": {
+        "tags": [
+          "venues"
+        ],
+        "description": "get venues",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "skip",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "limit",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "userid",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns venue of respective id sucessfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type":"object",
+                  "properties":{
+                    "success":{
+                      "type":"boolean"
+                    },
+                    "data":{
                       "type":"object",
                       "properties":{
-                        "venue": {
-                          "type":"object",
-                          "properties":{
-                            "name": {
-                              "type":"string"
-                            },
-                            "id": {
-                              "type":"string"
-                            },
-                            "address":{
-                              "type": "object",
-                              "properties": {
-                                "pincode": {
-                                  "type": "number"
-                                },
-                                "country": {
-                                  "type":"string"
-                                },
-                                "city": {
-                                  "type":"string"
-                                },
-                                "geoLocation": {
-                                  "type":"object",
-                                  "properties":{
-                                    "lat":{
-                                      "type":"number"
-                                    },
-                                    "long":{
-                                      "type":"number"
-                                    }
-                                  }
-                                }
-                              }
-                            },
-                            "capacity":{
-                              "type": "number"
-                            }
+                        "venues":{
+                          "type":"array",
+                          "items":{
+                            "$ref": "#/components/schemas/NewVenue"
                           }
                         }
                       }
@@ -886,6 +1095,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
                 }
               }
             }
@@ -1877,6 +2096,64 @@
           "status": {
             "type": "boolean",
             "example": false
+          }
+        }
+      },
+      "Address": {
+        "type": "object",
+        "properties": {
+          "pincode": {
+            "type": "number"
+          },
+          "country": {
+            "type":"string"
+          },
+          "city": {
+            "type":"string"
+          },
+          "geoLocation": {
+            "type":"object",
+            "properties":{
+              "lat":{
+                "type":"number"
+              },
+              "long":{
+                "type":"number"
+              }
+            }
+          }
+        }
+      },
+      "NewVenue":{
+        "type":"object",
+        "properties":{
+          "venue": {
+            "type":"object",
+            "properties":{
+              "name": {
+                "type":"string"
+              },
+              "id": {
+                "type":"string"
+              },
+              "address": {
+                "$ref": "#/components/schemas/Address"
+              },
+              "capacity":{
+                "type": "number"
+              }
+            }
+          }
+        }
+      },
+      "InternalServerError":{
+        "type":"object",
+        "properties":{
+          "error":{
+            "type":"boolean"
+          },
+          "message":{
+            "type":"string"
           }
         }
       }
