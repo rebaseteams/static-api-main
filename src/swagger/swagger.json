@@ -7,10 +7,10 @@
   },
   "servers": [
     {
-      "url": "http://52.66.164.23/api"
+      "url": "http://localhost:3000/cc-bff"
     },
     {
-      "url": "http://localhost:3000"
+      "url": "https://concertcuartor.rebaseitlabs.in/cc-bff"
     }
   ],
   "paths": {
@@ -760,7 +760,140 @@
           }
         }
       }
+    },
+    "/venues":{
+      "post": {
+        "tags": [
+          "venues"
+        ],
+        "description": "Create New Venue",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "userid",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "address": {
+                    "type": "object",
+                    "properties": {
+                      "pincode": {
+                        "type": "number"
+                      },
+                      "country": {
+                        "type":"string"
+                      },
+                      "city": {
+                        "type":"string"
+                      },
+                      "geoLocation": {
+                        "type":"object",
+                        "properties":{
+                          "lat":{
+                            "type":"number"
+                          },
+                          "long":{
+                            "type":"number"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "capacity":{
+                    "type":"number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Created new venue successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type":"object",
+                  "properties":{
+                    "success":{
+                      "type":"boolean"
+                    },
+                    "data":{
+                      "type":"object",
+                      "properties":{
+                        "venue": {
+                          "type":"object",
+                          "properties":{
+                            "name": {
+                              "type":"string"
+                            },
+                            "id": {
+                              "type":"string"
+                            },
+                            "address":{
+                              "type": "object",
+                              "properties": {
+                                "pincode": {
+                                  "type": "number"
+                                },
+                                "country": {
+                                  "type":"string"
+                                },
+                                "city": {
+                                  "type":"string"
+                                },
+                                "geoLocation": {
+                                  "type":"object",
+                                  "properties":{
+                                    "lat":{
+                                      "type":"number"
+                                    },
+                                    "long":{
+                                      "type":"number"
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "capacity":{
+                              "type": "number"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          }
+        }
+      }
     }
+    
   },
   "components": {
     "schemas": {
@@ -1748,5 +1881,6 @@
         }
       }
     }
+
   }
 }
