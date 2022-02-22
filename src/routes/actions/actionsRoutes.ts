@@ -15,5 +15,14 @@ export default class ActionsRoutes {
         next(error);
       }
     });
+
+    this.router.get('/', async (req, res, next) => {
+      try {
+        const data = await actionService.getActions();
+        res.send({ success: true, data });
+      } catch (error) {
+        next(error);
+      }
+    });
   }
 }

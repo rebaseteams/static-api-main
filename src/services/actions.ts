@@ -13,4 +13,8 @@ export default class ActionsService {
     async createAction(name: string): Promise<{ action: Action; }> {
       return this.actionRepo.createAction(name);
     }
+
+    async getActions(): Promise<{ actions: Array<Action> }> {
+      return this.actionRepo.getActions();
+    }
 }

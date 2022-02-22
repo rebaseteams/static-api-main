@@ -63,7 +63,7 @@ export class DevServer {
         const userRepo = new UserRepo(connection, auth0);
         const roleRepo = new RoleRepo(connection);
         const resourceRepo = new ResourceRepo(connection);
-        const actionsRepo = new ActionsRepo(connection, 'PgActionEntity');
+        const actionsRepo = new ActionsRepo(connection);
 
         this.config = {
           constants: configConstants,
