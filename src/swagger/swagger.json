@@ -1470,6 +1470,359 @@
           }
         }
       }
+    },
+    "/genres":{
+      "post": {
+        "tags": [
+          "genres"
+        ],
+        "description": "Create New Genre",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "userid",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Created new genre successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type":"object",
+                  "properties":{
+                    "success":{
+                      "type":"boolean"
+                    },
+                    "data":{
+                      "type":"object",
+                      "properties":{
+                        "genre":{
+                          "$ref": "#/components/schemas/NewGenre"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "genres"
+        ],
+        "description": "update the brand",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "userid",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewGenre"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated genre",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type":"object",
+                  "properties":{
+                    "success":{
+                      "type":"boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/genres/{id}":{
+      "get": {
+        "tags": [
+          "genres"
+        ],
+        "description": "get genre by id",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "userid",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns genre of respective id sucessfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type":"object",
+                  "properties":{
+                    "success":{
+                      "type":"boolean"
+                    },
+                    "data":{
+                      "$ref": "#/components/schemas/NewGenre"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete":{
+        "tags": [
+          "genres"
+        ],
+        "description": "Delete genre by id.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "userid",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted genre by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type":"object",
+                  "properties":{
+                    "success":{
+                      "type":"boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/genres/{skip}/{limit}":{
+      "get": {
+        "tags": [
+          "genres"
+        ],
+        "description": "get genres",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "skip",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "limit",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "userid",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns genres",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type":"object",
+                  "properties":{
+                    "success":{
+                      "type":"boolean"
+                    },
+                    "data":{
+                      "type":"object",
+                      "properties":{
+                        "genres":{
+                          "type":"array",
+                          "items":{
+                            "$ref": "#/components/schemas/NewGenre"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
     
   },
@@ -2533,6 +2886,20 @@
           },
           "contact": {
             "type": "number"
+          }
+        }
+      },
+      "NewGenre":{
+        "type":"object",
+        "properties":{
+          "id": {
+            "type":"string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
           }
         }
       }
