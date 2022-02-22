@@ -810,7 +810,12 @@
                       "type":"boolean"
                     },
                     "data":{
-                      "$ref": "#/components/schemas/NewVenue"
+                      "type":"object",
+                      "properties":{
+                        "venue":{
+                          "$ref": "#/components/schemas/NewVenue"
+                        }
+                      }
                     }
                   }
                 }
@@ -1064,7 +1069,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Returns venue of respective id sucessfully",
+            "description": "Returns venues",
             "content": {
               "application/json": {
                 "schema": {
@@ -2839,22 +2844,17 @@
       "NewVenue":{
         "type":"object",
         "properties":{
-          "venue": {
-            "type":"object",
-            "properties":{
-              "name": {
-                "type":"string"
-              },
-              "id": {
-                "type":"string"
-              },
-              "address": {
-                "$ref": "#/components/schemas/Address"
-              },
-              "capacity":{
-                "type": "number"
-              }
-            }
+          "name": {
+            "type":"string"
+          },
+          "id": {
+            "type":"string"
+          },
+          "address": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "capacity":{
+            "type": "number"
           }
         }
       },
