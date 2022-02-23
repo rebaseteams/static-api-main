@@ -8,7 +8,7 @@ export default class UsersRoutes {
   constructor(auth0 : Auth0Interface, usersService : UsersService) {
     this.router = express.Router();
 
-    this.router.get('/roles', auth0.checkAuthorization('user', '6f9c0db4-3340-4880-98d8-00288afa4300'), async (req, res, next) => {
+    this.router.get('/roles', async (req, res, next) => {
       try {
         const { userId } = req.body.auth;
         const data = await usersService.getRoles(userId);
@@ -27,7 +27,7 @@ export default class UsersRoutes {
       }
     });
 
-    this.router.get('/count', auth0.checkAuthorization('users', 'view'), async (req, res, next) => {
+    this.router.get('/count', async (req, res, next) => {
       try {
         const { getPending } = req.query;
         const data = await usersService.getUsersCount(getPending ? true : undefined);
@@ -37,7 +37,7 @@ export default class UsersRoutes {
       }
     });
 
-    this.router.get('/:id', auth0.checkAuthorization('user', 'view'), async (req, res, next) => {
+    this.router.get('/:id', async (req, res, next) => {
       try {
         const { id } = req.params;
         const data = await usersService.getUser(id);
@@ -47,7 +47,7 @@ export default class UsersRoutes {
       }
     });
 
-    this.router.delete('/:id', auth0.checkAuthorization('user', 'delete'), async (req, res, next) => {
+    this.router.delete('/:id', async (req, res, next) => {
       try {
         const data = await usersService.deleteUser(req.params.id);
         res.send({ success: data.success });
@@ -56,7 +56,7 @@ export default class UsersRoutes {
       }
     });
 
-    this.router.get('/:skip/:limit', auth0.checkAuthorization('users', 'view'), async (req, res, next) => {
+    this.router.get('/:skip/:limit', async (req, res, next) => {
       try {
         const data = await usersService.getUsers(parseInt(req.params.skip, 10), parseInt(req.params.limit, 10));
         res.send({ success: true, data: { users: data } });
@@ -65,7 +65,7 @@ export default class UsersRoutes {
       }
     });
 
-    this.router.get('/pending/:skip/:limit', auth0.checkAuthorization('users', 'view'), async (req, res, next) => {
+    this.router.get('/pending/:skip/:limit', async (req, res, next) => {
       try {
         const data = await usersService.getPendingUsers(parseInt(req.params.skip, 10), parseInt(req.params.limit, 10));
         res.send({ success: true, data: { users: data } });
@@ -74,7 +74,7 @@ export default class UsersRoutes {
       }
     });
 
-    this.router.patch('/approval', auth0.checkAuthorization('user', 'approval'), async (req, res, next) => {
+    this.router.patch('/approval', async (req, res, next) => {
       try {
         const data = await usersService.approveUser(req.body.id, req.body.approval);
         res.send({ success: data.success });
@@ -83,7 +83,7 @@ export default class UsersRoutes {
       }
     });
 
-    this.router.patch('/roles', auth0.checkAuthorization('user', 'update'), async (req, res, next) => {
+    this.router.patch('/roles', async (req, res, next) => {
       try {
         const data = await usersService.updateUsersRole(req.body.id, req.body.roles);
         res.send({ success: data.success });
