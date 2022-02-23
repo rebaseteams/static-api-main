@@ -18,6 +18,7 @@ export default class ResourceRepo implements ResourcesInterface {
     constructor(connection: Connection) {
       this.resourceRepository = connection.getRepository(PgResourceEntity);
       this.actionRepository = connection.getRepository(PgActionEntity);
+      this.actionPermissionRepository = connection.getRepository(PgActionPermissionsEntity);
     }
 
     async createResource(name : string, actions : string[]) : Promise<{resource : Resource}> {
