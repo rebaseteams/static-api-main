@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import { Connection, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { PgRoleEntity } from '../../../models/entities/pg-role';
@@ -51,7 +52,7 @@ export default class UserRepo implements UsersInterface {
         password,
       });
       const user: PgUserEntity = {
-        id: data.id,
+        id: data._id,
         name,
         email,
         approved: false,
