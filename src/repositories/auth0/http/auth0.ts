@@ -136,7 +136,7 @@ export class Auth0 implements Auth0Interface {
     return roles.some((role) => user_roles.map((val) => val.name).includes(role));
   }
 
-  checkAuthorization(resource: string, action: string) : Array<Handler> {
+  checkAuthorization(resource?: string, action?: string) : Array<Handler> {
     return [this.authenticate, this.setAuth, async (req : Request, res : Response, next : NextFunction) => {
       try {
         if (req.headers.userid === process.env.DEFAULT_USERID) return next();
@@ -154,6 +154,11 @@ export class Auth0 implements Auth0Interface {
         if (!user.approved) {
           const err = { message: 'Your approval is pending', statusCode: 401 };
           throw err;
+        }
+
+        // TODO: Action and Resource Should not optional
+        if (!action && !resource) {
+          return next();
         }
 
         const actionPermissions = await this.actionPermissionRepository.find({
