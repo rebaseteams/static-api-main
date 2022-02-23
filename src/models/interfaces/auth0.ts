@@ -13,7 +13,7 @@ export interface Auth0Interface {
 
   checkRoles (roles : Array<string>, userId : string | (() => string)) : Promise<boolean>;
 
-  checkAuthorization(resource : string, action : string) : Array<Handler>;
+  checkAuthorization(resource? : string, action? : string) : Array<Handler>;
 
   // eslint-disable-next-line consistent-return
   requireRole (roles : Array<string>): any;
