@@ -1,8 +1,8 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 import artists from '../../src/repositories/artists/in-memory/data/artists.json';
 
-export class insertArtistsDB1643019298219 implements MigrationInterface {
-    name = 'insertArtistsDB1643019298219'
+export class insertArtistsDB1645423225408 implements MigrationInterface {
+    name = 'insertArtistsDB1645423225408'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
       for (let i = 0; i < artists.length - 1; i += 1) {
