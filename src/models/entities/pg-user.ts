@@ -13,6 +13,6 @@ export class PgUserEntity {
   @Column()
   email: string
 
-  @Column({ nullable: true, default: false })
+  @Column({ nullable: true })
   approved: boolean;
 }
