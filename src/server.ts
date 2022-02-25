@@ -2,7 +2,7 @@
 import express, { Request, Response, Router } from 'express';
 import * as swaggerUi from 'swagger-ui-express';
 import cors from 'cors';
-import * as swaggerDoc from './swagger/swagger.json';
+import YAML from 'yamljs';
 
 import { DevServer } from './config.development';
 import ArtistRoute from './routes/artists/artistRoutes';
@@ -35,6 +35,7 @@ export default class MainServer {
 
   constructor(environment: Environment) {
     const server = environment === 'production' ? new ProdServer() : new DevServer();
+    const swaggerDocument = YAML.load('./src/swagger/index.yaml');
 
     const timeout = setTimeout(() => {
       if (server.config.services) {
@@ -60,7 +61,7 @@ export default class MainServer {
         this.expressApp.use('/cc-bff', this.app);
         this.app.use(cors(this.corsOptions));
         this.app.use('/healthcheck', (req : Request, res : Response) => res.status(200).send('OK'));
-        this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
+        this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
         this.app.use(contentType);
         this.app.use(express.json());
         this.app.use('/users', new UsersRoutes(auth0, usersService).router);

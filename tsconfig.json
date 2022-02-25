@@ -21,7 +21,8 @@
   },
   "include": [
     "src/**/*",
-    "src/**/*.json"
+    "src/**/*.json",
+    "src/**/*.yaml"
   ],
   "exclude": [
     "node_modules",
