@@ -86,6 +86,7 @@ export async function mapUser(pgUser: PgUserEntity, pgActionPermissions: PgActio
     id: pgUser.id,
     name: pgUser.name,
     email: pgUser.email,
+    approved: pgUser.approved,
     roles,
   };
 
