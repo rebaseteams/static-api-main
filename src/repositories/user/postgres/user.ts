@@ -55,7 +55,7 @@ export default class UserRepo implements UsersInterface {
         id: data._id,
         name,
         email,
-        approved: false,
+        approved: null,
       };
 
       const res = await this.userRepository.save(user);
