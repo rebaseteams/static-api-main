@@ -2,7 +2,7 @@ import {
   Column,
   Entity,
   JoinColumn,
-  OneToOne,
+  ManyToOne,
   PrimaryColumn,
   Unique,
 } from 'typeorm';
@@ -35,23 +35,23 @@ export class PgActionPermissionsEntity {
       @Column({ type: 'uuid', name: 'role_permission_id' })
       role_permission_id!: string;
 
-      @OneToOne(() => PgActionEntity, (action) => action.id)
+      @ManyToOne(() => PgActionEntity, (action) => action.id)
       @JoinColumn({ name: 'action_id', referencedColumnName: 'id' })
       public action!: Promise<PgActionEntity>;
 
-      @OneToOne(() => PgResourceEntity, (resource) => resource.id)
+      @ManyToOne(() => PgResourceEntity, (resource) => resource.id)
       @JoinColumn({ name: 'resource_id', referencedColumnName: 'id' })
       public resource!: Promise<PgResourceEntity>;
 
-      @OneToOne(() => PgRoleEntity, (role) => role.id)
+      @ManyToOne(() => PgRoleEntity, (role) => role.id)
       @JoinColumn({ name: 'role_id', referencedColumnName: 'id' })
       public role!: Promise<PgRoleEntity>;
 
-      @OneToOne(() => PgUserEntity, (user) => user.id)
+      @ManyToOne(() => PgUserEntity, (user) => user.id)
       @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
       public user!: Promise<PgUserEntity>;
 
-      @OneToOne(() => PgRolePermissionsEntity, (rp) => rp.id)
+      @ManyToOne(() => PgRolePermissionsEntity, (rp) => rp.id)
       @JoinColumn({ name: 'role_permission_id', referencedColumnName: 'id' })
       public role_permission!: Promise<PgRolePermissionsEntity>;
 
