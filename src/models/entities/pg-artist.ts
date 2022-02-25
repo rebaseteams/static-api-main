@@ -47,4 +47,16 @@ export class PgArtistEntity {
 
   @Column('jsonb')
   media_handles: media_handles;
+
+  @Column({ type: 'text', array: true, default: [] })
+  bowie_artist_ids?: string[];
+
+  @Column({ type: 'text', default: '' })
+  comments?: string;
+
+  @Column({ type: 'varchar', default: '' })
+  last_modified_by?: string;
+
+  @Column({ type: 'date', default: () => 'CURRENT_TIMESTAMP' })
+  last_modified_at?: string;
 }
