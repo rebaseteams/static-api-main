@@ -1,0 +1,1808 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Recommender
+  description: Service for Artist Recommendation
+servers:
+  - url: http://localhost:3000/cc-bff
+  - url: https://concertcuartor.rebaseitlabs.in/cc-bff
+paths:
+  /artists/recommendations/:
+    post:
+      tags:
+        - artist recommendations
+      description: Create new recommendation
+      parameters:
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuestionData'
+      responses:
+        '200':
+          description: Created new recommendation successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConcertCreationResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+    get:
+      tags:
+        - artist recommendations
+      description: get all recommendations.
+      parameters:
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Returns metadata of all saved recommendations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConcertCreationResponseArray'
+    patch:
+      tags:
+        - artist recommendations
+      description: discard the given artist for given recommendation.
+      parameters:
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchRecommendationRequest'
+      responses:
+        '200':
+          description: Successfully discarded artist for given recommendation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PatchRecommendationResponse'
+  /artists/recommendations/{id}:
+    delete:
+      tags:
+        - artist recommendations
+      description: Delete recommendation by id.
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successfully deleted recommendation for given id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteCurationResponse'
+    get:
+      tags:
+        - artist recommendations
+      description: get the match data based on the given questions
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: A list of recommended artists with respect to form id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/matchData'
+  /artists/recommendations/documents:
+    get:
+      tags:
+        - artist recommendation documents
+      description: get all documents
+      parameters:
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: retrieved all documents successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        createdOn:
+                          type: string
+    post:
+      tags:
+        - artist recommendation documents
+      description: create new document
+      parameters:
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                templateId:
+                  type: string
+                name:
+                  type: string
+                recommendationId:
+                  type: string
+                fields:
+                  type: object
+      responses:
+        '200':
+          description: returns document after successfully creating it
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      document:
+                        type: object
+                        properties:
+                          id: {}
+                          name: {}
+                          createdOn: {}
+                          recommendationId: {}
+                          html: {}
+  /artists/recommendations/documents/{id}:
+    get:
+      tags:
+        - artist recommendation documents
+      description: get document for given id
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: successfully retrieved document for given id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      id: {}
+                      name: {}
+                      createdOn: {}
+                      recommendationId: {}
+                      html: {}
+    patch:
+      tags:
+        - artist recommendation documents
+      description: edit document for given id
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                html: {}
+      responses:
+        '200':
+          description: successfully updated the document
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      tags:
+        - artist recommendation documents
+      description: delete document with given id
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: successfully updated the document
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /artists/recommendations/documents/templates:
+    get:
+      tags:
+        - document templates
+      description: get metadata of all templates
+      parameters:
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: successfully retrieved metadata of all templates
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        templateId: {}
+                        templateImg: {}
+                        templateName: {}
+  /artists/recommendations/documents/templates/{id}:
+    get:
+      tags:
+        - document templates
+      description: get questions for given template id
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: successfully retrieved questions for given template
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        templateId: {}
+                        questions:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              question: {}
+                              field: {}
+                              type: {}
+  /artists/{id}:
+    get:
+      tags:
+        - artist
+      description: get artist data with artist id
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Artist Schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/artistData'
+  /notification:
+    post:
+      tags:
+        - utils
+      description: Send notification on platforms like email, facebook etc.
+      parameters:
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationData'
+      responses:
+        '200':
+          description: Notification/ Message sent sucessfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationSuccess'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationServerError'
+  /auth/login:
+    post:
+      tags:
+        - auth
+      description: Login to system by username and password.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+      responses:
+        '200':
+          description: Login Sucessfull
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginStatus'
+        '404':
+          description: Username or password incorrect.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginStatusFailure'
+  /auth/signup:
+    post:
+      tags:
+        - auth
+      description: Login to system by username and password.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUp'
+      responses:
+        '200':
+          description: SignUp Sucessfull
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignUpStatus'
+        '401':
+          description: Duplicate User dectected.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignUpStatusFailure'
+  /venues:
+    post:
+      tags:
+        - venues
+      description: Create New Venue
+      parameters:
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                address:
+                  $ref: '#/components/schemas/Address'
+                capacity:
+                  type: number
+      responses:
+        '200':
+          description: Created new venue successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      venue:
+                        $ref: '#/components/schemas/NewVenue'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+    patch:
+      tags:
+        - venues
+      description: update the venue
+      parameters:
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewVenue'
+      responses:
+        '200':
+          description: Successfully updated venue
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+  /venues/{id}:
+    get:
+      tags:
+        - venues
+      description: get venue by id
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Returns venue of respective id sucessfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/NewVenue'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+    delete:
+      tags:
+        - venues
+      description: Delete venue by id.
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successfully deleted venue by id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+  /venues/{skip}/{limit}:
+    get:
+      tags:
+        - venues
+      description: get venues
+      parameters:
+        - in: path
+          name: skip
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: limit
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Returns venues
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      venues:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/NewVenue'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+  /brands:
+    post:
+      tags:
+        - brands
+      description: Create New Brand
+      parameters:
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                logo:
+                  type: string
+                website:
+                  type: string
+                contact:
+                  type: number
+      responses:
+        '200':
+          description: Created new brand successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      brand:
+                        $ref: '#/components/schemas/NewBrand'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+    patch:
+      tags:
+        - brands
+      description: update the brand
+      parameters:
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewBrand'
+      responses:
+        '200':
+          description: Successfully updated brand
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+  /brands/{id}:
+    get:
+      tags:
+        - brands
+      description: get brand by id
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Returns brand of respective id sucessfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/NewBrand'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+    delete:
+      tags:
+        - brands
+      description: Delete brand by id.
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successfully deleted brand by id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+  /brands/{skip}/{limit}:
+    get:
+      tags:
+        - brands
+      description: get brands
+      parameters:
+        - in: path
+          name: skip
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: limit
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Returns brands
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      brands:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/NewBrand'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+  /genres:
+    post:
+      tags:
+        - genres
+      description: Create New Genre
+      parameters:
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+      responses:
+        '200':
+          description: Created new genre successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      genre:
+                        $ref: '#/components/schemas/NewGenre'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+    patch:
+      tags:
+        - genres
+      description: update the brand
+      parameters:
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewGenre'
+      responses:
+        '200':
+          description: Successfully updated genre
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+  /genres/{id}:
+    get:
+      tags:
+        - genres
+      description: get genre by id
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Returns genre of respective id sucessfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/NewGenre'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+    delete:
+      tags:
+        - genres
+      description: Delete genre by id.
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successfully deleted genre by id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+  /genres/{skip}/{limit}:
+    get:
+      tags:
+        - genres
+      description: get genres
+      parameters:
+        - in: path
+          name: skip
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: limit
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Returns genres
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      genres:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/NewGenre'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+components:
+  schemas:
+    QuestionData:
+      type: object
+      properties:
+        userId:
+          type: string
+        concertName:
+          type: string
+        eventType:
+          type: string
+        venue:
+          type: array
+          items:
+            type: string
+        artistBudget:
+          type: object
+          properties:
+            min:
+              type: number
+            max:
+              type: number
+        sponsorshipType:
+          type: string
+        wantedBrands:
+          type: array
+          items:
+            type: object
+            properties:
+              brandName:
+                type: string
+              brandId:
+                type: string
+        unwantedBrands:
+          type: array
+          items:
+            type: object
+            properties:
+              brandName:
+                type: string
+              brandId:
+                type: string
+        targetAudience:
+          type: object
+          properties:
+            ageGroup:
+              type: array
+              items:
+                type: string
+            genre:
+              type: array
+              items:
+                type: object
+                properties:
+                  brandName:
+                    type: string
+                  brandId:
+                    type: string
+            gender:
+              type: array
+              items:
+                type: string
+        whatSellsMost:
+          type: object
+          properties:
+            beer:
+              type: array
+              items:
+                type: object
+                properties:
+                  brandName:
+                    type: string
+                  brandId:
+                    type: string
+            liquor:
+              type: array
+              items:
+                type: object
+                properties:
+                  brandName:
+                    type: string
+                  brandId:
+                    type: string
+            softDrinks:
+              type: array
+              items:
+                type: object
+                properties:
+                  brandName:
+                    type: string
+                  brandId:
+                    type: string
+    matchData:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            concertData:
+              type: object
+              properties:
+                id:
+                  type: string
+                dateCreated:
+                  type: string
+                userId:
+                  type: string
+                concertName:
+                  type: string
+                eventType:
+                  type: string
+                venue:
+                  type: array
+                  items:
+                    type: string
+                artistBudget:
+                  type: object
+                  properties:
+                    min:
+                      type: number
+                    max:
+                      type: number
+                sponsorshipType:
+                  type: string
+                wantedBrands:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      brandName:
+                        type: string
+                      brandId:
+                        type: string
+                unwantedBrands:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      brandName:
+                        type: string
+                      brandId:
+                        type: string
+                targetAudience:
+                  type: object
+                  properties:
+                    ageGroup:
+                      type: array
+                      items:
+                        type: string
+                    genre:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          genreName:
+                            type: string
+                          genreId:
+                            type: string
+                    gender:
+                      type: array
+                      items:
+                        type: string
+                whatSellsMost:
+                  type: object
+                  properties:
+                    beer:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          brandName:
+                            type: string
+                          brandId:
+                            type: string
+                    liquor:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          brandName:
+                            type: string
+                          brandId:
+                            type: string
+                    softDrinks:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          brandName:
+                            type: string
+                          brandId:
+                            type: string
+            artists:
+              type: array
+              description: Array of artists.
+              items:
+                type: object
+                properties:
+                  artistName:
+                    type: string
+                  artistId:
+                    type: string
+                  artistGender:
+                    type: string
+                  artistImage:
+                    type: string
+                  matchPercentage:
+                    type: number
+                  matchAttributes:
+                    type: object
+                    properties:
+                      venues:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            name:
+                              type: string
+                            address:
+                              type: object
+                              properties:
+                                pincode:
+                                  type: number
+                                country:
+                                  type: string
+                                city:
+                                  type: string
+                                geoLocation:
+                                  type: object
+                                  properties:
+                                    lat:
+                                      type: number
+                                    long:
+                                      type: number
+                            venueCapacity:
+                              type: number
+                            matchPercentage:
+                              type: number
+                      age:
+                        type: object
+                        properties:
+                          ageGroup:
+                            type: string
+                          matchPercentage:
+                            type: number
+                      gender:
+                        type: object
+                        properties:
+                          male:
+                            type: number
+                          female:
+                            type: number
+                      genre:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            genreName:
+                              type: string
+                            matchPercentage:
+                              type: number
+                      associatedBrands:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            name:
+                              type: string
+                            contact:
+                              type: string
+                            website:
+                              type: string
+                            logoUrl:
+                              type: string
+                  summary:
+                    type: string
+            status:
+              type: boolean
+        success:
+          type: boolean
+    artistData:
+      type: object
+      properties:
+        artistName:
+          type: string
+        contryOrigin:
+          type: string
+        artistId:
+          type: string
+        artistImage:
+          type: string
+        coverImage:
+          type: string
+        artistBio:
+          type: string
+        matchPercentage:
+          type: number
+        socialMediaAnalytics:
+          type: object
+          properties:
+            youtube:
+              type: object
+              properties:
+                channel:
+                  type: string
+                subscribers:
+                  type: number
+                avgLikes:
+                  type: number
+                engegmentRatio:
+                  type: number
+                avgView:
+                  type: number
+                audience:
+                  type: object
+                  properties:
+                    age:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          ageGroup:
+                            type: string
+                          matchPercentage:
+                            type: number
+                    gender:
+                      type: object
+                      properties:
+                        male:
+                          type: number
+                        female:
+                          type: number
+                    genre:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          genreName:
+                            type: string
+                          matchPercentage:
+                            type: number
+            spotify:
+              type: object
+              properties:
+                channel:
+                  type: string
+                subscribers:
+                  type: number
+                avgLikes:
+                  type: number
+                engegmentRatio:
+                  type: number
+                avgView:
+                  type: number
+                audience:
+                  type: object
+                  properties:
+                    age:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          ageGroup:
+                            type: string
+                          matchPercentage:
+                            type: number
+                    gender:
+                      type: object
+                      properties:
+                        male:
+                          type: number
+                        female:
+                          type: number
+                    genre:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          genreName:
+                            type: string
+                          matchPercentage:
+                            type: number
+            twitter:
+              type: object
+              properties:
+                channel:
+                  type: string
+                followers:
+                  type: number
+                avgLikes:
+                  type: number
+                totalTweets:
+                  type: number
+                avgView:
+                  type: number
+                audience:
+                  type: object
+                  properties:
+                    age:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          ageGroup:
+                            type: string
+                          matchPercentage:
+                            type: number
+                    gender:
+                      type: object
+                      properties:
+                        male:
+                          type: number
+                        female:
+                          type: number
+                    genre:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          genreName:
+                            type: string
+                          matchPercentage:
+                            type: number
+        manager:
+          type: object
+          properties:
+            name:
+              type: string
+            id:
+              type: string
+            contactInfo:
+              type: object
+              properties:
+                mobileNo:
+                  type: array
+                  items:
+                    type: string
+                email:
+                  type: array
+                  items:
+                    type: string
+        venues:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+              address:
+                type: object
+                properties:
+                  pincode:
+                    type: number
+                  country:
+                    type: string
+                  city:
+                    type: string
+                  geoLocation:
+                    type: object
+                    properties:
+                      lat:
+                        type: number
+                      long:
+                        type: number
+              venueCapacity:
+                type: number
+              matchPercentage:
+                type: number
+        age:
+          type: array
+          items:
+            type: object
+            properties:
+              ageGroup:
+                type: string
+              matchPercentage:
+                type: number
+        gender:
+          type: object
+          properties:
+            male:
+              type: number
+            female:
+              type: number
+        genre:
+          type: array
+          items:
+            type: object
+            properties:
+              genreName:
+                type: string
+              matchPercentage:
+                type: number
+        associatedBrands:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+              contact:
+                type: string
+              website:
+                type: string
+              logoUrl:
+                type: string
+    NotificationData:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - email
+            - facebook
+            - twitter
+            - message
+        recipients:
+          type: array
+          items:
+            type: string
+        subject:
+          type: string
+        message:
+          type: string
+    NotificationSuccess:
+      type: object
+      properties:
+        message:
+          type: string
+          enum:
+            - email sent successfully
+            - facebook notification sent successfully
+            - twitter notification send successfully
+    BadRequest:
+      type: object
+      properties:
+        message:
+          type: string
+        error:
+          type: boolean
+    NotificationServerError:
+      type: object
+      properties:
+        message:
+          type: string
+        error:
+          type: boolean
+    ConcertCreationResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        concertName:
+          type: string
+        status:
+          type: boolean
+        dateCreated:
+          type: string
+    ConcertCreationResponseArray:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+          concertName:
+            type: string
+          status:
+            type: boolean
+          dateCreated:
+            type: string
+    DeleteCurationResponse:
+      type: object
+      properties:
+        formId:
+          type: string
+        success:
+          type: boolean
+    PatchRecommendationRequest:
+      type: object
+      properties:
+        formId:
+          type: string
+        discardedArtistId:
+          type: string
+        userId:
+          type: string
+    PatchRecommendationResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+    Login:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    SignUp:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    LoginStatus:
+      type: object
+      properties:
+        success:
+          type: boolean
+    LoginStatusFailure:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+    SignUpStatus:
+      type: object
+      properties:
+        status:
+          type: boolean
+    SignUpStatusFailure:
+      type: object
+      properties:
+        status:
+          type: boolean
+          example: false
+    Address:
+      type: object
+      properties:
+        pincode:
+          type: number
+        country:
+          type: string
+        city:
+          type: string
+        geoLocation:
+          type: object
+          properties:
+            lat:
+              type: number
+            long:
+              type: number
+    NewVenue:
+      type: object
+      properties:
+        name:
+          type: string
+        id:
+          type: string
+        address:
+          $ref: '#/components/schemas/Address'
+        capacity:
+          type: number
+    InternalServerError:
+      type: object
+      properties:
+        error:
+          type: boolean
+        message:
+          type: string
+    NewBrand:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        logo:
+          type: string
+        website:
+          type: string
+        contact:
+          type: number
+    NewGenre:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
