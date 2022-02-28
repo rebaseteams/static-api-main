@@ -24,7 +24,7 @@ export default class ResourceRepo implements ResourcesInterface {
     async createResource(name : string, actions : string[]) : Promise<{resource : Resource}> {
       const resourceId = uuidv4();
 
-      const pgActions = this.actionRepository.findByIds(actions);
+      const pgActions = await this.actionRepository.findByIds(actions);
 
       const resource: PgResourceEntity = {
         id: resourceId,
