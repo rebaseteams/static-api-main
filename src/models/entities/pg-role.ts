@@ -11,7 +11,7 @@ export class PgRoleEntity {
   @Column()
   name: string;
 
-  @ManyToMany(() => PgResourceEntity)
+  @ManyToMany(() => PgResourceEntity, { cascade: true })
   @JoinTable(
     {
       name: 'role_resources_resource',
@@ -25,5 +25,5 @@ export class PgRoleEntity {
       },
     },
   )
-  resources: Promise<PgResourceEntity[]>;
+  resources: PgResourceEntity[];
 }
