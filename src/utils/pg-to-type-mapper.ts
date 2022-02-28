@@ -104,7 +104,7 @@ export function mapAction(pgAction: PgActionEntity): Action {
 
 export async function mapResource(pgResource: PgResourceEntity): Promise<Resource> {
   const actions = [];
-  const pgActions = await pgResource.actions;
+  const pgActions = pgResource.actions;
   for (let i = 0; i < pgActions.length; i += 1) {
     const action = mapAction(pgActions[i]);
     actions.push(action);
@@ -118,11 +118,10 @@ export async function mapResource(pgResource: PgResourceEntity): Promise<Resourc
   return mappedResource;
 }
 
-export async function mapRole(pgRole: PgRoleEntity): Promise<Role> {
-  const pgRoleResources = await pgRole.resources;
+export async function mapRole(pgRole: PgRoleEntity, pgResource: PgResourceEntity[]): Promise<Role> {
   const resources = [];
-  for (let i = 0; i < pgRoleResources.length; i += 1) {
-    const resource = await mapResource(pgRoleResources[i]);
+  for (let i = 0; i < pgResource.length; i += 1) {
+    const resource = await mapResource(pgResource[i]);
     resources.push(resource);
   }
   const mappedRole: Role = {
@@ -146,4 +145,12 @@ export function mapDocument(pgDocument: PgDocumentEntity): Document {
   };
 
   return document;
+}
+
+export function getArrayOf(field: string, arr: Array<any>) {
+  try {
+    return arr.map((a) => a[field]);
+  } catch (err) {
+    return [];
+  }
 }

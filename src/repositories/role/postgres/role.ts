@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 
 import { Connection, Repository } from 'typeorm';
@@ -8,31 +7,38 @@ import { PgRoleEntity } from '../../../models/entities/pg-role';
 import { RolesInterface } from '../../../models/interfaces/role';
 import { ResourceActions } from '../../../models/types/resource-actions';
 import { Role } from '../../../models/types/role';
-import { mapResource, mapRole } from '../../../utils/pg-to-type-mapper';
+import { getArrayOf, mapRole } from '../../../utils/pg-to-type-mapper';
 
 export default class RoleRepo implements RolesInterface {
     private roleRepository : Repository<PgRoleEntity>;
 
+    private resourceRepository : Repository<PgResourceEntity>;
+
     constructor(connection: Connection) {
       this.roleRepository = connection.getRepository(PgRoleEntity);
+      this.resourceRepository = connection.getRepository(PgResourceEntity);
     }
 
-    async createRole(name : string, resourceActions : ResourceActions) : Promise<{role : Role}> {
-      const pgResources: Promise<PgResourceEntity[]> = new Promise<PgResourceEntity[]>(() => []);
+    async createRole(name : string, resourceActions : PgResourceEntity[]) : Promise<{role : Role}> {
+      const resourceIds = getArrayOf('id', resourceActions); // resourceActions.map((r) => r.id);
+      const resources = await this.resourceRepository.findByIds(resourceIds, { relations: ['actions'] });
       const role:PgRoleEntity = {
         id: uuidv4(),
         name,
-        resources: pgResources, // TODO: figure out how to use resourceActions,
+        resources, // TODO: figure out how to use resourceActions,
       };
 
       await this.roleRepository.save(role);
-      return { role: await mapRole(role) };
+      return { role: await mapRole(role, role.resources) };
     }
 
     async getRole(id : string) : Promise<Role> {
-      const role: PgRoleEntity = await this.roleRepository.findOne({ id });
+      const role: PgRoleEntity = await this.roleRepository.findOne({ id }, { relations: ['resources'] });
+      const resourceIds = getArrayOf('id', role.resources);
+      const resources = await this.resourceRepository.findByIds(resourceIds, { relations: ['actions'] });
       if (role) {
-        return mapRole(role);
+        const roles = await mapRole(role, resources);
+        return roles;
       }
       const err = { message: `Role not found for id: ${id}`, statusCode: 404 };
       throw err;
@@ -66,7 +72,9 @@ export default class RoleRepo implements RolesInterface {
 
       const mappedRoles = [];
       for (let i = 0; i < roles.length; i += 1) {
-        const mappedRole = await mapRole(roles[i]);
+        const resourceIds = getArrayOf('id', roles[i].resources); // roles[i].resources.map((r) => r.id);
+        const resource = await this.resourceRepository.findByIds(resourceIds, { relations: ['actions'] });
+        const mappedRole = await mapRole(roles[i], resource);
         mappedRoles.push(mappedRole);
       }
 
