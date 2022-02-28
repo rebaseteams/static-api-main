@@ -11,7 +11,7 @@ export class PgResourceEntity {
   @Column()
   name: string;
 
-  @ManyToMany(() => PgActionEntity)
+  @ManyToMany(() => PgActionEntity, { cascade: true })
   @JoinTable(
     {
       name: 'resource_actions_actions',
@@ -25,5 +25,5 @@ export class PgResourceEntity {
       },
     },
   )
-  actions: Promise<PgActionEntity[]>;
+  actions: PgActionEntity[];
 }
