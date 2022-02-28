@@ -37,6 +37,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
     get:
       tags:
         - artist recommendations
@@ -54,6 +60,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ConcertCreationResponseArray'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
     patch:
       tags:
         - artist recommendations
@@ -77,6 +95,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PatchRecommendationResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
   /artists/recommendations/{id}:
     delete:
       tags:
@@ -100,6 +130,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DeleteCurationResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
     get:
       tags:
         - artist recommendations
@@ -122,6 +164,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/matchData'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
   /artists/recommendations/documents:
     get:
       tags:
@@ -154,6 +208,20 @@ paths:
                           type: string
                         createdOn:
                           type: string
+                        mode:
+                          type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
     post:
       tags:
         - artist recommendation documents
@@ -178,6 +246,8 @@ paths:
                   type: string
                 fields:
                   type: object
+                required:
+                  type: object
       responses:
         '200':
           description: returns document after successfully creating it
@@ -194,11 +264,43 @@ paths:
                       document:
                         type: object
                         properties:
-                          id: {}
-                          name: {}
-                          createdOn: {}
-                          recommendationId: {}
-                          html: {}
+                          id:
+                            type: string
+                          name:
+                            type: string
+                          createdOn:
+                            type: string
+                          createdBy:
+                            type: string
+                          mode:
+                            type: string
+                          html:
+                            type: string
+                          contract:
+                            type: object
+                            properties:
+                              envelopeId:
+                                type: string
+                              url:
+                                type: string
+                              dateCreated:
+                                type: string
+                              signDate:
+                                type: string
+                              status:
+                                type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
   /artists/recommendations/documents/{id}:
     get:
       tags:
@@ -228,11 +330,43 @@ paths:
                   data:
                     type: object
                     properties:
-                      id: {}
-                      name: {}
-                      createdOn: {}
-                      recommendationId: {}
-                      html: {}
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      createdOn:
+                        type: string
+                      createdBy:
+                        type: string
+                      mode:
+                        type: string
+                      html:
+                        type: string
+                      contract:
+                        type: object
+                        properties:
+                          envelopeId:
+                            type: string
+                          url:
+                            type: string
+                          dateCreated:
+                            type: string
+                          signDate:
+                            type: string
+                          status:
+                            type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
     patch:
       tags:
         - artist recommendation documents
@@ -265,6 +399,18 @@ paths:
                 properties:
                   success:
                     type: boolean
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
     delete:
       tags:
         - artist recommendation documents
@@ -290,6 +436,129 @@ paths:
                 properties:
                   success:
                     type: boolean
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+  /artists/recommendations/documents/share/{id}:
+    post:
+      tags:
+        - artist recommendation documents
+      description: create new document
+      parameters:
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                files:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                emails: 
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: successfully updated the document
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+  /artists/recommendations/documents/ids: 
+    post:
+      tags:
+        - artist recommendation documents
+      description: create new document
+      parameters:
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids: 
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: successfully updated the document
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        createdOn:
+                          type: string
+                        mode:
+                          type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
   /artists/recommendations/documents/templates:
     get:
       tags:
@@ -319,6 +588,18 @@ paths:
                         templateId: {}
                         templateImg: {}
                         templateName: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
   /artists/recommendations/documents/templates/{id}:
     get:
       tags:
@@ -346,19 +627,267 @@ paths:
                   success:
                     type: boolean
                   data:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        templateId: {}
-                        questions:
-                          type: array
-                          items:
+                    type: object
+                    properties:
+                      templateId:
+                        type: string
+                      questions:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            question:
+                              type: string
+                            field:
+                              type: string
+                            type:
+                              type: string
+                      required:
+                        type: array
+                        items:
+                          type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+  /artists/recommendations/documents/docusign:
+    get:
+      tags:
+        - docusign
+      description: get questions for given template id
+      parameters:
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: successfully added docusign
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+  /artists/recommendations/documents/docusign/{id}:
+    post:
+      tags:
+        - docusign
+      description: get questions for given template id
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                emailSubject:
+                  type: string
+                documents: 
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      htmlDefinition:
+                        type: object
+                        properties: 
+                          source: 
+                            type: string
+                      documentId:
+                        type: string
+                      name: 
+                        type: string
+                recipients:
+                  type: object
+                  properties: 
+                    carbonCopies:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          email:
+                           type: string
+                          name:
+                           type: string
+                          recipientId:
+                           type: string
+                          routingOrder:
+                           type: string
+                    signers:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          email:
+                           type: string
+                          name:
+                           type: string
+                          recipientId:
+                           type: string
+                          routingOrder:
+                           type: string
+                          tabs: 
                             type: object
                             properties:
-                              question: {}
-                              field: {}
-                              type: {}
+                              signHereTabs: 
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    anchorString:
+                                     type: string
+                                    anchorUnits:
+                                     type: string
+                                    anchorXOffset:
+                                     type: string
+                                    anchorYOffset:
+                                     type: string
+                status:
+                  type: string
+      responses:
+        '200':
+          description: successfully retrieved docusign
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  success: 
+                    type: boolean
+                  data: 
+                    type: object
+                    properties:
+                      envelopeId:
+                        type: string
+                      uri:
+                        type: string
+                      statusDateTime:
+                        type: string
+                      status:
+                        type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+  /artists/recommendations/documents/docusign/{envelopeId}:
+    get:
+      tags:
+        - docusign
+      description: get questions for given template id
+      parameters:
+        - in: path
+          name: envelopeId
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: successfully added docusign
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+  /artists/recommendations/documents/docusign/{envelopeId}/{documentId}:
+    get:
+      tags:
+        - docusign
+      description: get questions for given template id
+      parameters:
+        - in: path
+          name: envelopeId
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: documentId
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: successfully added docusign
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
   /artists/{id}:
     get:
       tags:
@@ -382,30 +911,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/artistData'
-  /notification:
-    post:
-      tags:
-        - utils
-      description: Send notification on platforms like email, facebook etc.
-      parameters:
-        - in: header
-          name: userid
-          schema:
-            type: string
-          required: true
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/NotificationData'
-      responses:
-        '200':
-          description: Notification/ Message sent sucessfully.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotificationSuccess'
         '400':
           description: Bad Request
           content:
@@ -413,11 +918,51 @@ paths:
               schema:
                 $ref: '#/components/schemas/BadRequest'
         '500':
-          description: Server Error
+          description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NotificationServerError'
+                $ref: '#/components/schemas/InternalServerError'
+  /artists/{skip}/{limit}: 
+    get:
+      tags:
+        - artist
+      description: get artist data
+      parameters:
+        - in: path
+          name: skip
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: limit
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Artist Schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/artistData'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
   /auth/login:
     post:
       tags:
@@ -1209,6 +1754,8 @@ components:
     matchData:
       type: object
       properties:
+        success:
+          type: boolean
         data:
           type: object
           properties:
@@ -1216,8 +1763,6 @@ components:
               type: object
               properties:
                 id:
-                  type: string
-                dateCreated:
                   type: string
                 userId:
                   type: string
@@ -1232,9 +1777,9 @@ components:
                 artistBudget:
                   type: object
                   properties:
-                    min:
-                      type: number
                     max:
+                      type: number
+                    min:
                       type: number
                 sponsorshipType:
                   type: string
@@ -1243,36 +1788,36 @@ components:
                   items:
                     type: object
                     properties:
-                      brandName:
-                        type: string
                       brandId:
+                        type: string
+                      brandName:
                         type: string
                 unwantedBrands:
                   type: array
                   items:
                     type: object
                     properties:
-                      brandName:
-                        type: string
                       brandId:
+                        type: string
+                      brandName:
                         type: string
                 targetAudience:
                   type: object
                   properties:
-                    ageGroup:
-                      type: array
-                      items:
-                        type: string
                     genre:
                       type: array
                       items:
                         type: object
                         properties:
-                          genreName:
-                            type: string
                           genreId:
                             type: string
+                          genreName:
+                            type: string
                     gender:
+                      type: array
+                      items:
+                        type: string
+                    ageGroup:
                       type: array
                       items:
                         type: string
@@ -1284,350 +1829,187 @@ components:
                       items:
                         type: object
                         properties:
-                          brandName:
-                            type: string
                           brandId:
+                            type: string
+                          brandName:
                             type: string
                     liquor:
                       type: array
                       items:
                         type: object
                         properties:
-                          brandName:
-                            type: string
                           brandId:
+                            type: string
+                          brandName:
                             type: string
                     softDrinks:
                       type: array
                       items:
                         type: object
                         properties:
-                          brandName:
-                            type: string
                           brandId:
                             type: string
+                          brandName:
+                            type: string
+                dateCreated:
+                  type: string
             artists:
               type: array
-              description: Array of artists.
+              items:
+                type: object
+            discardedArtists:
+              type: array
+              items:
+                type: object
+            documents:
+              type: array
+              items:
+                type: object
+            lastChangedUserId:
+              type: string
+            status:
+              type: boolean
+    
+    artistSingleData:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            gender:
+              type: string
+            associatedBrands:
+              type: array
+              items:
+                type: string
+            venues:
+              type: array
+              items:
+                type: string
+            country:
+              type: string
+            image:
+              type: string
+            coverImage:
+              type: string
+            bio:
+              type: string
+            manager:
+              type: string
+            contact:
+              type: string
+            address:
+              type: string
+            popularity:
+              type: number
+            audience:
+              type: array
               items:
                 type: object
                 properties:
-                  artistName:
+                  fields:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        value:
+                          type: number
+                  demographicName:
                     type: string
-                  artistId:
+            mediaHandles:
+              type: array
+              items:
+                type: object
+                properties:
+                  url:
                     type: string
-                  artistGender:
+                  logo:
                     type: string
-                  artistImage:
-                    type: string
-                  matchPercentage:
+                  followers:
                     type: number
-                  matchAttributes:
-                    type: object
-                    properties:
-                      venues:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            id:
-                              type: string
-                            name:
-                              type: string
-                            address:
-                              type: object
-                              properties:
-                                pincode:
-                                  type: number
-                                country:
-                                  type: string
-                                city:
-                                  type: string
-                                geoLocation:
-                                  type: object
-                                  properties:
-                                    lat:
-                                      type: number
-                                    long:
-                                      type: number
-                            venueCapacity:
-                              type: number
-                            matchPercentage:
-                              type: number
-                      age:
-                        type: object
-                        properties:
-                          ageGroup:
-                            type: string
-                          matchPercentage:
-                            type: number
-                      gender:
-                        type: object
-                        properties:
-                          male:
-                            type: number
-                          female:
-                            type: number
-                      genre:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            genreName:
-                              type: string
-                            matchPercentage:
-                              type: number
-                      associatedBrands:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            id:
-                              type: string
-                            name:
-                              type: string
-                            contact:
-                              type: string
-                            website:
-                              type: string
-                            logoUrl:
-                              type: string
-                  summary:
+                  handleName:
                     type: string
-            status:
-              type: boolean
-        success:
-          type: boolean
     artistData:
       type: object
       properties:
-        artistName:
-          type: string
-        contryOrigin:
-          type: string
-        artistId:
-          type: string
-        artistImage:
-          type: string
-        coverImage:
-          type: string
-        artistBio:
-          type: string
-        matchPercentage:
-          type: number
-        socialMediaAnalytics:
+        success:
+          type: boolean
+        data:
           type: object
           properties:
-            youtube:
-              type: object
-              properties:
-                channel:
-                  type: string
-                subscribers:
-                  type: number
-                avgLikes:
-                  type: number
-                engegmentRatio:
-                  type: number
-                avgView:
-                  type: number
-                audience:
-                  type: object
-                  properties:
-                    age:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          ageGroup:
-                            type: string
-                          matchPercentage:
-                            type: number
-                    gender:
-                      type: object
-                      properties:
-                        male:
-                          type: number
-                        female:
-                          type: number
-                    genre:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          genreName:
-                            type: string
-                          matchPercentage:
-                            type: number
-            spotify:
-              type: object
-              properties:
-                channel:
-                  type: string
-                subscribers:
-                  type: number
-                avgLikes:
-                  type: number
-                engegmentRatio:
-                  type: number
-                avgView:
-                  type: number
-                audience:
-                  type: object
-                  properties:
-                    age:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          ageGroup:
-                            type: string
-                          matchPercentage:
-                            type: number
-                    gender:
-                      type: object
-                      properties:
-                        male:
-                          type: number
-                        female:
-                          type: number
-                    genre:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          genreName:
-                            type: string
-                          matchPercentage:
-                            type: number
-            twitter:
-              type: object
-              properties:
-                channel:
-                  type: string
-                followers:
-                  type: number
-                avgLikes:
-                  type: number
-                totalTweets:
-                  type: number
-                avgView:
-                  type: number
-                audience:
-                  type: object
-                  properties:
-                    age:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          ageGroup:
-                            type: string
-                          matchPercentage:
-                            type: number
-                    gender:
-                      type: object
-                      properties:
-                        male:
-                          type: number
-                        female:
-                          type: number
-                    genre:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          genreName:
-                            type: string
-                          matchPercentage:
-                            type: number
-        manager:
-          type: object
-          properties:
-            name:
-              type: string
-            id:
-              type: string
-            contactInfo:
-              type: object
-              properties:
-                mobileNo:
-                  type: array
-                  items:
-                    type: string
-                email:
-                  type: array
-                  items:
-                    type: string
-        venues:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-              name:
-                type: string
-              address:
+            artists:
+              type: array
+              items:
                 type: object
                 properties:
-                  pincode:
-                    type: number
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  gender:
+                    type: string
+                  associated_brands:
+                    type: array
+                    items:
+                      type: string
+                  venues:
+                    type: array
+                    items:
+                      type: string
                   country:
                     type: string
-                  city:
+                  image:
                     type: string
-                  geoLocation:
-                    type: object
-                    properties:
-                      lat:
-                        type: number
-                      long:
-                        type: number
-              venueCapacity:
-                type: number
-              matchPercentage:
-                type: number
-        age:
-          type: array
-          items:
-            type: object
-            properties:
-              ageGroup:
-                type: string
-              matchPercentage:
-                type: number
-        gender:
-          type: object
-          properties:
-            male:
-              type: number
-            female:
-              type: number
-        genre:
-          type: array
-          items:
-            type: object
-            properties:
-              genreName:
-                type: string
-              matchPercentage:
-                type: number
-        associatedBrands:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-              name:
-                type: string
-              contact:
-                type: string
-              website:
-                type: string
-              logoUrl:
-                type: string
+                  cover_image:
+                    type: string
+                  bio:
+                    type: string
+                  manager:
+                    type: string
+                  contact:
+                    type: string
+                  address:
+                    type: string
+                  popularity:
+                    type: number
+                  audience:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        fields:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                              value:
+                                type: number
+                        demographicName:
+                          type: string
+                  media_handles:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        url:
+                          type: string
+                        logo:
+                          type: string
+                        followers:
+                          type: number
+                        handleName:
+                          type: string
+
     NotificationData:
       type: object
       properties:
@@ -1717,11 +2099,9 @@ components:
     PatchRecommendationRequest:
       type: object
       properties:
-        formId:
+        id:
           type: string
-        discardedArtistId:
-          type: string
-        userId:
+        artistId:
           type: string
     PatchRecommendationResponse:
       type: object
