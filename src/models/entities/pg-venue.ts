@@ -13,9 +13,6 @@ export default class PgVenueEntity {
   @Column('jsonb')
   address: Address;
 
-  @Column()
-  capacity: number;
-
   @Column({ type: 'varchar', default: '' })
   bowie_venue_id: string;
 
@@ -46,9 +43,12 @@ export default class PgVenueEntity {
   @Column({ type: 'text', default: '' })
   comments?: string;
 
+  @Column()
+  capacity: number;
+
   @Column({ type: 'varchar', default: '' })
-  last_modified_by?: string;
+  last_updated_by?: string;
 
   @Column({ type: 'date', default: () => 'CURRENT_TIMESTAMP' })
-  last_modified_at?: string;
+  last_updated_at?: string;
 }
