@@ -1100,6 +1100,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InternalServerError'
+    get:
+      tags:
+        - venues
+      description: get venue by id
+      parameters:
+        - in: header
+          name: userid
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Returns all venues sucessfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/NewVenue'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
   /venues/{id}:
     get:
       tags:
@@ -2163,14 +2197,38 @@ components:
     NewVenue:
       type: object
       properties:
-        name:
-          type: string
         id:
+          type: string
+        name:
           type: string
         address:
           $ref: '#/components/schemas/Address'
         capacity:
           type: number
+        bowie_venue_id:
+          type: string
+        url:
+          type: string
+        lat:
+          type: number
+        long:
+          type: number
+        street:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        postal_code:
+          type: string
+        country:
+          type: string
+        comments:
+          type: string
+        last_updated_by:
+          type: string
+        last_updated_at:
+          type: string
     InternalServerError:
       type: object
       properties:
