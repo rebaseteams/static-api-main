@@ -27,6 +27,10 @@ export default class VenuesService implements VenuesInterface {
     return this.venueRepo.getVenues(skip, limit);
   }
 
+  async getAllVenues() : Promise<Venue[]> {
+    return this.venueRepo.getAllVenues();
+  }
+
   async deleteVenue(id : string) : Promise<{success : boolean}> {
     return this.venueRepo.deleteVenue(id);
   }

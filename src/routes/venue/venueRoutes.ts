@@ -37,6 +37,15 @@ export default class VenuesRoutes {
       }
     });
 
+    this.router.get('/', async (req, res, next) => {
+      try {
+        const data = await venuesService.getAllVenues();
+        res.send({ success: true, data: { venues: data } });
+      } catch (error) {
+        next(error);
+      }
+    });
+
     this.router.patch('/', editVenueValidator, async (req, res, next) => {
       try {
         const data = await venuesService.editVenue(req.body.id, req.body.name, req.body.address, req.body.capacity);

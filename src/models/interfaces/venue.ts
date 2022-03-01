@@ -8,4 +8,5 @@ export interface VenuesInterface{
   deleteVenue(id : string) : Promise<{ success : boolean }>;
   editVenue(id : string, name : string, address : Address, capacity : number) : Promise<{ success : boolean }>;
   getVenues(skip : number, limit : number) : Promise<Venue[]>;
+  getAllVenues() : Promise<Venue[]>;
 }
