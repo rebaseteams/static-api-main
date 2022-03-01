@@ -58,4 +58,9 @@ export default class VenueRepo implements VenuesInterface {
       });
       return venues;
     }
+
+    async getAllVenues() : Promise<Venue[]> {
+      const venues : Venue[] = await this.venueRepository.find();
+      return venues;
+    }
 }

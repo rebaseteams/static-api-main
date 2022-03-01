@@ -80,4 +80,19 @@ export default class VenueRepo implements VenuesInterface {
 
     return allVenues;
   }
+
+  async getAllVenues() : Promise<Venue[]> {
+    const allVenues : Venue[] = [];
+
+    const files = await this.fileManager.list('venues');
+
+    for (let ind = 0; ind < files.data.length; ind += 1) {
+      const file = files[ind];
+      const toread = await this.fileManager.get(`venues/${file}`);
+      const venue = JSON.parse(toread.data.toString()) as Venue;
+      allVenues.push(venue);
+    }
+
+    return allVenues;
+  }
 }
