@@ -11,7 +11,7 @@ export class FileManagerAWSS3Repo implements FileManagerInterface {
     FileManagerAWSS3Repo.config = {
       accessKeyId: process.env.AWS_ACCESS_KEY,
       secretAccessKey: process.env.AWS_SECRET_KEY,
-      region: 'ap-south-1',
+      region: process.env.AWS_REGION_US,
     };
   }
 
