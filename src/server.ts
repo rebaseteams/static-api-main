@@ -18,6 +18,7 @@ import { Environment } from './models/types/config';
 import { ProdServer } from './config.production';
 import setPoll from './utils/setPoll';
 import ActionsRoutes from './routes/actions/actionsRoutes';
+import EventsTypeRoute from './routes/eventsType/eventeTypeRoute';
 
 // to use .environment variable in the project
 require('dotenv').config();
@@ -51,6 +52,7 @@ export default class MainServer {
           resourcesService,
           templatesService,
           actionService,
+          eventsTypeService,
         } = server.config.services;
 
         const { auth0 } = server.config.providers;
@@ -74,6 +76,7 @@ export default class MainServer {
         this.app.use('/genres', new GenresRoutes(genresService).router);
         this.app.use('/resources', new ResourcesRoutes(resourcesService).router);
         this.app.use('/actions', new ActionsRoutes(actionService).router);
+        this.app.use('/events-type', new EventsTypeRoute(eventsTypeService).router);
         this.app.use(errorHandler);
         clearTimeout(timeout);
       }
