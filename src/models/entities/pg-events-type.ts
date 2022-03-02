@@ -5,6 +5,7 @@ export default class PgEventsTypeEntity {
   @PrimaryColumn({ type: 'uuid' })
   id: string;
 
+<<<<<<< HEAD
   @Column({ type: 'varchar', default: '' })
   name: string;
 
@@ -18,5 +19,20 @@ export default class PgEventsTypeEntity {
   last_updated_at: string;
 
   @Column({ type: 'varchar', default: '' })
+=======
+  @Column()
+  name: string;
+
+  @Column()
+  description: string;
+
+  @Column()
+  comments: string;
+
+  @Column()
+  last_updated_at: string;
+
+  @Column()
+>>>>>>> events type table created
   last_updated_by: string;
 }
