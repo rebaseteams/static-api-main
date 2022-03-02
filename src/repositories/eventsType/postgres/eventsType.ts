@@ -18,7 +18,7 @@ export default class EventsTypeRepo implements EventsTypeInterface {
         name,
         description,
         comments,
-      };
+      } as EventsType;
       await this.eventsTypeRepository.save(eventsType);
       return { eventsType };
     }
