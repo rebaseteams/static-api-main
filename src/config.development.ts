@@ -6,6 +6,7 @@ import { Auth0 } from './repositories/auth0/http/auth0';
 import BrandRepo from './repositories/brands/inmemory/brand';
 import DocumentsRepo from './repositories/documents/in-memory/documents';
 import { DocusignRepo } from './repositories/docusign/http/docusign'; // TODO: This should be in-memory docusign implementation
+import EventsTypeRepo from './repositories/eventsType/postgres/eventsType';
 import { FileManagerInmemoryRepo } from './repositories/file-manager/in-memory/file-manager';
 import GenreRepo from './repositories/genre/in-memory/genre';
 import ResourceRepo from './repositories/resource/postgres/resource'; // TODO: This has to be in-memory
@@ -18,6 +19,7 @@ import ArtistService from './services/artist';
 import BrandsService from './services/brand';
 import DocumentsService from './services/documents';
 import { DocusignService } from './services/docusign';
+import EventsTypeService from './services/events-type';
 import { FileManagerService } from './services/file-manager';
 import GenresService from './services/genre';
 import ResourcesService from './services/resource';
@@ -64,6 +66,7 @@ export class DevServer {
         const roleRepo = new RoleRepo(connection);
         const resourceRepo = new ResourceRepo(connection);
         const actionsRepo = new ActionsRepo(connection);
+        const eventsTypeRepo = new EventsTypeRepo(connection);
 
         this.config = {
           constants: configConstants,
@@ -81,6 +84,7 @@ export class DevServer {
             docusignService: new DocusignService(docusignRepo, documentsRepo), // This doesnt look correct.
             fileManagerService: new FileManagerService(fileManagerRepo),
             actionService: new ActionsService(actionsRepo),
+            eventsTypeService: new EventsTypeService(eventsTypeRepo),
           },
           providers: {
             auth0,
