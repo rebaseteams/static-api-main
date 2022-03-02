@@ -6,6 +6,7 @@ import { Auth0 } from './repositories/auth0/http/auth0';
 import BrandRepo from './repositories/brands/postgres/brand';
 import DocumentsRepo from './repositories/documents/postgres/documents';
 import { DocusignRepo } from './repositories/docusign/http/docusign';
+import EventsTypeRepo from './repositories/eventsType/postgres/eventsType';
 import { FileManagerAWSS3Repo } from './repositories/file-manager/s3-file-manager/awsS3';
 import GenreRepo from './repositories/genre/postgres/genre';
 import ResourceRepo from './repositories/resource/postgres/resource';
@@ -18,6 +19,7 @@ import ArtistService from './services/artist';
 import BrandsService from './services/brand';
 import DocumentsService from './services/documents';
 import { DocusignService } from './services/docusign';
+import EventsTypeService from './services/events-type';
 import { FileManagerService } from './services/file-manager';
 import GenresService from './services/genre';
 import ResourcesService from './services/resource';
@@ -63,6 +65,7 @@ export class ProdServer {
         const roleRepo = new RoleRepo(connection);
         const resourceRepo = new ResourceRepo(connection);
         const actionsRepo = new ActionsRepo(connection);
+        const eventsTypeRepo = new EventsTypeRepo(connection);
 
         this.config = {
           constants: configConstants,
@@ -80,6 +83,7 @@ export class ProdServer {
             docusignService: new DocusignService(docusignRepo, documentsRepo), // This doesnt look correct.
             fileManagerService: new FileManagerService(fileManagerRepo),
             actionService: new ActionsService(actionsRepo),
+            eventsTypeService: new EventsTypeService(eventsTypeRepo),
 
           },
           providers: {

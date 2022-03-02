@@ -5,6 +5,7 @@ import AuthService from '../../services/auth';
 import BrandsService from '../../services/brand';
 import DocumentsService from '../../services/documents';
 import { DocusignService } from '../../services/docusign';
+import EventsTypeService from '../../services/events-type';
 import { FileManagerService } from '../../services/file-manager';
 import GenresService from '../../services/genre';
 import ResourcesService from '../../services/resource';
@@ -38,6 +39,7 @@ export type ConfigServices = {
   docusignService: DocusignService;
   fileManagerService: FileManagerService;
   actionService: ActionsService;
+  eventsTypeService: EventsTypeService;
 }
 
 export type ConfigProviders = {
