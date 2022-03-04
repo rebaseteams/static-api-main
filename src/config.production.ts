@@ -92,6 +92,6 @@ export class ProdServer {
         };
         clearTimeout(timeout);
       }
-    }, 1000);
+    }, 3000);
   }
 }

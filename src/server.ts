@@ -80,6 +80,6 @@ export default class MainServer {
         this.app.use(errorHandler);
         clearTimeout(timeout);
       }
-    }, 1000);
+    }, 3000);
   }
 }

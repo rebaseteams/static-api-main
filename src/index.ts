@@ -18,8 +18,8 @@ const timeout = setTimeout(() => {
         });
         clearTimeout(t2);
       }
-    }, 1000);
+    }, 3000);
 
     clearTimeout(timeout);
   }
-}, 1000);
+}, 3000);
