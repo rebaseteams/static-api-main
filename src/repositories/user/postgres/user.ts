@@ -40,7 +40,7 @@ export default class UserRepo implements UsersInterface {
     }
 
     async createUser(name : string, email : string, password : string, role : string) : Promise<{user : User}> {
-      const pgRole = await this.roleRepository.findOne({ id: role });
+      const pgRole = await this.roleRepository.findOne({ id: role }, { relations: ['resources'] });
       if (!pgRole) {
         const err = { message: `Role not found for id: ${role}`, statusCode: 404 };
         throw err;

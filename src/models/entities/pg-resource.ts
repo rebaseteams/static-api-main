@@ -25,5 +25,5 @@ export class PgResourceEntity {
       },
     },
   )
-  actions: PgActionEntity[];
+  actions: Promise<PgActionEntity[]>;
 }

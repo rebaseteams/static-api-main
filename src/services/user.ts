@@ -53,6 +53,9 @@ export default class UsersService implements UsersInterface {
     const result: UserRoleType = { roles: [] };
     // Geting roles
     const user = await this.userRepo.getUser(id);
+    if (!user.approved) {
+      return { roles: [] };
+    }
     result.roles = user.roles;
     return result;
   }

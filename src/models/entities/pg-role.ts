@@ -25,5 +25,5 @@ export class PgRoleEntity {
       },
     },
   )
-  resources: PgResourceEntity[];
+  resources: Promise<PgResourceEntity[]>;
 }
