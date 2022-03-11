@@ -21,7 +21,7 @@ export default class RoleRepo implements RolesInterface {
 
     async createRole(name : string, resourceActions : PgResourceEntity[]) : Promise<{role : Role}> {
       const resourceIds = getArrayOf('id', resourceActions); // resourceActions.map((r) => r.id);
-      const resources = await this.resourceRepository.findByIds(resourceIds, { relations: ['actions'] });
+      const resources = this.resourceRepository.findByIds(resourceIds, { relations: ['actions'] });
       const role:PgRoleEntity = {
         id: uuidv4(),
         name,
@@ -29,12 +29,12 @@ export default class RoleRepo implements RolesInterface {
       };
 
       await this.roleRepository.save(role);
-      return { role: await mapRole(role, role.resources) };
+      return { role: await mapRole(role, await role.resources) };
     }
 
     async getRole(id : string) : Promise<Role> {
       const role: PgRoleEntity = await this.roleRepository.findOne({ id }, { relations: ['resources'] });
-      const resourceIds = getArrayOf('id', role.resources);
+      const resourceIds = getArrayOf('id', await role.resources);
       const resources = await this.resourceRepository.findByIds(resourceIds, { relations: ['actions'] });
       if (role) {
         const roles = await mapRole(role, resources);
@@ -72,7 +72,7 @@ export default class RoleRepo implements RolesInterface {
 
       const mappedRoles = [];
       for (let i = 0; i < roles.length; i += 1) {
-        const resourceIds = getArrayOf('id', roles[i].resources); // roles[i].resources.map((r) => r.id);
+        const resourceIds = getArrayOf('id', await roles[i].resources); // roles[i].resources.map((r) => r.id);
         const resource = await this.resourceRepository.findByIds(resourceIds, { relations: ['actions'] });
         const mappedRole = await mapRole(roles[i], resource);
         mappedRoles.push(mappedRole);

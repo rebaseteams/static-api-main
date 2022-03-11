@@ -104,7 +104,7 @@ export function mapAction(pgAction: PgActionEntity): Action {
 
 export async function mapResource(pgResource: PgResourceEntity): Promise<Resource> {
   const actions = [];
-  const pgActions = pgResource.actions;
+  const pgActions = await pgResource.actions;
   for (let i = 0; i < pgActions.length; i += 1) {
     const action = mapAction(pgActions[i]);
     actions.push(action);

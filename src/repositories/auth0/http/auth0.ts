@@ -153,7 +153,7 @@ export class Auth0 implements Auth0Interface {
         }
         if (!user.approved) {
           const err = { message: 'Your approval is pending', statusCode: 401 };
-          throw err;
+          next(err);
         }
 
         // TODO: Action and Resource Should not optional
