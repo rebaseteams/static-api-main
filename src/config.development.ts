@@ -1,5 +1,6 @@
 import { ConfigInterface } from './models/types/config';
 import ActionsRepo from './repositories/actions/postgres/actions';
+import AdvacedSearchRepo from './repositories/advancedSearch/postgres/advancedSearch';
 import InMemoryArtistRecommendationRepo from './repositories/artistRecommendations/in-memory/artist-recommendation';
 import ArtistsRepo from './repositories/artists/in-memory/artist';
 import { Auth0 } from './repositories/auth0/http/auth0';
@@ -15,6 +16,7 @@ import InMemoryTemplatesRepo from './repositories/templates/in-memory/templates'
 import UserRepo from './repositories/user/postgres/user'; // TODO: This has to be in-memory
 import VenueRepo from './repositories/venues/inmemory/venue';
 import ActionsService from './services/actions';
+import AdvancedSearchService from './services/advancedSearch';
 import ArtistService from './services/artist';
 import BrandsService from './services/brand';
 import DocumentsService from './services/documents';
@@ -67,6 +69,7 @@ export class DevServer {
         const resourceRepo = new ResourceRepo(connection);
         const actionsRepo = new ActionsRepo(connection);
         const eventsTypeRepo = new EventsTypeRepo(connection);
+        const advacedSearchRepo = new AdvacedSearchRepo(connection);
 
         this.config = {
           constants: configConstants,
@@ -85,6 +88,8 @@ export class DevServer {
             fileManagerService: new FileManagerService(fileManagerRepo),
             actionService: new ActionsService(actionsRepo),
             eventsTypeService: new EventsTypeService(eventsTypeRepo),
+            advancedSearchService: new AdvancedSearchService(advacedSearchRepo),
+
           },
           providers: {
             auth0,

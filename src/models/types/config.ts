@@ -1,4 +1,5 @@
 import ActionsService from '../../services/actions';
+import AdvancedSearchService from '../../services/advancedSearch';
 import ArtistService from '../../services/artist';
 // eslint-disable-next-line no-unused-vars
 import AuthService from '../../services/auth';
@@ -40,6 +41,7 @@ export type ConfigServices = {
   fileManagerService: FileManagerService;
   actionService: ActionsService;
   eventsTypeService: EventsTypeService;
+  advancedSearchService: AdvancedSearchService;
 }
 
 export type ConfigProviders = {
