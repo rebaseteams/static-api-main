@@ -1,5 +1,6 @@
 import { ConfigInterface } from './models/types/config';
 import ActionsRepo from './repositories/actions/postgres/actions';
+import AdvacedSearchRepo from './repositories/advancedSearch/postgres/advancedSearch';
 import ArtistRecommendationRepo from './repositories/artistRecommendations/lambda/artistRecommendation';
 import ArtistsRepo from './repositories/artists/postgres/artists';
 import { Auth0 } from './repositories/auth0/http/auth0';
@@ -15,6 +16,7 @@ import InMemoryTemplatesRepo from './repositories/templates/in-memory/templates'
 import UserRepo from './repositories/user/postgres/user';
 import VenueRepo from './repositories/venues/postgres/venue';
 import ActionsService from './services/actions';
+import AdvancedSearchService from './services/advancedSearch';
 import ArtistService from './services/artist';
 import BrandsService from './services/brand';
 import DocumentsService from './services/documents';
@@ -66,6 +68,7 @@ export class ProdServer {
         const resourceRepo = new ResourceRepo(connection);
         const actionsRepo = new ActionsRepo(connection);
         const eventsTypeRepo = new EventsTypeRepo(connection);
+        const advacedSearchRepo = new AdvacedSearchRepo(connection);
 
         this.config = {
           constants: configConstants,
@@ -84,6 +87,7 @@ export class ProdServer {
             fileManagerService: new FileManagerService(fileManagerRepo),
             actionService: new ActionsService(actionsRepo),
             eventsTypeService: new EventsTypeService(eventsTypeRepo),
+            advancedSearchService: new AdvancedSearchService(advacedSearchRepo),
 
           },
           providers: {

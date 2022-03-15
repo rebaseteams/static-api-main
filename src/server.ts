@@ -19,6 +19,7 @@ import { ProdServer } from './config.production';
 import setPoll from './utils/setPoll';
 import ActionsRoutes from './routes/actions/actionsRoutes';
 import EventsTypeRoute from './routes/eventsType/eventeTypeRoute';
+import AdvancedSearchRoute from './routes/advancedSearch/advancedSearchRoute';
 
 // to use .environment variable in the project
 require('dotenv').config();
@@ -53,6 +54,7 @@ export default class MainServer {
           templatesService,
           actionService,
           eventsTypeService,
+          advancedSearchService,
         } = server.config.services;
 
         const { auth0 } = server.config.providers;
@@ -77,6 +79,7 @@ export default class MainServer {
         this.app.use('/resources', new ResourcesRoutes(resourcesService).router);
         this.app.use('/actions', new ActionsRoutes(actionService).router);
         this.app.use('/events-type', new EventsTypeRoute(eventsTypeService).router);
+        this.app.use('/search', new AdvancedSearchRoute(advancedSearchService).router);
         this.app.use(errorHandler);
         clearTimeout(timeout);
       }
