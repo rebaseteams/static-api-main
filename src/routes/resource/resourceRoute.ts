@@ -47,7 +47,7 @@ export default class ResourcesRoutes {
     this.router.patch('/', async (req, res, next) => {
       try {
         const data = await resourcesService.editResource(req.body.id, req.body.name, req.body.actions);
-        res.send({ success: data.success });
+        res.send({ success: true, data: { resource: data.resource } });
       } catch (error) {
         next(error);
       }

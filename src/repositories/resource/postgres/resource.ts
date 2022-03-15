@@ -24,7 +24,7 @@ export default class ResourceRepo implements ResourcesInterface {
     async createResource(name : string, actions : string[]) : Promise<{resource : Resource}> {
       const resourceId = uuidv4();
 
-      const pgActions = this.actionRepository.findByIds(actions);
+      const pgActions = await this.actionRepository.findByIds(actions);
 
       const resource: PgResourceEntity = {
         id: resourceId,
@@ -34,7 +34,7 @@ export default class ResourceRepo implements ResourcesInterface {
 
       let pgResource = await this.resourceRepository.save(resource);
 
-      pgResource = await this.resourceRepository.findOne(resourceId);
+      pgResource = await this.resourceRepository.findOne({ id: resourceId }, { relations: ['actions'] });
       return { resource: await mapResource(pgResource) };
     }
 
@@ -54,28 +54,31 @@ export default class ResourceRepo implements ResourcesInterface {
       throw err;
     }
 
-    async editResource(id : string, name : string, actions : string[]) : Promise<{success : boolean}> {
-      const resource = await this.resourceRepository.findOne({ id });
+    async editResource(id : string, name : string, actions : string[]) : Promise<{resource : Resource}> {
+      const resource = await this.resourceRepository.findOne({ id }, { relations: ['actions'] });
 
       if (!resource) {
         const err = { message: `Resource not found for id: ${id}`, statusCode: 404 };
         throw err;
       }
 
-      const pgActionPermissions: PgActionPermissionsEntity[] = [];
+      const pgActionPermissions: PgActionEntity[] = [];
 
       for (let i = 0; i < actions.length; i += 1) {
-        const ac = await this.actionRepository.findOne(actions[i]);
+        const ac = await this.actionRepository.findOne({ id: actions[i] });
         if (ac) {
-          const ap = await this.actionPermissionRepository.findOne({ action: ac, resource_id: id });
+          const ap = await this.actionRepository.findOne({ id: ac.id });
           pgActionPermissions.push(ap);
         }
       }
       resource.name = name;
+      resource.actions = pgActionPermissions;
 
       this.resourceRepository.save(resource);
 
-      return { success: true };
+      const res = await this.resourceRepository.findOne({ id }, { relations: ['actions'] });
+
+      return { resource: res };
     }
 
     async getResources(skip : number, limit : number) : Promise<Resource[]> {

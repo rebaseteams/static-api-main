@@ -14,7 +14,7 @@ export default class ResourcesService implements ResourcesInterface {
     return this.resourceRepo.createResource(name, actions);
   }
 
-  async editResource(id : string, name : string, actions : string[]) : Promise<{success : boolean}> {
+  async editResource(id : string, name : string, actions : string[]) : Promise<{resource : Resource}> {
     return this.resourceRepo.editResource(id, name, actions);
   }
 
