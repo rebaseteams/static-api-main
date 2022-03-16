@@ -1,6 +1,7 @@
 export type Action = {
     id: string;
     name: string;
+    permission?: boolean;
   }
 
 export type Resource = {

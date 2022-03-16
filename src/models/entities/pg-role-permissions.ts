@@ -27,15 +27,15 @@ export class PgRolePermissionsEntity {
 
   @ManyToOne(() => PgActionEntity, (action) => action.id)
   @JoinColumn({ name: 'action_id', referencedColumnName: 'id' })
-  public action!: Promise<PgActionEntity>;
+  public action!: PgActionEntity;
 
   @ManyToOne(() => PgResourceEntity, (resource) => resource.id)
   @JoinColumn({ name: 'resource_id', referencedColumnName: 'id' })
-  public resource!: Promise<PgResourceEntity>;
+  public resource!: PgResourceEntity;
 
   @ManyToOne(() => PgRoleEntity, (role) => role.id)
   @JoinColumn({ name: 'role_id', referencedColumnName: 'id' })
-  public role!: Promise<PgRoleEntity>;
+  public role!: PgRoleEntity;
 
   @Column({
     type: 'boolean',
