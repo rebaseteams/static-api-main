@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { PgUserEntity } from '../models/entities/pg-user';
 import { PgResourceEntity } from '../models/entities/pg-resource';
 import { PgRoleEntity } from '../models/entities/pg-role';
@@ -16,7 +17,9 @@ export function mapUserPermission(
     (p) => p.action_id === actionId && p.resource_id === resourceId
       && p.role_id === roleId && p.user_id === userId,
   );
-
+  if (!actionPermission) {
+    return false;
+  }
   return actionPermission.permission;
 }
 
@@ -75,7 +78,7 @@ export async function mapUserRole(
 }
 
 export async function mapUser(pgUser: PgUserEntity, pgActionPermissions: PgActionPermissionsEntity[]): Promise<User> {
-  const roles = [];
+  const roles: UserRole[] = [];
   for (let i = 0; i < pgActionPermissions.length; i += 1) {
     const pgRole = await pgActionPermissions[i].role;
     const role = await mapUserRole(pgRole, pgActionPermissions, pgUser.id);
@@ -91,6 +94,14 @@ export async function mapUser(pgUser: PgUserEntity, pgActionPermissions: PgActio
   };
 
   return mapperUser;
+}
+
+export async function mapUserWithUniqueRole(pgUser: PgUserEntity, pgActionPermissions: PgActionPermissionsEntity[]): Promise<User> {
+  const user = await mapUser(pgUser, pgActionPermissions);
+  return {
+    ...user,
+    roles: _.unionBy(user.roles, 'id'),
+  };
 }
 
 export function mapAction(pgAction: PgActionEntity): Action {
