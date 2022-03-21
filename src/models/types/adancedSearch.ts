@@ -22,4 +22,5 @@ export type AdvancedSearchDesiredRepos = Array<{
         select: Array<string>
         searchFrom: Array<string>
     }
+    mapperFunction: Function
 }>

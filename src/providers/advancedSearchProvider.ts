@@ -30,7 +30,7 @@ export default class AdvancedSearchProvider implements AdvancedSearchInterface {
               return obj;
             }),
           });
-          return arr;
+          return e.mapperFunction(arr);
         }),
       );
 
