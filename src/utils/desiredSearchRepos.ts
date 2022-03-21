@@ -7,9 +7,17 @@ const getDesiredSearchRepos = (connection: Connection) => [{
   name: 'artist',
   repo: connection.getRepository(PgArtistEntity),
   options: {
-    select: ['id', 'name', 'country'],
-    searchFrom: ['name', 'country'],
+    select: ['id', 'name'],
+    searchFrom: ['name'],
   },
+  mapperFunction: (res: any) => (res.map((r) => ({
+    id: r.id,
+    title: r.name,
+    description: '',
+    image: '',
+    type: 'artist',
+    destinationUrl: '',
+  }))),
 },
 {
   name: 'brand',
@@ -17,8 +25,15 @@ const getDesiredSearchRepos = (connection: Connection) => [{
   options: {
     select: ['id', 'name'],
     searchFrom: ['name'],
-
   },
+  mapperFunction: (res: any) => (res.map((r) => ({
+    id: r.id,
+    title: r.name,
+    description: '',
+    image: '',
+    type: 'brand',
+    destinationUrl: '',
+  }))),
 },
 {
   name: 'venue',
@@ -26,8 +41,15 @@ const getDesiredSearchRepos = (connection: Connection) => [{
   options: {
     select: ['id', 'name'],
     searchFrom: ['name'],
-
   },
+  mapperFunction: (res: any) => (res.map((r) => ({
+    id: r.id,
+    title: r.name,
+    description: '',
+    image: '',
+    type: 'venue',
+    destinationUrl: '',
+  }))),
 },
 ];
 
