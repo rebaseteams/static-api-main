@@ -1,6 +1,8 @@
+import { Repository } from 'typeorm';
+
 export type AdvancedSearchQuery = {
-    category: string;
-    subcategory: string;
+    category?: string;
+    subcategory?: string;
     query: string;
 }
 
@@ -11,4 +13,9 @@ export type AdvancedSearchResults = Array<{
     description: string;
     type: string;
     destinationUrl: string;
+}>
+
+export type AdvancedSearchDesiredRepos = Array<{
+    name: string;
+    repo: Repository<any>
 }>
