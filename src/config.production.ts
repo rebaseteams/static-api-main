@@ -1,6 +1,6 @@
 import { ConfigInterface } from './models/types/config';
+import AdvancedSearchProvider from './providers/advancedSearchProvider';
 import ActionsRepo from './repositories/actions/postgres/actions';
-import AdvacedSearchRepo from './repositories/advancedSearch/postgres/advancedSearch';
 import ArtistRecommendationRepo from './repositories/artistRecommendations/lambda/artistRecommendation';
 import ArtistsRepo from './repositories/artists/postgres/artists';
 import { Auth0 } from './repositories/auth0/http/auth0';
@@ -30,6 +30,7 @@ import TemplatesService from './services/templates';
 import UsersService from './services/user';
 import VenuesService from './services/venue';
 import { DBConnection } from './utils/createDbConnection';
+import getDesiredSearchRepos from './utils/desiredSearchRepos';
 
 export class ProdServer {
   config: ConfigInterface;
@@ -51,6 +52,8 @@ export class ProdServer {
         Auth0.initAuth(configConstants.AUTH_DOMAIN, configConstants.AUTH_AUDIENCE);
         FileManagerAWSS3Repo.initConfig();
 
+        const desiredSearchRepos = getDesiredSearchRepos(connection);
+
         // Creating objects of repo
         const auth0 = new Auth0(connection, configConstants);
         const artistRepo = new ArtistsRepo(connection);
@@ -68,7 +71,7 @@ export class ProdServer {
         const resourceRepo = new ResourceRepo(connection);
         const actionsRepo = new ActionsRepo(connection);
         const eventsTypeRepo = new EventsTypeRepo(connection);
-        const advacedSearchRepo = new AdvacedSearchRepo(connection);
+        const advacedSearchRepo = new AdvancedSearchProvider(desiredSearchRepos);
 
         this.config = {
           constants: configConstants,

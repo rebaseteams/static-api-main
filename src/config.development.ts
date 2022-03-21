@@ -1,6 +1,6 @@
 import { ConfigInterface } from './models/types/config';
+import AdvancedSearchProvider from './providers/advancedSearchProvider';
 import ActionsRepo from './repositories/actions/postgres/actions';
-import AdvacedSearchRepo from './repositories/advancedSearch/postgres/advancedSearch';
 import InMemoryArtistRecommendationRepo from './repositories/artistRecommendations/in-memory/artist-recommendation';
 import ArtistsRepo from './repositories/artists/in-memory/artist';
 import { Auth0 } from './repositories/auth0/http/auth0';
@@ -30,6 +30,7 @@ import TemplatesService from './services/templates';
 import UsersService from './services/user';
 import VenuesService from './services/venue';
 import { DBConnection } from './utils/createDbConnection';
+import getDesiredSearchRepos from './utils/desiredSearchRepos';
 
 export class DevServer {
   config: ConfigInterface;
@@ -53,6 +54,8 @@ export class DevServer {
         Auth0.initAuth(configConstants.AUTH_DOMAIN, configConstants.AUTH_AUDIENCE);
         const auth0 = new Auth0(connection, configConstants);
 
+        const desiredSearchRepos = getDesiredSearchRepos(connection);
+
         /** Repositories Initializations: */
         const artistRepo = new ArtistsRepo();
         const fileManagerRepo = new FileManagerInmemoryRepo();
@@ -69,7 +72,7 @@ export class DevServer {
         const resourceRepo = new ResourceRepo(connection);
         const actionsRepo = new ActionsRepo(connection);
         const eventsTypeRepo = new EventsTypeRepo(connection);
-        const advacedSearchRepo = new AdvacedSearchRepo(connection);
+        const advacedSearchRepo = new AdvancedSearchProvider(desiredSearchRepos);
 
         this.config = {
           constants: configConstants,
