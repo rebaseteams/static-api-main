@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { ILike } from 'typeorm';
 import { AdvancedSearchInterface } from '../models/interfaces/adancedSearch';
 import { AdvancedSearchDesiredRepos, AdvancedSearchQuery, AdvancedSearchResults } from '../models/types/adancedSearch';
 
@@ -21,7 +22,14 @@ export default class AdvancedSearchProvider implements AdvancedSearchInterface {
 
       const repoResponseData: any = await Promise.all(
         filteredRepos.map(async (e) => {
-          const arr = await e.repo.find();
+          const arr = await e.repo.find({
+            select: e.options.select,
+            where: e.options.searchFrom.map((i) => {
+              const obj = {};
+              obj[i] = ILike(`%${query.query}%`);
+              return obj;
+            }),
+          });
           return arr;
         }),
       );

@@ -17,5 +17,9 @@ export type AdvancedSearchResults = Array<{
 
 export type AdvancedSearchDesiredRepos = Array<{
     name: string;
-    repo: Repository<any>
+    repo: Repository<any>;
+    options: {
+        select: Array<string>
+        searchFrom: Array<string>
+    }
 }>
