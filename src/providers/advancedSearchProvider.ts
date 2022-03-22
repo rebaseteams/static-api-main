@@ -10,7 +10,7 @@ export default class AdvancedSearchProvider implements AdvancedSearchInterface {
       if (!category) return this.desiredRepos;
       const validCategory = !!this.desiredRepos.find((i) => i.name.toLowerCase() === category.toLowerCase());
       if (!validCategory) return this.desiredRepos;
-      return this.desiredRepos.filter((r) => r.name === category);
+      return this.desiredRepos.filter((r) => r.name.toLowerCase() === category.toLowerCase());
     }
 
     constructor(desiredRepos: AdvancedSearchDesiredRepos) {
