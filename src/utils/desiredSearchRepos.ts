@@ -13,7 +13,7 @@ const getDesiredSearchRepos = (connection: Connection) => [{
   mapperFunction: (res: any) => (res.map((r) => ({
     id: r.id,
     title: r.name,
-    description: '',
+    description: 'artist description',
     image: '',
     type: 'artist',
     destinationUrl: '',
@@ -29,14 +29,14 @@ const getDesiredSearchRepos = (connection: Connection) => [{
   mapperFunction: (res: any) => (res.map((r) => ({
     id: r.id,
     title: r.name,
-    description: '',
+    description: 'brand description',
     image: '',
     type: 'brand',
     destinationUrl: '',
   }))),
 },
 {
-  name: 'venue',
+  name: 'venue location',
   repo: connection.getRepository(PgVenueEntity),
   options: {
     select: ['id', 'name'],
@@ -45,7 +45,7 @@ const getDesiredSearchRepos = (connection: Connection) => [{
   mapperFunction: (res: any) => (res.map((r) => ({
     id: r.id,
     title: r.name,
-    description: '',
+    description: 'some description of venue location',
     image: '',
     type: 'venue',
     destinationUrl: '',
