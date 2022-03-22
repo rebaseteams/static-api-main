@@ -16,7 +16,7 @@ const getDesiredSearchRepos = (connection: Connection) => [{
     description: 'artist description',
     image: '',
     type: 'artist',
-    destinationUrl: '',
+    destinationUrl: `/artist/${r.id}`,
   }))),
 },
 {
