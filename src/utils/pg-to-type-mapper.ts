@@ -9,34 +9,33 @@ import { PgActionEntity } from '../models/entities/pg-actions';
 import { Action, Resource, Role } from '../models/types/role';
 import PgDocumentEntity from '../models/entities/pg-document';
 import { Document } from '../models/types/document';
+import { PgRolePermissionsEntity } from '../models/entities/pg-role-permissions';
 
-export function mapUserPermission(
-  pgActionPermissions: PgActionPermissionsEntity[], userId, roleId, resourceId, actionId,
-) {
-  const actionPermission = pgActionPermissions.find(
+export function mapUserPermission(roleId, resourceId, actionId, pgRolePermission: PgRolePermissionsEntity[]) {
+  const userPermission = pgRolePermission.find(
     (p) => p.action_id === actionId && p.resource_id === resourceId
-      && p.role_id === roleId && p.user_id === userId,
+      && p.role_id === roleId,
   );
-  if (!actionPermission) {
+  if (!userPermission) {
     return false;
   }
-  return actionPermission.permission;
+  return userPermission.permission;
 }
 
 export function mapUserAction(
-  pgAction: PgActionEntity, pgActionPermissions: PgActionPermissionsEntity[], userId, roleId, resourceId,
+  pgAction: PgActionEntity, roleId, resourceId, pgRolePermission: PgRolePermissionsEntity[],
 ): UserAction {
   const mappedAction: UserAction = {
     id: pgAction.id,
     name: pgAction.name,
-    permission: mapUserPermission(pgActionPermissions, userId, roleId, resourceId, pgAction.id),
+    permission: mapUserPermission(roleId, resourceId, pgAction.id, pgRolePermission),
   };
 
   return mappedAction;
 }
 
 export async function mapUserResource(
-  ra: PgResourceEntity, pgActionPermissions: PgActionPermissionsEntity[], userId, roleId,
+  ra: PgResourceEntity, pgActionPermissions: PgActionPermissionsEntity[], userId, roleId, pgRolePermission: PgRolePermissionsEntity[],
 ): Promise<UserResource> {
   const mappedUserActions: UserAction[] = [];
 
@@ -44,7 +43,7 @@ export async function mapUserResource(
     const resource = await pgActionPermissions[i].resource;
     if (resource.id === ra.id) {
       const action = await pgActionPermissions[i].action;
-      const mappedAction = await mapUserAction(action, pgActionPermissions, userId, roleId, resource.id);
+      const mappedAction = await mapUserAction(action, roleId, resource.id, pgRolePermission);
 
       mappedUserActions.push(mappedAction);
     }
@@ -60,12 +59,12 @@ export async function mapUserResource(
 }
 
 export async function mapUserRole(
-  pgRole: PgRoleEntity, pgActionPermissions: PgActionPermissionsEntity[], userId,
+  pgRole: PgRoleEntity, pgActionPermissions: PgActionPermissionsEntity[], userId, pgRolePermission: PgRolePermissionsEntity[],
 ): Promise<UserRole> {
   const resources = [];
   for (let i = 0; i < pgActionPermissions.length; i += 1) {
     const pgResource = await pgActionPermissions[i].resource;
-    const resource = await mapUserResource(pgResource, pgActionPermissions, userId, pgRole.id);
+    const resource = await mapUserResource(pgResource, pgActionPermissions, userId, pgRole.id, pgRolePermission);
     resources.push(resource);
   }
   const mappedRole: UserRole = {
@@ -77,11 +76,11 @@ export async function mapUserRole(
   return mappedRole;
 }
 
-export async function mapUser(pgUser: PgUserEntity, pgActionPermissions: PgActionPermissionsEntity[]): Promise<User> {
+export async function mapUser(pgUser: PgUserEntity, pgActionPermissions: PgActionPermissionsEntity[], pgRolePermission: PgRolePermissionsEntity[]): Promise<User> {
   const roles: UserRole[] = [];
   for (let i = 0; i < pgActionPermissions.length; i += 1) {
     const pgRole = await pgActionPermissions[i].role;
-    const role = await mapUserRole(pgRole, pgActionPermissions, pgUser.id);
+    const role = await mapUserRole(pgRole, pgActionPermissions, pgUser.id, pgRolePermission);
     // const role = await mapUserRole(pgUser.roles[i], pgActionPermissions, pgUser.id);
     roles.push(role);
   }
@@ -96,8 +95,8 @@ export async function mapUser(pgUser: PgUserEntity, pgActionPermissions: PgActio
   return mapperUser;
 }
 
-export async function mapUserWithUniqueRole(pgUser: PgUserEntity, pgActionPermissions: PgActionPermissionsEntity[]): Promise<User> {
-  const user = await mapUser(pgUser, pgActionPermissions);
+export async function mapUserWithUniqueRole(pgUser: PgUserEntity, pgActionPermissions: PgActionPermissionsEntity[], pgRolePermission: PgRolePermissionsEntity[]): Promise<User> {
+  const user = await mapUser(pgUser, pgActionPermissions, pgRolePermission);
   return {
     ...user,
     roles: _.unionBy(user.roles, 'id'),

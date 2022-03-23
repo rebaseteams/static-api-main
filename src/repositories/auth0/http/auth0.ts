@@ -17,6 +17,7 @@ import { PgResourceEntity } from '../../../models/entities/pg-resource';
 import { mapUserRole } from '../../../utils/pg-to-type-mapper';
 import { PgActionPermissionsEntity } from '../../../models/entities/pg-action-permissions';
 import { UserRole } from '../../../models/types/userRole';
+import { PgRolePermissionsEntity } from '../../../models/entities/pg-role-permissions';
 
 // TODO: This needs to be looked upon
 export class Auth0 implements Auth0Interface {
@@ -39,6 +40,8 @@ export class Auth0 implements Auth0Interface {
   resourceRepository : Repository<PgResourceEntity>;
 
   actionPermissionRepository: Repository<PgActionPermissionsEntity>;
+
+  rolePermissionRepo: Repository<PgRolePermissionsEntity>;
 
   static initAuth(AUTH_DOMAIN, AUTH_AUDIENCE) {
     Auth0.auth0 = auth({
@@ -169,7 +172,9 @@ export class Auth0 implements Auth0Interface {
           },
         });
 
-        if (actionPermissions.find((a) => a.permission === true)) {
+        const pgRoleP = await this.getPgRolePermission(actionPermissions);
+
+        if (pgRoleP.find((a) => a.permission === true)) {
           return next();
         }
 
@@ -190,10 +195,12 @@ export class Auth0 implements Auth0Interface {
 
     const pgActionPermissions = await this.actionPermissionRepository.find({ user_id: user.id });
 
+    const pgRoleP = await this.getPgRolePermission(pgActionPermissions);
+
     const mappedUserRoles: UserRole[] = [];
     for (let i = 0; i < pgActionPermissions.length; i += 1) {
       const role = await pgActionPermissions[i].role;
-      const mappedUser = await mapUserRole(role, pgActionPermissions, role.id);
+      const mappedUser = await mapUserRole(role, pgActionPermissions, role.id, pgRoleP);
       mappedUserRoles.push(mappedUser);
     }
 
@@ -235,5 +242,14 @@ export class Auth0 implements Auth0Interface {
         reject(error);
       });
     });
+  }
+
+  async getPgRolePermission(pgActionPermissions: PgActionPermissionsEntity[]): Promise<PgRolePermissionsEntity[]> {
+    const pgRoleP: PgRolePermissionsEntity[] = [];
+    for (let a = 0; a < pgActionPermissions.length; a += 1) {
+      const rolePer = await this.rolePermissionRepo.findOne({ id: pgActionPermissions[a].role_permission_id });
+      if (rolePer) pgRoleP.push(rolePer);
+    }
+    return pgRoleP;
   }
 }
