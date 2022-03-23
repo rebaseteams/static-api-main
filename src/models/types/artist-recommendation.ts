@@ -57,3 +57,7 @@ export type ArtistRecommendation = {
   lastChangedUserId?: string;
   status: boolean
 };
+
+export type RecommendtionValidation = {
+  eventName: string;
+};

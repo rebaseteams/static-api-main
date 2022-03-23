@@ -7,6 +7,7 @@ import DocumentsService from '../../../services/documents';
 import questionsUIValidator from './validators/questionsUIValidator';
 import TemplatesService from '../../../services/templates';
 import { DocusignService } from '../../../services/docusign';
+import { RecommendtionValidation } from '../../../models/types/artist-recommendation';
 
 export default class RecommendationsRoute {
   router: express.Router;
@@ -20,6 +21,16 @@ export default class RecommendationsRoute {
     this.router = express.Router();
 
     this.router.use('/documents', new DocumentsRoutes(documentsService, templatesService, docusignService).router);
+
+    this.router.get('/validate', async (req, res, next) => {
+      try {
+        const { eventName } = req.query as RecommendtionValidation;
+        const data = await artistService.validateRecommendationFields({ eventName });
+        res.send({ success: true, data });
+      } catch (error) {
+        next(error);
+      }
+    });
 
     this.router.get('/:id', async (req, res, next) => {
       try {

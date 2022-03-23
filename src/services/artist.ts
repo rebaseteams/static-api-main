@@ -4,7 +4,7 @@ import {
 } from '../models/interfaces/artist';
 import { ArtistRecommendationInterface } from '../models/interfaces/artist-recommendation';
 import { ConcertCreationResponse, QuestionsUI } from '../models/types/questions';
-import { ArtistRecommendation } from '../models/types/artist-recommendation';
+import { ArtistRecommendation, RecommendtionValidation } from '../models/types/artist-recommendation';
 
 export default class ArtistService implements ArtistInterface, ArtistRecommendationInterface {
   private artistRepo: ArtistInterface;
@@ -53,6 +53,10 @@ export default class ArtistService implements ArtistInterface, ArtistRecommendat
 
   async getAllRecommendations() : Promise<ConcertCreationResponse[]> {
     return this.artistRecommendationRepo.getAllRecommendations();
+  }
+
+  async validateRecommendationFields(fields: RecommendtionValidation) : Promise<{nameAvailable: boolean}> {
+    return this.artistRecommendationRepo.validateRecommendationFields(fields);
   }
 
   async deleteRecommendation(id : string) : Promise<{ success: boolean}> {

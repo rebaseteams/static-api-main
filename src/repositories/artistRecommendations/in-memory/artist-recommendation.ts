@@ -2,7 +2,7 @@
 /* eslint-disable consistent-return */
 import { v4 as uuidv4 } from 'uuid';
 import { ArtistRecommendationInterface } from '../../../models/interfaces/artist-recommendation';
-import { ARec, ArtistRecommendation } from '../../../models/types/artist-recommendation';
+import { ARec, ArtistRecommendation, RecommendtionValidation } from '../../../models/types/artist-recommendation';
 import { ConcertCreationResponse, QuestionsUI } from '../../../models/types/questions';
 import { Artist } from '../../../models/types/artist';
 import { FileManagerInterface } from '../../../models/interfaces/file-manager';
@@ -12,6 +12,11 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
 
   constructor(fileManager: FileManagerInterface) {
     this.fileManager = fileManager;
+  }
+
+  // eslint-disable-next-line no-unused-vars
+  async validateRecommendationFields(fields: RecommendtionValidation): Promise<{ nameAvailable: boolean; }> {
+    throw new Error('Method not implemented.');
   }
 
   async getRecommendationStatus(id : string) : Promise<{status : boolean}> {

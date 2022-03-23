@@ -2,7 +2,7 @@
 /* eslint-disable array-callback-return */
 import { v4 as uuidv4 } from 'uuid';
 import { Connection, Repository } from 'typeorm';
-import { ArtistRecommendation, ARec } from '../../../models/types/artist-recommendation';
+import { ArtistRecommendation, ARec, RecommendtionValidation } from '../../../models/types/artist-recommendation';
 import { ConcertCreationResponse, QuestionsUI } from '../../../models/types/questions';
 import { Artist } from '../../../models/types/artist';
 import { ArtistRecommendationInterface } from '../../../models/interfaces/artist-recommendation';
@@ -67,6 +67,18 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
       return aRecommendation;
     });
     return allARecommendations;
+  }
+
+  async validateRecommendationFields(fields: RecommendtionValidation) : Promise<{nameAvailable: boolean}> {
+    const { eventName } = fields;
+    const resp = await this.artistRecommendationRepository.find({
+      select: ['name'],
+      where: {
+        name: eventName,
+      },
+    });
+    if (resp.length === 0) return { nameAvailable: true };
+    return { nameAvailable: false };
   }
 
   async discardArtist(id : string, artistId : string) : Promise<{ success: boolean }> {

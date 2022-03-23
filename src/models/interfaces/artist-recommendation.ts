@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 
 import { Artist } from '../types/artist';
-import { ARec, ArtistRecommendation } from '../types/artist-recommendation';
+import { ARec, ArtistRecommendation, RecommendtionValidation } from '../types/artist-recommendation';
 import { ConcertCreationResponse, QuestionsUI } from '../types/questions';
 
 /* The repositories are supposed to implement this interface */
@@ -15,4 +15,5 @@ export interface ArtistRecommendationInterface {
   getArtistCount(id : string) : Promise<{count : number }>
   getRecommendationStatus(id : string) : Promise<{status : boolean}>;
   registerDocument(id : string, docid : string) : Promise<{success : boolean}>;
+  validateRecommendationFields(fields: RecommendtionValidation): Promise<{nameAvailable: boolean}>;
 }
