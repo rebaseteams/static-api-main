@@ -59,4 +59,11 @@ export default class BrandRepo implements BrandsInterface {
       });
       return brands;
     }
+
+    async getAllBrands() : Promise<Array<{id: string, name: string}>> {
+      const brands : Array<{id: string, name: string}> = await this.brandRepository.find({
+        select: ['id', 'name'],
+      });
+      return brands;
+    }
 }
