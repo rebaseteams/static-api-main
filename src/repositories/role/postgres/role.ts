@@ -3,6 +3,7 @@
 
 import { Connection, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
+import { PgActionPermissionsEntity } from '../../../models/entities/pg-action-permissions';
 import { PgResourceEntity } from '../../../models/entities/pg-resource';
 import { PgRoleEntity } from '../../../models/entities/pg-role';
 import { PgRolePermissionsEntity } from '../../../models/entities/pg-role-permissions';
@@ -17,10 +18,13 @@ export default class RoleRepo implements RolesInterface {
 
     private rolePermissionRepo: Repository<PgRolePermissionsEntity>;
 
+    private actionPermissionRepo: Repository<PgActionPermissionsEntity>
+
     constructor(connection: Connection) {
       this.roleRepository = connection.getRepository(PgRoleEntity);
       this.resourceRepository = connection.getRepository(PgResourceEntity);
       this.rolePermissionRepo = connection.getRepository(PgRolePermissionsEntity);
+      this.actionPermissionRepo = connection.getRepository(PgActionPermissionsEntity);
     }
 
     async createRole(name : string, resourceActions : Resource[]) : Promise<{role : Role}> {
@@ -117,6 +121,7 @@ export default class RoleRepo implements RolesInterface {
             }
           }
           if (flag === false) {
+            this.actionPermissionRepo.delete({ role_permission_id: allRolePermissions[p].id });
             this.rolePermissionRepo.delete(allRolePermissions[p]);
           }
         }
