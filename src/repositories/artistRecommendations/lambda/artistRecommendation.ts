@@ -3,7 +3,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import * as AWS from 'aws-sdk';
 import { Connection, Repository } from 'typeorm';
-import { ArtistRecommendation } from '../../../models/types/artist-recommendation';
+import { ArtistRecommendation, RecommendtionValidation } from '../../../models/types/artist-recommendation';
 import { ConcertCreationResponse, QuestionsUI } from '../../../models/types/questions';
 import { Artist } from '../../../models/types/artist';
 import { ArtistRecommendationInterface } from '../../../models/interfaces/artist-recommendation';
@@ -22,6 +22,20 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
       region: process.env.AWS_REGION_US,
     });
     this.lambda = new AWS.Lambda();
+  }
+
+  // eslint-disable-next-line no-unused-vars
+  async validateRecommendationFields(fields: RecommendtionValidation): Promise<{ nameAvailable: boolean; }> {
+    const { eventName } = fields;
+    if (!eventName) return { nameAvailable: false };
+    const resp = await this.artistRecommendationRepository.find({
+      select: ['name'],
+      where: {
+        name: eventName,
+      },
+    });
+    if (resp.length === 0) return { nameAvailable: true };
+    return { nameAvailable: false };
   }
 
   async getRecommendationStatus(id : string) : Promise<{status : boolean}> {
