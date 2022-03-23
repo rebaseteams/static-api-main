@@ -7,4 +7,5 @@ export interface BrandsInterface{
   deleteBrand(id : string) : Promise<{ success : boolean }>;
   editBrand(id : string, name : string, logo : string, website : string, contact : string) : Promise<{ success : boolean }>;
   getBrands(skip : number, limit : number) : Promise<Brand[]>;
+  getAllBrands(): Promise<Array<{id: string, name: string}>>;
 }

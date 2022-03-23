@@ -26,6 +26,10 @@ export default class BrandsService implements BrandsInterface {
     return this.brandRepo.getBrands(skip, limit);
   }
 
+  async getAllBrands() : Promise<Array<{id: string, name: string}>> {
+    return this.brandRepo.getAllBrands();
+  }
+
   async deleteBrand(id : string) : Promise<{success : boolean}> {
     return this.brandRepo.deleteBrand(id);
   }

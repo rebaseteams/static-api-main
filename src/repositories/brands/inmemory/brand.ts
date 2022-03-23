@@ -11,6 +11,10 @@ export default class BrandRepo implements BrandsInterface {
     this.fileManager = fileManager;
   }
 
+  async getAllBrands(): Promise<Array<{id: string, name: string}>> {
+    throw new Error('Method not implemented.');
+  }
+
   async createBrand(name: string, logo: string, website: string, contact: string): Promise<{ brand: Brand }> {
     const brand = {
       id: uuidv4(),

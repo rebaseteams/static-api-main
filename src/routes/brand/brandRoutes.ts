@@ -37,6 +37,15 @@ export default class BrandsRoutes {
       }
     });
 
+    this.router.get('/', async (req, res, next) => {
+      try {
+        const data = await brandsService.getAllBrands();
+        res.send({ success: true, data: { brands: data } });
+      } catch (error) {
+        next(error);
+      }
+    });
+
     this.router.patch('/', editBrandValidator, async (req, res, next) => {
       try {
         const data = await brandsService.editBrand(req.body.id, req.body.name, req.body.logo, req.body.website, req.body.contact);
