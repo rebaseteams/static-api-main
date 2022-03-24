@@ -51,8 +51,8 @@ export default class ArtistService implements ArtistInterface, ArtistRecommendat
     return this.artistRecommendationRepo.getRecommendation(id);
   }
 
-  async getAllRecommendations() : Promise<ConcertCreationResponse[]> {
-    return this.artistRecommendationRepo.getAllRecommendations();
+  async getAllRecommendations(user_id: string) : Promise<ConcertCreationResponse[]> {
+    return this.artistRecommendationRepo.getAllRecommendations(user_id);
   }
 
   async validateRecommendationFields(fields: RecommendtionValidation) : Promise<{nameAvailable: boolean}> {

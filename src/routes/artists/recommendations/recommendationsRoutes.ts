@@ -45,7 +45,12 @@ export default class RecommendationsRoute {
     this.router.post('/', questionsUIValidator, async (req, res, next) => {
       try {
         const data = req.body as QuestionsUI;
-        const response = await artistService.createRecommendation(data);
+        const { userId } = req.body.auth;
+        const newData = {
+          ...data,
+          userId,
+        };
+        const response = await artistService.createRecommendation(newData);
         res.send({ success: true, data: response });
       } catch (error) {
         next(error);
@@ -54,7 +59,8 @@ export default class RecommendationsRoute {
 
     this.router.get('/', async (req, res, next) => {
       try {
-        const data = await artistService.getAllRecommendations();
+        const { userId } = req.body.auth;
+        const data = await artistService.getAllRecommendations(userId);
         res.send({ success: true, data: { recommendations: data } });
       } catch (error) {
         next(error);
