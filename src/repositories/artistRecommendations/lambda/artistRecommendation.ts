@@ -77,9 +77,9 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
     throw err;
   }
 
-  async getAllRecommendations() : Promise<ConcertCreationResponse[]> {
+  async getAllRecommendations(user_id: string) : Promise<ConcertCreationResponse[]> {
     let allRecommendations : PgArtistRecommendationEntity[] = [];
-    allRecommendations = await this.artistRecommendationRepository.find();
+    allRecommendations = await this.artistRecommendationRepository.find({ user_id });
     const allARecommendations : ConcertCreationResponse[] = allRecommendations.map((recommendation) => {
       const aRecommendation : ConcertCreationResponse = {
         id: recommendation.id,
