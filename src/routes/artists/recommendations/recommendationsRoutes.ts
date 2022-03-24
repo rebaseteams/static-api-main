@@ -25,7 +25,8 @@ export default class RecommendationsRoute {
     this.router.get('/validate', async (req, res, next) => {
       try {
         const { eventName } = req.query as RecommendtionValidation;
-        const data = await artistService.validateRecommendationFields({ eventName });
+        const { userId } = req.body.auth;
+        const data = await artistService.validateRecommendationFields({ eventName }, userId);
         res.send({ success: true, data });
       } catch (error) {
         next(error);

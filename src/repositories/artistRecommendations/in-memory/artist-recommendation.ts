@@ -15,7 +15,7 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
   }
 
   // eslint-disable-next-line no-unused-vars
-  async validateRecommendationFields(fields: RecommendtionValidation): Promise<{ nameAvailable: boolean; }> {
+  async validateRecommendationFields(fields: RecommendtionValidation, user_id: string): Promise<{ nameAvailable: boolean; }> {
     throw new Error('Method not implemented.');
   }
 
@@ -41,7 +41,7 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
     throw err;
   }
 
-  async getAllRecommendations(): Promise<ConcertCreationResponse[]> {
+  async getAllRecommendations(user_id: string): Promise<ConcertCreationResponse[]> {
     // fileCheck(`${__dirname}/data`, false);
 
     const allRecommendations : ConcertCreationResponse[] = [];
@@ -54,13 +54,15 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
         const toread = await this.fileManager.get(`artist-recommendation/${file}`);
         if (toread.success) {
           const dataJson = JSON.parse(toread.data.toString()) as ArtistRecommendation;
-          const recommendation : ConcertCreationResponse = {
-            id: dataJson.concertData.id,
-            concertName: dataJson.concertData.concertName,
-            status: dataJson.status,
-            dateCreated: dataJson.concertData.dateCreated,
-          };
-          allRecommendations.push(recommendation);
+          if (dataJson.concertData.userId === user_id) {
+            const recommendation : ConcertCreationResponse = {
+              id: dataJson.concertData.id,
+              concertName: dataJson.concertData.concertName,
+              status: dataJson.status,
+              dateCreated: dataJson.concertData.dateCreated,
+            };
+            allRecommendations.push(recommendation);
+          }
         }
       }
     }

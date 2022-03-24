@@ -54,9 +54,9 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
     throw err;
   }
 
-  async getAllRecommendations() : Promise<ConcertCreationResponse[]> {
+  async getAllRecommendations(user_id: string) : Promise<ConcertCreationResponse[]> {
     let allRecommendations : PgArtistRecommendationEntity[] = [];
-    allRecommendations = await this.artistRecommendationRepository.find();
+    allRecommendations = await this.artistRecommendationRepository.find({ user_id });
     const allARecommendations : ConcertCreationResponse[] = allRecommendations.map((recommendation) => {
       const aRecommendation : ConcertCreationResponse = {
         id: recommendation.id,
@@ -69,12 +69,13 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
     return allARecommendations;
   }
 
-  async validateRecommendationFields(fields: RecommendtionValidation) : Promise<{nameAvailable: boolean}> {
+  async validateRecommendationFields(fields: RecommendtionValidation, user_id: string) : Promise<{nameAvailable: boolean}> {
     const { eventName } = fields;
     const resp = await this.artistRecommendationRepository.find({
       select: ['name'],
       where: {
         name: eventName,
+        user_id,
       },
     });
     if (resp.length === 0) return { nameAvailable: true };

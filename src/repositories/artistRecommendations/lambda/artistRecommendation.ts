@@ -25,13 +25,14 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
   }
 
   // eslint-disable-next-line no-unused-vars
-  async validateRecommendationFields(fields: RecommendtionValidation): Promise<{ nameAvailable: boolean; }> {
+  async validateRecommendationFields(fields: RecommendtionValidation, user_id: string): Promise<{ nameAvailable: boolean; }> {
     const { eventName } = fields;
     if (!eventName) return { nameAvailable: false };
     const resp = await this.artistRecommendationRepository.find({
       select: ['name'],
       where: {
         name: eventName,
+        user_id,
       },
     });
     if (resp.length === 0) return { nameAvailable: true };
