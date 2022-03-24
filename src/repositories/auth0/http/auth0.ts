@@ -198,9 +198,9 @@ export class Auth0 implements Auth0Interface {
     const pgRoleP = await this.getPgRolePermission(pgActionPermissions);
 
     const mappedUserRoles: UserRole[] = [];
-    for (let i = 0; i < pgActionPermissions.length; i += 1) {
-      const role = await pgActionPermissions[i].role;
-      const mappedUser = await mapUserRole(role, pgActionPermissions, role.id, pgRoleP);
+    for (let i = 0; i < pgRoleP.length; i += 1) {
+      const role = await pgRoleP[i].role;
+      const mappedUser = await mapUserRole(role, role.id, pgRoleP);
       mappedUserRoles.push(mappedUser);
     }
 
@@ -247,7 +247,7 @@ export class Auth0 implements Auth0Interface {
   async getPgRolePermission(pgActionPermissions: PgActionPermissionsEntity[]): Promise<PgRolePermissionsEntity[]> {
     const pgRoleP: PgRolePermissionsEntity[] = [];
     for (let a = 0; a < pgActionPermissions.length; a += 1) {
-      const rolePer = await this.rolePermissionRepo.findOne({ id: pgActionPermissions[a].role_permission_id });
+      const rolePer = await this.rolePermissionRepo.findOne({ id: pgActionPermissions[a].role_permission_id }, { relations: ['action', 'role', 'resource'] });
       if (rolePer) pgRoleP.push(rolePer);
     }
     return pgRoleP;
