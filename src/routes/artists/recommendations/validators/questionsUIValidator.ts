@@ -28,7 +28,7 @@ const schema = Joi.object({
       genreId: Joi.string().required(),
       genreName: Joi.string().required(),
     })),
-    gender: Joi.array().items(Joi.string().required()),
+    gender: Joi.string().required(),
   }),
   whatSellsMost: Joi.object({
     beer: Joi.array().items(Joi.object({
