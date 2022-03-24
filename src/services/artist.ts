@@ -55,8 +55,8 @@ export default class ArtistService implements ArtistInterface, ArtistRecommendat
     return this.artistRecommendationRepo.getAllRecommendations(user_id);
   }
 
-  async validateRecommendationFields(fields: RecommendtionValidation) : Promise<{nameAvailable: boolean}> {
-    return this.artistRecommendationRepo.validateRecommendationFields(fields);
+  async validateRecommendationFields(fields: RecommendtionValidation, user_id: string) : Promise<{nameAvailable: boolean}> {
+    return this.artistRecommendationRepo.validateRecommendationFields(fields, user_id);
   }
 
   async deleteRecommendation(id : string) : Promise<{ success: boolean}> {

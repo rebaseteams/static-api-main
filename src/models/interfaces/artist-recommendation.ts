@@ -15,5 +15,5 @@ export interface ArtistRecommendationInterface {
   getArtistCount(id : string) : Promise<{count : number }>
   getRecommendationStatus(id : string) : Promise<{status : boolean}>;
   registerDocument(id : string, docid : string) : Promise<{success : boolean}>;
-  validateRecommendationFields(fields: RecommendtionValidation): Promise<{nameAvailable: boolean}>;
+  validateRecommendationFields(fields: RecommendtionValidation, user_id: string): Promise<{nameAvailable: boolean}>;
 }
