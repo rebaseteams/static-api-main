@@ -28,7 +28,6 @@ export default class RoleRepo implements RolesInterface {
     }
 
     async createRole(name : string, resourceActions : Resource[]) : Promise<{role : Role}> {
-      console.log('resource Actions', resourceActions);
       const resourceIds = getArrayOf('id', resourceActions);
       const resources = await this.resourceRepository.findByIds(resourceIds, { relations: ['actions'] });
       const role:PgRoleEntity = {

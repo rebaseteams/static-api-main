@@ -60,7 +60,6 @@ export default class UserRepo implements UsersInterface {
 
       const res = await this.userRepository.save(user);
 
-      const userPromise = this.userRepository.findOne({ id: user.id });
       const resources = await pgRole.resources;
       for (let j = 0; j < resources.length; j += 1) {
         const resource = await this.resourceRepository.findOne({ id: resources[j].id }, { relations: ['actions'] });
@@ -72,12 +71,8 @@ export default class UserRepo implements UsersInterface {
           if (rolePermission) {
             const actionPermission: PgActionPermissionsEntity = {
               id: uuidv4(),
-              user: userPromise,
               user_id: user.id,
               role_permission_id: rolePermission.id,
-              action: this.actionRepository.findOne({ id: action.id }),
-              resource: this.resourceRepository.findOne({ id: resource.id }),
-              role: this.roleRepository.findOne({ id: role }),
               role_permission: this.rolePermissionsRepository.findOne({ role_id: role, action_id: action.id, resource_id: resource.id }),
             };
             await this.actionPermissionsRepository.save(actionPermission);
@@ -86,10 +81,10 @@ export default class UserRepo implements UsersInterface {
       }
 
       const pgActionPermissions = await this.actionPermissionsRepository
-        .find({ user });
+        .find({ user_id: user.id });
 
       const pgRoleP = await this.getPgRolePermissions(pgActionPermissions);
-      const mapperUser: User = await mapUser(res, pgActionPermissions, pgRoleP);
+      const mapperUser: User = await mapUser(res, pgRoleP);
 
       return { user: mapperUser };
     }
@@ -98,7 +93,6 @@ export default class UserRepo implements UsersInterface {
       const user = await this.userRepository.findOne({ id });
       const pgActionPermissions = await this.actionPermissionsRepository.find(
         {
-          relations: ['role', 'resource', 'action'],
           where: {
             user_id: user.id,
           },
@@ -106,7 +100,7 @@ export default class UserRepo implements UsersInterface {
       );
       const pgRoleP = await this.getPgRolePermissions(pgActionPermissions);
 
-      const mappedUser = await mapUserWithUniqueRole(user, pgActionPermissions, pgRoleP);
+      const mappedUser = await mapUserWithUniqueRole(user, pgRoleP);
       if (mappedUser) {
         return mappedUser;
       }
@@ -140,7 +134,6 @@ export default class UserRepo implements UsersInterface {
       }
       for (let a = 0; a < roles.length; a += 1) {
         const pgRole = await this.roleRepository.findOne({ id: roles[a] }, { relations: ['resources'] });
-        const userPromise = this.userRepository.findOne({ id });
         const resources = await pgRole.resources;
         for (let j = 0; j < resources.length; j += 1) {
           const resource = await this.resourceRepository.findOne({ id: resources[j].id }, { relations: ['actions'] });
@@ -152,12 +145,8 @@ export default class UserRepo implements UsersInterface {
             if (rolePermission) {
               const actionPermission: PgActionPermissionsEntity = {
                 id: uuidv4(),
-                user: userPromise,
                 user_id: user.id,
                 role_permission_id: rolePermission.id,
-                action: this.actionRepository.findOne({ id: action.id }),
-                resource: this.resourceRepository.findOne({ id: resource.id }),
-                role: this.roleRepository.findOne({ id: pgRole.id }),
                 role_permission: this.rolePermissionsRepository.findOne({ role_id: pgRole.id, action_id: action.id, resource_id: resource.id }),
               };
               const actionsPresent = await this.actionPermissionsRepository.findOne({
@@ -193,9 +182,9 @@ export default class UserRepo implements UsersInterface {
       for (let i = 0; i < users.length; i += 1) {
         const user = users[i];
         const pgActionPermissions = await this.actionPermissionsRepository
-          .find({ user });
+          .find({ user_id: user.id });
         const pgRoleP = await this.getPgRolePermissions(pgActionPermissions);
-        const mappedUser = await mapUser(user, pgActionPermissions, pgRoleP);
+        const mappedUser = await mapUser(user, pgRoleP);
         pendingUsers.push(mappedUser);
       }
       return pendingUsers;
@@ -212,10 +201,10 @@ export default class UserRepo implements UsersInterface {
         const user = users[i];
         const pgActionPermissions = await this.actionPermissionsRepository.find({
           where: { user_id: user.id },
-          relations: ['role', 'action', 'resource', 'role_permission'],
+          relations: ['role_permission'],
         });
         const pgRoleP = await this.getPgRolePermissions(pgActionPermissions);
-        const mappedUser = await mapUser(user, pgActionPermissions, pgRoleP);
+        const mappedUser = await mapUser(user, pgRoleP);
         resUsers.push(mappedUser);
       }
       return resUsers;
@@ -238,7 +227,8 @@ export default class UserRepo implements UsersInterface {
     async getPgRolePermissions(pgActionPermissions: PgActionPermissionsEntity[]): Promise<PgRolePermissionsEntity[]> {
       const pgRoleP: PgRolePermissionsEntity[] = [];
       for (let a = 0; a < pgActionPermissions.length; a += 1) {
-        const rolePer = await this.rolePermissionsRepository.findOne({ id: pgActionPermissions[a].role_permission_id });
+        const rolePer = await this.rolePermissionsRepository.findOne({ id: pgActionPermissions[a].role_permission_id },
+          { relations: ['role', 'action', 'resource'] });
         if (rolePer) pgRoleP.push(rolePer);
       }
       return pgRoleP;
