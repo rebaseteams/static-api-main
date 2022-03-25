@@ -41,4 +41,5 @@ export type Artist = {
     audience: audience,
     media_handles: media_handles
     brandAffinity: LineChartModel
+    popularityOverTime: LineChartModel
 };

@@ -4,6 +4,7 @@ import { Artist as TypeArtist } from '../../../models/types/artist';
 import { ArtistInterface } from '../../../models/interfaces/artist';
 import { PgArtistEntity } from '../../../models/entities/pg-artist';
 import brandAffinity from './addOnData/brandAffinity';
+import popularityOverTime from './addOnData/popularityOverTime';
 
 export default class ArtistsRepo implements ArtistInterface {
   private artistRepository : Repository<PgArtistEntity>;
@@ -32,6 +33,7 @@ export default class ArtistsRepo implements ArtistInterface {
         audience: artist.audience,
         media_handles: artist.media_handles,
         brandAffinity,
+        popularityOverTime,
       };
       return toSendArtist;
     }
@@ -65,6 +67,7 @@ export default class ArtistsRepo implements ArtistInterface {
         audience: artist.audience,
         media_handles: artist.media_handles,
         brandAffinity,
+        popularityOverTime,
       };
       return toSendArtist;
     });
