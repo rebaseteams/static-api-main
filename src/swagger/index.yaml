@@ -910,7 +910,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/artistData'
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/artistData'
         '400':
           description: Bad Request
           content:
@@ -950,7 +955,17 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/artistData'
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      artists:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/artistData'
         '400':
           description: Bad Request
           content:
@@ -1974,75 +1989,128 @@ components:
     artistData:
       type: object
       properties:
-        success:
-          type: boolean
-        data:
+        id:
+          type: string
+        name:
+          type: string
+        gender:
+          type: string
+        associatedBrands:
+          type: array
+          items:
+            type: string
+        venues:
+          type: array
+          items:
+            type: string
+        country:
+          type: string
+        image:
+          type: string
+        coverImage:
+          type: string
+        bio:
+          type: string
+        manager:
+          type: string
+        contact:
+          type: string
+        address:
+          type: string
+        popularity:
+          type: number
+        audience:
+          type: array
+          items:
+            type: object
+            properties:
+              fields:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    value:
+                      type: number
+              demographicName:
+                type: string
+        mediaHandles:
+          type: array
+          items:
+            type: object
+            properties:
+              url:
+                type: string
+              logo:
+                type: string
+              followers:
+                type: number
+              handleName:
+                type: string
+        brandAffinity:
           type: object
           properties:
-            artists:
+            xAxisData:
+              type: array
+              items:
+                type: string
+            yAxisData:
               type: array
               items:
                 type: object
                 properties:
-                  id:
-                    type: string
                   name:
                     type: string
-                  gender:
-                    type: string
-                  associated_brands:
-                    type: array
-                    items:
-                      type: string
-                  venues:
-                    type: array
-                    items:
-                      type: string
-                  country:
-                    type: string
-                  image:
-                    type: string
-                  cover_image:
-                    type: string
-                  bio:
-                    type: string
-                  manager:
-                    type: string
-                  contact:
-                    type: string
-                  address:
-                    type: string
-                  popularity:
-                    type: number
-                  audience:
+                  data:
                     type: array
                     items:
                       type: object
                       properties:
-                        fields:
-                          type: array
-                          items:
-                            type: object
-                            properties:
-                              name:
-                                type: string
-                              value:
-                                type: number
-                        demographicName:
+                        xAxis:
                           type: string
-                  media_handles:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        url:
-                          type: string
-                        logo:
-                          type: string
-                        followers:
+                        yAxis:
                           type: number
-                        handleName:
+        popularityOverTime:
+          type: object
+          properties:
+            xAxisData:
+              type: array
+              items:
+                type: string
+            yAxisData:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        xAxis:
                           type: string
+                        yAxis:
+                          type: number
+        latestYoutubeRelease:
+          type: array
+          items:
+            type: object
+            properties:
+              tumbnail:
+                type: string
+              title:
+                type: string
+              url:
+                type: string
+              channelName:
+                type: string
+              views:
+                type: number
+              subscribers:
+                type: number
 
     NotificationData:
       type: object
