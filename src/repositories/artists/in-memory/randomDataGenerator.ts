@@ -132,6 +132,27 @@ const randomDataGenerator = async () => {
           },
         ],
       },
+      popularityOverTime: {
+        xAxisData: [
+          '100',
+          '101',
+          '102',
+        ],
+        yAxisData: [
+          {
+            name: 'populatity-over-time',
+            data: [
+              {
+                xAxis: '100',
+                yAxis: 0,
+              },
+              {
+                xAxis: '101',
+                yAxis: 16,
+              }],
+          },
+        ],
+      },
     };
 
     artistList.push(artistObj);
