@@ -24,6 +24,15 @@ export type media_handles = Array<
     }
 >;
 
+export type LatestReleaseVideo = {
+    tumbnail: string,
+    title: string,
+    channelName: string,
+    views: number,
+    url: string,
+    subscribers: number,
+  }
+
 export type Artist = {
     id: string,
     name: string,
@@ -40,6 +49,7 @@ export type Artist = {
     popularity: number,
     audience: audience,
     media_handles: media_handles
-    brandAffinity: LineChartModel
-    popularityOverTime: LineChartModel
+    brand_affinity: LineChartModel
+    popularity_over_time: LineChartModel
+    latest_youtube_release: Array<LatestReleaseVideo>
 };

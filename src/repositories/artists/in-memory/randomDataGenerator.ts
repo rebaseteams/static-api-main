@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 import * as fs from 'fs';
 import { Artist } from '../../../models/types/artist';
+import latestReleaseVideos from '../postgres/addOnData/latestReleaseVideos';
 
 const randomDataGenerator = async () => {
   const artistList = [];
@@ -99,7 +100,7 @@ const randomDataGenerator = async () => {
           followers: Math.floor(Math.random() * 1000000),
         },
       ],
-      brandAffinity: {
+      brand_affinity: {
         xAxisData: [
           '100',
           '101',
@@ -132,7 +133,7 @@ const randomDataGenerator = async () => {
           },
         ],
       },
-      popularityOverTime: {
+      popularity_over_time: {
         xAxisData: [
           '100',
           '101',
@@ -153,6 +154,7 @@ const randomDataGenerator = async () => {
           },
         ],
       },
+      latest_youtube_release: latestReleaseVideos,
     };
 
     artistList.push(artistObj);
