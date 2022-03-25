@@ -99,6 +99,39 @@ const randomDataGenerator = async () => {
           followers: Math.floor(Math.random() * 1000000),
         },
       ],
+      brandAffinity: {
+        xAxisData: [
+          '100',
+          '101',
+          '102',
+        ],
+        yAxisData: [
+          {
+            name: 'Brand1',
+            data: [
+              {
+                xAxis: '100',
+                yAxis: 0,
+              },
+              {
+                xAxis: '101',
+                yAxis: 16,
+              }],
+          },
+          {
+            name: 'Brand2',
+            data: [
+              {
+                xAxis: '100',
+                yAxis: 0,
+              },
+              {
+                xAxis: '101',
+                yAxis: 83,
+              }],
+          },
+        ],
+      },
     };
 
     artistList.push(artistObj);

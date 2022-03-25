@@ -3,6 +3,7 @@ import { Connection, Repository } from 'typeorm';
 import { Artist as TypeArtist } from '../../../models/types/artist';
 import { ArtistInterface } from '../../../models/interfaces/artist';
 import { PgArtistEntity } from '../../../models/entities/pg-artist';
+import brandAffinity from './addOnData/brandAffinity';
 
 export default class ArtistsRepo implements ArtistInterface {
   private artistRepository : Repository<PgArtistEntity>;
@@ -30,6 +31,7 @@ export default class ArtistsRepo implements ArtistInterface {
         popularity: artist.popularity,
         audience: artist.audience,
         media_handles: artist.media_handles,
+        brandAffinity,
       };
       return toSendArtist;
     }
@@ -62,6 +64,7 @@ export default class ArtistsRepo implements ArtistInterface {
         popularity: artist.popularity,
         audience: artist.audience,
         media_handles: artist.media_handles,
+        brandAffinity,
       };
       return toSendArtist;
     });
