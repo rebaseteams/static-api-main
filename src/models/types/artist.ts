@@ -1,4 +1,7 @@
 /* eslint-disable semi */
+
+import { LineChartModel } from './charts';
+
 /* eslint-disable no-unused-vars */
 export type audience = Array<
     {
@@ -20,6 +23,7 @@ export type media_handles = Array<
         followers: number
     }
 >;
+
 export type Artist = {
     id: string,
     name: string,
@@ -36,4 +40,5 @@ export type Artist = {
     popularity: number,
     audience: audience,
     media_handles: media_handles
+    brandAffinity: LineChartModel
 };
