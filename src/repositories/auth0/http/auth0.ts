@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable no-underscore-dangle */
 import { auth } from 'express-oauth2-jwt-bearer';
 import axios from 'axios';
@@ -58,6 +59,7 @@ export class Auth0 implements Auth0Interface {
     this.roleRepository = connection.getRepository(PgRoleEntity);
     this.resourceRepository = connection.getRepository(PgResourceEntity);
     this.actionPermissionRepository = connection.getRepository(PgActionPermissionsEntity);
+    this.rolePermissionRepo = connection.getRepository(PgRolePermissionsEntity);
   }
 
   async setAuth(req: Request, res: Response, next: NextFunction) {
@@ -165,16 +167,17 @@ export class Auth0 implements Auth0Interface {
         }
 
         const actionPermissions = await this.actionPermissionRepository.find({
-          relations: ['role'],
+          relations: ['role_permission'],
           where: {
             user_id: user.id,
-            action_id: action,
           },
         });
 
         const pgRoleP = await this.getPgRolePermission(actionPermissions);
 
-        if (pgRoleP.find((a) => a.permission === true)) {
+        const check = pgRoleP.find((a) => a.resource.name === resource);
+
+        if (check && check.action.name === action) {
           return next();
         }
 
@@ -208,22 +211,22 @@ export class Auth0 implements Auth0Interface {
   }
 
   // eslint-disable-next-line consistent-return
-  requireRole(roles : Array<string>) {
-    return async (req : Request, res : Response, next : NextFunction): Promise<any> => {
-      try {
-        if (req.headers.userid === process.env.DEFAULT_USERID) return next();
-        const token = req.headers.authorization.split(' ')[1];
-        const payload = await jwt.decode(token);
-        const roleCheck = await this.checkRoles(roles, payload.sub);
-        if (roleCheck) return next();
-        const err = { message: 'Unauthorized', statusCode: 401 };
-        throw err;
-      } catch (err) {
-        next(err);
-      }
-      return 0;
-    };
-  }
+  // requireRole(roles : Array<string>) {
+  //   return async (req : Request, res : Response, next : NextFunction): Promise<any> => {
+  //     try {
+  //       // if (req.headers.userid === process.env.DEFAULT_USERID) return next();
+  //       const token = req.headers.authorization.split(' ')[1];
+  //       const payload = await jwt.decode(token);
+  //       const roleCheck = await this.checkRoles(roles, payload.sub);
+  //       if (roleCheck) return next();
+  //       const err = { message: 'Unauthorized', statusCode: 401 };
+  //       throw err;
+  //     } catch (err) {
+  //       next(err);
+  //     }
+  //     return 0;
+  //   };
+  // }
 
   async signupUser(data : SignUp) {
     return new Promise((resolve, reject) => {

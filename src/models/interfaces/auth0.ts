@@ -16,7 +16,7 @@ export interface Auth0Interface {
   checkAuthorization(resource? : string, action? : string) : Array<Handler>;
 
   // eslint-disable-next-line consistent-return
-  requireRole (roles : Array<string>): any;
+  // requireRole (roles : Array<string>): any;
 
   signupUser (data : SignUp): Promise<any>;
 }
