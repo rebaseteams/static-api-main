@@ -2,7 +2,6 @@ import { User } from '../models/types/user';
 import { ResourcesInterface } from '../models/interfaces/resource';
 import { RolesInterface } from '../models/interfaces/role';
 import { UsersInterface } from '../models/interfaces/user';
-import { UserRoleType } from '../models/types/userRole';
 
 export default class UsersService implements UsersInterface {
   private userRepo: UsersInterface;
@@ -49,15 +48,8 @@ export default class UsersService implements UsersInterface {
     return this.userRepo.deleteUser(id);
   }
 
-  async getRoles(id: string): Promise<UserRoleType> {
-    const result: UserRoleType = { roles: [] };
-    // Geting roles
-    const user = await this.userRepo.getUser(id);
-    if (!user.approved) {
-      return { roles: [] };
-    }
-    result.roles = user.roles;
-    return result;
+  async getRoles(id: string): Promise<any> {
+    return this.userRepo.getRoles(id);
   }
 
   async getUsersCount(getPending: boolean) : Promise<{count: number}> {

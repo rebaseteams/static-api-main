@@ -15,7 +15,3 @@ export type UserRole = {
   name: string;
   resources: Array<UserResource>;
 }
-
-export type UserRoleType = {
-  roles: Array<UserRole>
-};

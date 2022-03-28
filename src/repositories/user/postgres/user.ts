@@ -4,7 +4,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { PgRoleEntity } from '../../../models/entities/pg-role';
 import { PgUserEntity } from '../../../models/entities/pg-user';
 import { UsersInterface } from '../../../models/interfaces/user';
-import { UserRoleType } from '../../../models/types/userRole';
 import { Auth0 } from '../../auth0/http/auth0';
 import { User } from '../../../models/types/user';
 import { mapUser, mapUserWithUniqueRole } from '../../../utils/pg-to-type-mapper';
@@ -210,9 +209,32 @@ export default class UserRepo implements UsersInterface {
       return resUsers;
     }
 
-    // eslint-disable-next-line no-unused-vars
-    getRoles(id: string): Promise<UserRoleType> {
-      throw new Error('Method not implemented.');
+    async getRoles(id: string): Promise<any> {
+      const user = await this.userRepository.findOne({ id });
+      const pgActionPermissions = await this.actionPermissionsRepository.find(
+        {
+          where: {
+            user_id: user.id,
+          },
+        },
+      );
+      const pgRoleP = await this.getPgRolePermissions(pgActionPermissions);
+      const result = pgRoleP.map((p) => ({
+        resource: p.resource.name,
+        action: p.action.name,
+        permission: p.permission,
+      }));
+      const final: any = {};
+      for (let a = 0; a < result.length; a += 1) {
+        // eslint-disable-next-line no-prototype-builtins
+        if (final.hasOwnProperty(result[a].resource)) {
+          final[result[a].resource][result[a].action] = result[a].permission;
+        } else {
+          final[result[a].resource] = {};
+          final[result[a].resource][result[a].action] = result[a].permission;
+        }
+      }
+      return final;
     }
 
     async getUsersCount(getPending: boolean) : Promise<{count: number}> {
