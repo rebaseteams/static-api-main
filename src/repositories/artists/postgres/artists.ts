@@ -6,6 +6,7 @@ import { PgArtistEntity } from '../../../models/entities/pg-artist';
 import brandAffinity from './addOnData/brandAffinity';
 import popularityOverTime from './addOnData/popularityOverTime';
 import latestReleaseVideos from './addOnData/latestReleaseVideos';
+import { youtubeinsights } from './addOnData/youtubeInsights';
 
 export default class ArtistsRepo implements ArtistInterface {
   private artistRepository : Repository<PgArtistEntity>;
@@ -36,6 +37,7 @@ export default class ArtistsRepo implements ArtistInterface {
         brand_affinity: brandAffinity,
         popularity_over_time: popularityOverTime,
         latest_youtube_release: latestReleaseVideos,
+        youtube_insights: youtubeinsights,
       };
       return toSendArtist;
     }
@@ -71,6 +73,7 @@ export default class ArtistsRepo implements ArtistInterface {
         brand_affinity: brandAffinity,
         popularity_over_time: popularityOverTime,
         latest_youtube_release: latestReleaseVideos,
+        youtube_insights: youtubeinsights,
       };
       return toSendArtist;
     });

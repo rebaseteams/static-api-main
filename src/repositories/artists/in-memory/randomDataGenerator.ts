@@ -3,6 +3,7 @@ import axios from 'axios';
 import * as fs from 'fs';
 import { Artist } from '../../../models/types/artist';
 import latestReleaseVideos from '../postgres/addOnData/latestReleaseVideos';
+import { youtubeinsights } from '../postgres/addOnData/youtubeInsights';
 
 const randomDataGenerator = async () => {
   const artistList = [];
@@ -155,6 +156,7 @@ const randomDataGenerator = async () => {
         ],
       },
       latest_youtube_release: latestReleaseVideos,
+      youtube_insights: youtubeinsights,
     };
 
     artistList.push(artistObj);
