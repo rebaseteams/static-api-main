@@ -60,7 +60,7 @@ export async function mapUserResource(
 export async function mapUserRole(
   pgRole: PgRoleEntity, userId, pgRolePermission: PgRolePermissionsEntity[],
 ): Promise<UserRole> {
-  const resources = [];
+  const resources: UserResource[] = [];
   for (let i = 0; i < pgRolePermission.length; i += 1) {
     const pgResource = await pgRolePermission[i].resource;
     const resource = await mapUserResource(pgResource, userId, pgRole.id, pgRolePermission);
