@@ -33,6 +33,26 @@ export type LatestReleaseVideo = {
     subscribers: number,
   }
 
+export type YoutubeInsights = {
+    channel: {
+    id: string;
+    subscribersCount: number;
+    viewsCount: number;
+    videosCount: number;
+    avgViewsCount: number;
+    avgLikesCount: number;
+    engagementRatio: number;
+    },
+    videos: Array<{
+    playlistId: string;
+    songCount: number;
+    viewsCount: number;
+    likesCount: number;
+    dislikeCount: number;
+    commentsCount: number;
+    }>
+  }
+
 export type Artist = {
     id: string,
     name: string,
@@ -52,4 +72,5 @@ export type Artist = {
     brand_affinity: LineChartModel
     popularity_over_time: LineChartModel
     latest_youtube_release: Array<LatestReleaseVideo>
-};
+    youtube_insights: YoutubeInsights
+}
