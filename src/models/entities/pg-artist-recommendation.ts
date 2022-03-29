@@ -1,7 +1,6 @@
 import { Entity, Column, PrimaryColumn } from 'typeorm';
 import { ArtistBudget } from '../types/artist-budget';
 import { ARec } from '../types/artist-recommendation';
-import { Brand } from '../types/brand';
 import { TargetAudience } from '../types/target-audience';
 import { WhatSellsMost } from '../types/what-sells-most';
 
@@ -19,11 +18,11 @@ export default class PgArtistRecommendationEntity {
   @Column({ type: 'varchar' })
   user_id: string;
 
-  @Column()
-  event_type: string;
+  @Column({ type: 'jsonb', default: {} })
+  event_type: {id: string, name: string;};
 
-  @Column('text', { array: true })
-  venue: string[];
+  @Column('jsonb', { array: true, default: [] })
+  venue: {id: string, name: string;}[];
 
   @Column('jsonb')
   artist_budget: ArtistBudget;
@@ -31,11 +30,11 @@ export default class PgArtistRecommendationEntity {
   @Column()
   sponsorship_type: string;
 
-  @Column('jsonb')
-  wanted_brands: Brand[];
+  @Column('jsonb', { array: true, default: [] })
+  wanted_brands: {id: string, name: string;}[];
 
-  @Column('jsonb')
-  unwanted_brands: Brand[];
+  @Column('jsonb', { array: true, default: [] })
+  unwanted_brands: {id: string, name: string;}[];
 
   @Column('jsonb')
   target_audience: TargetAudience;
