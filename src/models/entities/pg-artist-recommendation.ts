@@ -53,7 +53,7 @@ export default class PgArtistRecommendationEntity {
   @Column()
   sponsorship_type: string;
 
-  @Column({ type: 'uuid', array: true, default: [] })
+  @Column({ type: 'uuid', array: true })
   wanted_brands_id: string[];
 
   @ManyToMany(() => PgBrandEntity)
@@ -70,7 +70,7 @@ export default class PgArtistRecommendationEntity {
   })
   wanted_brands: PgBrandEntity[]
 
-  @Column({ type: 'uuid', array: true, default: [] })
+  @Column({ type: 'uuid', array: true })
   unwanted_brands_id: string[];
 
   @ManyToMany(() => PgBrandEntity)
