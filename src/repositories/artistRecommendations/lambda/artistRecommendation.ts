@@ -8,14 +8,18 @@ import { ConcertCreationResponse, QuestionsUI } from '../../../models/types/ques
 import { Artist } from '../../../models/types/artist';
 import { ArtistRecommendationInterface } from '../../../models/interfaces/artist-recommendation';
 import PgArtistRecommendationEntity from '../../../models/entities/pg-artist-recommendation';
+import PgEventsTypeEntity from '../../../models/entities/pg-events-type';
 
 export default class ArtistRecommendationRepo implements ArtistRecommendationInterface {
   private artistRecommendationRepository : Repository<PgArtistRecommendationEntity>;
+
+  private eventsTypeRepository: Repository<PgEventsTypeEntity>
 
   private lambda : AWS.Lambda;
 
   constructor(connection: Connection) {
     this.artistRecommendationRepository = connection.getRepository(PgArtistRecommendationEntity);
+    this.eventsTypeRepository = connection.getRepository(PgEventsTypeEntity);
     AWS.config.update({
       accessKeyId: process.env.AWS_ACCESS_KEY,
       secretAccessKey: process.env.AWS_SECRET_KEY,
@@ -49,7 +53,7 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
   }
 
   async getRecommendation(id : string) : Promise<ArtistRecommendation> {
-    const recommendation = await this.artistRecommendationRepository.findOne(id);
+    const recommendation = await this.artistRecommendationRepository.findOne(id, { relations: ['event_type'] });
     if (recommendation) {
       const aRecommendation : ArtistRecommendation = {
         concertData: {
@@ -127,12 +131,14 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
   }
 
   async createRecommendation(questions: QuestionsUI) : Promise<ConcertCreationResponse> {
+    const events_type = await this.eventsTypeRepository.findOne(questions.eventType);
     const recommendation: PgArtistRecommendationEntity = {
       id: uuidv4(),
       name: questions.concertName,
       date_created: new Date(),
       user_id: questions.userId,
-      event_type: questions.eventType,
+      event_type_id: questions.eventType,
+      event_type: events_type,
       venue: questions.venue,
       artist_budget: questions.artistBudget,
       sponsorship_type: questions.sponsorshipType,
