@@ -1,5 +1,5 @@
 import {
-  Entity, Column, PrimaryColumn, ManyToOne, JoinColumn,
+  Entity, Column, PrimaryColumn, ManyToOne, JoinColumn, ManyToMany, JoinTable,
 } from 'typeorm';
 import { ArtistBudget } from '../types/artist-budget';
 import { ARec } from '../types/artist-recommendation';
@@ -7,6 +7,7 @@ import { Brand } from '../types/brand';
 import { TargetAudience } from '../types/target-audience';
 import { WhatSellsMost } from '../types/what-sells-most';
 import PgEventsTypeEntity from './pg-events-type';
+import PgVenueEntity from './pg-venue';
 
 @Entity({ name: 'artist_recommendation' })
 export default class PgArtistRecommendationEntity {
@@ -29,8 +30,22 @@ export default class PgArtistRecommendationEntity {
   @JoinColumn({ name: 'event_type_id', referencedColumnName: 'id' })
   event_type: PgEventsTypeEntity
 
-  @Column('text', { array: true })
-  venue: string[];
+  @Column({ type: 'uuid', array: true, default: [] })
+  venue_id: string[];
+
+  @ManyToMany(() => PgVenueEntity)
+  @JoinTable({
+    name: 'artist-recommendation-venue',
+    joinColumn: {
+      name: 'venue_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'artist_recomm_id',
+      referencedColumnName: 'id',
+    },
+  })
+  venue: PgVenueEntity[]
 
   @Column('jsonb')
   artist_budget: ArtistBudget;

@@ -8,15 +8,19 @@ import { Artist } from '../../../models/types/artist';
 import { ArtistRecommendationInterface } from '../../../models/interfaces/artist-recommendation';
 import PgArtistRecommendationEntity from '../../../models/entities/pg-artist-recommendation';
 import PgEventsTypeEntity from '../../../models/entities/pg-events-type';
+import PgVenueEntity from '../../../models/entities/pg-venue';
 
 export default class ArtistRecommendationRepo implements ArtistRecommendationInterface {
   private artistRecommendationRepository : Repository<PgArtistRecommendationEntity>;
 
   private eventsTypeRepository: Repository<PgEventsTypeEntity>
 
+  private venueRepository: Repository<PgVenueEntity>
+
   constructor(connection: Connection) {
     this.artistRecommendationRepository = connection.getRepository(PgArtistRecommendationEntity);
     this.eventsTypeRepository = connection.getRepository(PgEventsTypeEntity);
+    this.venueRepository = connection.getRepository(PgVenueEntity);
   }
 
   async getRecommendationStatus(id : string) : Promise<{status : boolean}> {
@@ -121,6 +125,8 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
 
   async createRecommendation(questions: QuestionsUI) : Promise<ConcertCreationResponse> {
     const events_type = await this.eventsTypeRepository.findOne(questions.eventType);
+    const venues = await this.venueRepository.findByIds(questions.venue);
+
     const recommendation: PgArtistRecommendationEntity = {
       id: uuidv4(),
       name: questions.concertName,
@@ -128,7 +134,8 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
       user_id: questions.userId,
       event_type_id: questions.eventType,
       event_type: events_type,
-      venue: questions.venue,
+      venue_id: questions.venue,
+      venue: venues,
       artist_budget: questions.artistBudget,
       sponsorship_type: questions.sponsorshipType,
       wanted_brands: questions.wantedBrands,
