@@ -124,6 +124,20 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
       id: questions.userId,
       name: 'string',
     }];
+    const wantedBrands = questions.wantedBrands.map((id) => ({
+      id,
+      name: 'string',
+      logo: 'string',
+      website: 'string',
+      contact: 'string',
+    }));
+    const unwantedBrands = questions.unwantedBrands.map((id) => ({
+      id,
+      name: 'string',
+      logo: 'string',
+      website: 'string',
+      contact: 'string',
+    }));
     const recommendation : ArtistRecommendation = {
       concertData: {
         id: uuidv4(),
@@ -134,8 +148,8 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
         venue: venues,
         artistBudget: questions.artistBudget,
         sponsorshipType: questions.sponsorshipType,
-        wantedBrands: questions.wantedBrands,
-        unwantedBrands: questions.unwantedBrands,
+        wantedBrands,
+        unwantedBrands,
         targetAudience: questions.targetAudience,
         whatSellsMost: questions.whatSellsMost,
       },

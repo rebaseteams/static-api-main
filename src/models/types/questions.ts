@@ -27,8 +27,8 @@ export type QuestionsUI = {
         venue: Array<string>;
         artistBudget:{'min': number, 'max':number};
         sponsorshipType :string;
-        wantedBrands: Array<Brand>;
-        unwantedBrands: Array<Brand>;
+        wantedBrands: Array<string>;
+        unwantedBrands: Array<string>;
         targetAudience: TargetAudience;
         whatSellsMost: WhatSellsMost;
 }

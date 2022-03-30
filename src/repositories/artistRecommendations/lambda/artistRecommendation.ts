@@ -10,6 +10,7 @@ import { ArtistRecommendationInterface } from '../../../models/interfaces/artist
 import PgArtistRecommendationEntity from '../../../models/entities/pg-artist-recommendation';
 import PgEventsTypeEntity from '../../../models/entities/pg-events-type';
 import PgVenueEntity from '../../../models/entities/pg-venue';
+import PgBrandEntity from '../../../models/entities/pg-brand';
 
 export default class ArtistRecommendationRepo implements ArtistRecommendationInterface {
   private artistRecommendationRepository : Repository<PgArtistRecommendationEntity>;
@@ -18,12 +19,15 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
 
   private venueRepository: Repository<PgVenueEntity>
 
+  private brandsRepository: Repository<PgBrandEntity>
+
   private lambda : AWS.Lambda;
 
   constructor(connection: Connection) {
     this.artistRecommendationRepository = connection.getRepository(PgArtistRecommendationEntity);
     this.eventsTypeRepository = connection.getRepository(PgEventsTypeEntity);
     this.venueRepository = connection.getRepository(PgVenueEntity);
+    this.brandsRepository = connection.getRepository(PgBrandEntity);
 
     AWS.config.update({
       accessKeyId: process.env.AWS_ACCESS_KEY,
@@ -58,7 +62,10 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
   }
 
   async getRecommendation(id : string) : Promise<ArtistRecommendation> {
-    const recommendation = await this.artistRecommendationRepository.findOne(id, { relations: ['event_type', 'venue'] });
+    const recommendation = await this.artistRecommendationRepository.findOne(
+      id,
+      { relations: ['event_type', 'venue', 'wanted_brands', 'unwanted_brands'] },
+    );
     if (recommendation) {
       const aRecommendation : ArtistRecommendation = {
         concertData: {
@@ -138,6 +145,8 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
   async createRecommendation(questions: QuestionsUI) : Promise<ConcertCreationResponse> {
     const events_type = await this.eventsTypeRepository.findOne(questions.eventType);
     const venues = await this.venueRepository.findByIds(questions.venue);
+    const wantedBrands = await this.brandsRepository.findByIds(questions.wantedBrands);
+    const unwantedBrands = await this.brandsRepository.findByIds(questions.unwantedBrands);
     const recommendation: PgArtistRecommendationEntity = {
       id: uuidv4(),
       name: questions.concertName,
@@ -149,8 +158,10 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
       venue: venues,
       artist_budget: questions.artistBudget,
       sponsorship_type: questions.sponsorshipType,
-      wanted_brands: questions.wantedBrands,
-      unwanted_brands: questions.unwantedBrands,
+      wanted_brands_id: questions.wantedBrands,
+      wanted_brands: wantedBrands,
+      unwanted_brands_id: questions.unwantedBrands,
+      unwanted_brands: unwantedBrands,
       target_audience: questions.targetAudience,
       what_sells_most: questions.whatSellsMost,
       artists: [],
