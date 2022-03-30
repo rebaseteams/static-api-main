@@ -30,7 +30,7 @@ export default class PgArtistRecommendationEntity {
   @JoinColumn({ name: 'event_type_id', referencedColumnName: 'id' })
   event_type: PgEventsTypeEntity
 
-  @Column({ type: 'uuid', array: true, default: [] })
+  @Column({ type: 'uuid', array: true })
   venue_id: string[];
 
   @ManyToMany(() => PgVenueEntity)
