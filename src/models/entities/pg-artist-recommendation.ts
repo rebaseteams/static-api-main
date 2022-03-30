@@ -3,9 +3,9 @@ import {
 } from 'typeorm';
 import { ArtistBudget } from '../types/artist-budget';
 import { ARec } from '../types/artist-recommendation';
-import { Brand } from '../types/brand';
 import { TargetAudience } from '../types/target-audience';
 import { WhatSellsMost } from '../types/what-sells-most';
+import PgBrandEntity from './pg-brand';
 import PgEventsTypeEntity from './pg-events-type';
 import PgVenueEntity from './pg-venue';
 
@@ -53,11 +53,39 @@ export default class PgArtistRecommendationEntity {
   @Column()
   sponsorship_type: string;
 
-  @Column('jsonb')
-  wanted_brands: Brand[];
+  @Column({ type: 'uuid', array: true, default: [] })
+  wanted_brands_id: string[];
 
-  @Column('jsonb')
-  unwanted_brands: Brand[];
+  @ManyToMany(() => PgBrandEntity)
+  @JoinTable({
+    name: 'artist-recommendation-brands-wanted',
+    joinColumn: {
+      name: 'brand_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'artist_recomm_id',
+      referencedColumnName: 'id',
+    },
+  })
+  wanted_brands: PgBrandEntity[]
+
+  @Column({ type: 'uuid', array: true, default: [] })
+  unwanted_brands_id: string[];
+
+  @ManyToMany(() => PgBrandEntity)
+  @JoinTable({
+    name: 'artist-recommendation-brands-unwanted',
+    joinColumn: {
+      name: 'brand_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'artist_recomm_id',
+      referencedColumnName: 'id',
+    },
+  })
+  unwanted_brands: PgBrandEntity[]
 
   @Column('jsonb')
   target_audience: TargetAudience;

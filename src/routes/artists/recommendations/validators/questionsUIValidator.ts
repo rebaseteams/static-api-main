@@ -14,14 +14,8 @@ const schema = Joi.object({
     max: Joi.number().required(),
   }),
   sponsorshipType: Joi.string().required(),
-  wantedBrands: Joi.array().items(Joi.object({
-    brandName: Joi.string().required(),
-    brandId: Joi.string().required(),
-  })),
-  unwantedBrands: Joi.array().items(Joi.object({
-    brandName: Joi.string().required(),
-    brandId: Joi.string().required(),
-  })),
+  wantedBrands: Joi.array().items(Joi.string()).required(),
+  unwantedBrands: Joi.array().items(Joi.string()).required(),
   targetAudience: Joi.object({
     ageGroup: Joi.array().items(Joi.string().required()),
     genre: Joi.array().items(Joi.object({
