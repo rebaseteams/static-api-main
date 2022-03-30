@@ -111,13 +111,21 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
   }
 
   async createRecommendation(questions: QuestionsUI) : Promise<ConcertCreationResponse> {
+    const eventsType = {
+      id: questions.eventType,
+      name: 'string',
+      description: 'string',
+      comments: 'string',
+      last_updated_at: 'string',
+      last_updated_by: 'string',
+    };
     const recommendation : ArtistRecommendation = {
       concertData: {
         id: uuidv4(),
         concertName: questions.concertName,
         dateCreated: new Date().toDateString(),
         userId: questions.userId,
-        eventType: questions.eventType,
+        eventType: eventsType,
         venue: questions.venue,
         artistBudget: questions.artistBudget,
         sponsorshipType: questions.sponsorshipType,
