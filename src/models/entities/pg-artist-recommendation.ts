@@ -22,7 +22,7 @@ export default class PgArtistRecommendationEntity {
   @Column({ type: 'varchar' })
   user_id: string;
 
-  @Column({ type: 'uuid', default: '07cc7ec0-5f0c-48e1-92dd-85e56d732671' })
+  @Column({ type: 'uuid' })
   event_type_id: string;
 
   @ManyToOne(() => PgEventsTypeEntity)
