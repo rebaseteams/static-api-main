@@ -119,6 +119,11 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
       last_updated_at: 'string',
       last_updated_by: 'string',
     };
+
+    const venues = [{
+      id: questions.userId,
+      name: 'string',
+    }];
     const recommendation : ArtistRecommendation = {
       concertData: {
         id: uuidv4(),
@@ -126,7 +131,7 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
         dateCreated: new Date().toDateString(),
         userId: questions.userId,
         eventType: eventsType,
-        venue: questions.venue,
+        venue: venues,
         artistBudget: questions.artistBudget,
         sponsorshipType: questions.sponsorshipType,
         wantedBrands: questions.wantedBrands,
