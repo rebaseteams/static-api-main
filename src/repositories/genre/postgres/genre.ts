@@ -15,6 +15,7 @@ export default class GenreRepo implements GenresInterface {
     async createGenre(name : string, description : string) : Promise<{genre : Genre}> {
       const genre: PgGenreEntity = {
         id: uuidv4(),
+        bowie_genre_id: '',
         name,
         description,
       };

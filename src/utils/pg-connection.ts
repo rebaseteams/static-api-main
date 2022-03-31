@@ -18,6 +18,7 @@ import PgVenueEntity from '../models/entities/pg-venue';
 import PgGenreEntity from '../models/entities/pg-genre';
 import { PgRolePermissionsEntity } from '../models/entities/pg-role-permissions';
 import PgEventsTypeEntity from '../models/entities/pg-events-type';
+import PgEventsEntity from '../models/entities/pg-events';
 
 export type ConnectionInfo = OmitStrict<DbConfig, 'password'>;
 
@@ -106,6 +107,7 @@ export async function createPgConnection(
         PgActionPermissionsEntity,
         PgRolePermissionsEntity,
         PgEventsTypeEntity,
+        PgEventsEntity,
       ],
       migrations,
       database,
