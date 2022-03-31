@@ -11,6 +11,7 @@ import PgArtistRecommendationEntity from '../../../models/entities/pg-artist-rec
 import PgEventsTypeEntity from '../../../models/entities/pg-events-type';
 import PgVenueEntity from '../../../models/entities/pg-venue';
 import PgBrandEntity from '../../../models/entities/pg-brand';
+import { PgUserEntity } from '../../../models/entities/pg-user';
 
 export default class ArtistRecommendationRepo implements ArtistRecommendationInterface {
   private artistRecommendationRepository : Repository<PgArtistRecommendationEntity>;
@@ -21,6 +22,8 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
 
   private brandsRepository: Repository<PgBrandEntity>
 
+  private userRepository : Repository<PgUserEntity>;
+
   private lambda : AWS.Lambda;
 
   constructor(connection: Connection) {
@@ -28,6 +31,7 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
     this.eventsTypeRepository = connection.getRepository(PgEventsTypeEntity);
     this.venueRepository = connection.getRepository(PgVenueEntity);
     this.brandsRepository = connection.getRepository(PgBrandEntity);
+    this.userRepository = connection.getRepository(PgUserEntity);
 
     AWS.config.update({
       accessKeyId: process.env.AWS_ACCESS_KEY,
@@ -66,6 +70,7 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
       id,
       { relations: ['event_type', 'venue', 'wanted_brands', 'unwanted_brands'] },
     );
+    const userName = await this.userRepository.findOne(recommendation.user_id);
     if (recommendation) {
       const aRecommendation : ArtistRecommendation = {
         concertData: {
@@ -85,7 +90,7 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
         artists: recommendation.artists,
         discardedArtists: recommendation.discarded_artists,
         documents: recommendation.documents,
-        lastChangedUserId: recommendation.user_id,
+        lastChangedUserId: userName.name,
         status: recommendation.status,
       };
       return aRecommendation;
