@@ -58,7 +58,7 @@ export default class PgArtistRecommendationEntity {
 
   @ManyToMany(() => PgBrandEntity)
   @JoinTable({
-    name: 'artist-recommendation-brands-wanted',
+    name: 'artist-recom-brands-wanted',
     joinColumn: {
       name: 'brand_id',
       referencedColumnName: 'id',
@@ -75,7 +75,7 @@ export default class PgArtistRecommendationEntity {
 
   @ManyToMany(() => PgBrandEntity)
   @JoinTable({
-    name: 'artist-recommendation-brands-unwanted',
+    name: 'artist-recom-brands-unwanted',
     joinColumn: {
       name: 'brand_id',
       referencedColumnName: 'id',
