@@ -19,6 +19,9 @@ import PgGenreEntity from '../models/entities/pg-genre';
 import { PgRolePermissionsEntity } from '../models/entities/pg-role-permissions';
 import PgEventsTypeEntity from '../models/entities/pg-events-type';
 import PgEventsEntity from '../models/entities/pg-events';
+import { PgArtistPopularity } from '../models/entities/pg-artist-popularity';
+import { PgEventPerformers } from '../models/entities/pg-event-performers';
+import { PgArtistGenre } from '../models/entities/pg-artist-genre';
 
 export type ConnectionInfo = OmitStrict<DbConfig, 'password'>;
 
@@ -108,6 +111,9 @@ export async function createPgConnection(
         PgRolePermissionsEntity,
         PgEventsTypeEntity,
         PgEventsEntity,
+        PgArtistPopularity,
+        PgArtistGenre,
+        PgEventPerformers,
       ],
       migrations,
       database,
