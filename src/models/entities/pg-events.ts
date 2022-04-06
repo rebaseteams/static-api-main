@@ -14,6 +14,12 @@ export default class PgEventsEntity {
   @Column({ type: 'uuid' })
   event_type_id: string;
 
+  @Column({ type: 'uuid', default: '43e20942-3029-4801-ab01-3493786169c9' })
+  venue_id: string;
+
+  @Column({ type: 'jsonb', default: {} })
+  metadata: any;
+
   @Column({ type: 'date' })
   start_date: string;
 
