@@ -1,0 +1,16 @@
+{
+    "templateId" : "b135518e-bc69-4c78-a5b8-9bb18f9a555e",
+    "templateImg" : "https://media.istockphoto.com/vectors/plus-sign-icon-on-white-background-vector-id1129860293?k=20&m=1129860293&s=612x612&w=0&h=pL62BkTGUP9mhmvlt817AuQbImJkpFktR6sUwXcuIq8=",
+    "templateName" : "Blank",
+    "questions" : [
+        {
+            "question" : "Enter doc Name",
+            "field" : "documentName",
+            "type" : "text"
+        }
+    ],
+    "required": [],
+    "resources": [],
+    "html": "blank-doc.html",
+    "email" : "<b>Praveen shared this document with you</b>"
+  }
