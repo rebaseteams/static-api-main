@@ -13,8 +13,8 @@ export default class TemplatesService implements TemplatesInterface {
     this.templatesRepo = templatesRepo;
   }
 
-  createTemplate() {
-    this.templatesRepo.createTemplate();
+  createTemplate(id: string, templateObject: Template, template: string) : Promise<{success: boolean}> {
+    return this.templatesRepo.createTemplate(id, templateObject, template);
   }
 
   editTemplate() {

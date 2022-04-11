@@ -7,8 +7,9 @@ export default class TemplatesRoutes {
   constructor(templatesService: TemplatesService) {
     this.router = Router();
 
-    this.router.post('/', (req, res) => {
-      res.send('TODO : create new template');
+    this.router.post('/', async (req, res) => {
+      const resp = await templatesService.createTemplate(req.body.id, req.body.templateObject, req.body.template);
+      res.send(resp);
     });
 
     this.router.get('/', async (req, res) => {
