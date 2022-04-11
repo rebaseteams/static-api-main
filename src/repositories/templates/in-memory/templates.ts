@@ -13,9 +13,17 @@ export default class InMemoryTemplatesRepo implements TemplatesInterface {
     this.templatesDir = 'templates';
   }
 
-  createTemplate() {
-    // eslint-disable-next-line no-console
-    console.log('TODO : Create Template');
+  async createTemplate(id : string, templateObject: Template, template: string) : Promise<{success: boolean}> {
+    try {
+      const templateObjectData = Buffer.from(JSON.stringify(templateObject));
+      const tempBuff = Buffer.from(template);
+      const { html } = templateObject;
+      await this.fileManager.set(`templates/${id}.json`, templateObjectData);
+      await this.fileManager.set(`contract-templates/${html}`, tempBuff);
+      return { success: true };
+    } catch (error) {
+      return error;
+    }
   }
 
   editTemplate() {
