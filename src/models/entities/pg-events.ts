@@ -1,4 +1,5 @@
 import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { float } from 'aws-sdk/clients/lightsail';
 
 @Entity({ name: 'events' })
 export default class PgEventsEntity {
@@ -28,6 +29,9 @@ export default class PgEventsEntity {
 
   @Column({ type: 'varchar', default: '' })
   comments: string;
+
+  @Column({ type: 'float', default: 0.0 })
+  approx_budget: float;
 
   @Column({ type: 'date', default: () => 'CURRENT_TIMESTAMP' })
   last_updated_at: string;
