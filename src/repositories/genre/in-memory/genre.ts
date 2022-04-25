@@ -11,6 +11,10 @@ export default class GenreRepo implements GenresInterface {
     this.fileManager = fileManager;
   }
 
+  getAllGenres(): Promise<{ id: string; name: string; }[]> {
+    throw new Error('Method not implemented.');
+  }
+
   async createGenre(name: string, description: string): Promise<{ genre: Genre }> {
     const genre: Genre = {
       id: uuidv4(),

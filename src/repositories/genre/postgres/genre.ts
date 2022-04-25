@@ -56,4 +56,11 @@ export default class GenreRepo implements GenresInterface {
       });
       return genres;
     }
+
+    async getAllGenres() : Promise<Array<{id: string, name: string}>> {
+      const genres : Array<{id: string, name: string}> = await this.genreRepository.find({
+        select: ['id', 'name'],
+      });
+      return genres;
+    }
 }
