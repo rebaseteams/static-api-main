@@ -26,6 +26,10 @@ export default class GenresService implements GenresInterface {
     return this.genreRepo.getGenres(skip, limit);
   }
 
+  async getAllGenres() : Promise<Array<{id: string, name: string}>> {
+    return this.genreRepo.getAllGenres();
+  }
+
   async deleteGenre(id : string) : Promise<{success : boolean}> {
     return this.genreRepo.deleteGenre(id);
   }

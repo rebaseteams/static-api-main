@@ -37,6 +37,15 @@ export default class GenresRoutes {
       }
     });
 
+    this.router.get('/', async (req, res, next) => {
+      try {
+        const data = await genresService.getAllGenres();
+        res.send({ success: true, data: { genres: data } });
+      } catch (error) {
+        next(error);
+      }
+    });
+
     this.router.patch('/', editGenreValidator, async (req, res, next) => {
       try {
         const data = await genresService.editGenre(req.body.id, req.body.name, req.body.description);

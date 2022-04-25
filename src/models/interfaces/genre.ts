@@ -7,4 +7,5 @@ export interface GenresInterface{
   deleteGenre(id : string) : Promise<{ success : boolean }>;
   editGenre(id : string, name : string, description : string) : Promise<{ success : boolean }>;
   getGenres(skip : number, limit : number) : Promise<Genre[]>;
+  getAllGenres(): Promise<Array<{id: string, name: string}>>;
 }
