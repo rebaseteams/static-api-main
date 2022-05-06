@@ -1,7 +1,7 @@
 import { ConfigInterface } from './models/types/config';
 import AdvancedSearchProvider from './providers/advancedSearchProvider';
 import ActionsRepo from './repositories/actions/postgres/actions';
-import ArtistRecommendationRepo from './repositories/artistRecommendations/lambda/artistRecommendation';
+import ArtistRecommendationRepo from './repositories/artistRecommendations/cc-recomm-api/artistRecommendation';
 import ArtistsRepo from './repositories/artists/postgres/artists';
 import { Auth0 } from './repositories/auth0/http/auth0';
 import BrandRepo from './repositories/brands/postgres/brand';
