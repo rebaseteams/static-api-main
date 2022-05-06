@@ -66,7 +66,7 @@ export default class ArtistService implements ArtistInterface, ArtistRecommendat
   async discardArtist(id : string, artistId : string) : Promise<{ success: boolean}> {
     const data = this.artistRecommendationRepo.discardArtist(id, artistId);
     const recommendation = await this.getRecommendation(id);
-    if (recommendation.artists.length < 5) this.generateRecommendedArtists(id);
+    if (recommendation.artists.length <= 5) this.generateRecommendedArtists(id);
     return data;
   }
 
