@@ -9,8 +9,13 @@ export default class CCRecommendationRepo implements CCRecommendationInterface {
       this.Uri = `${cc_recomm_server}/artist-recommendation`;
     }
 
-    async generateRecommendation(id: string): Promise<{ success: boolean; }> {
-      axios.post(this.Uri, { id });
-      return { success: true };
-    }
+    generateRecommendation = async (id: string): Promise<{ success: boolean; }> => new Promise((resolve, reject) => {
+      axios.post(this.Uri, { id }).then(() => {
+        resolve({
+          success: true,
+        });
+      }).catch((err) => {
+        reject(err);
+      });
+    })
 }
