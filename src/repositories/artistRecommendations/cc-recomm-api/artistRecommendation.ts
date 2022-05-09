@@ -181,18 +181,17 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
 
   // eslint-disable-next-line no-unused-vars
   async generateRecommendedArtists(id : string, _artists : Artist[]) : Promise<{ success: boolean }> {
-    const artistRecommendation = await this.artistRecommendationRepository.findOne(id);
+    try {
+      const artistRecommendation = await this.artistRecommendationRepository.findOne(id);
 
-    if (artistRecommendation) {
-      try {
-        this.ccRecommendation.generateRecommendation(id);
+      if (artistRecommendation) {
+        await this.ccRecommendation.generateRecommendation(id);
         return { success: true };
-      } catch (error) {
-        throw JSON.parse(error);
       }
+    } catch (error) {
+      const err = { message: `Recommendation not generated for id: ${id}`, statusCode: 404 };
+      throw err;
     }
-    const err = { message: `Recommendation not found for id: ${id}`, statusCode: 404 };
-    throw err;
   }
 
   async getArtistCount(id : string) : Promise<{count : number }> {

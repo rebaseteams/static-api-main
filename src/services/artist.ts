@@ -33,7 +33,7 @@ export default class ArtistService implements ArtistInterface, ArtistRecommendat
 
   async createRecommendation(questions : QuestionsUI) : Promise<ConcertCreationResponse> {
     const data = await this.artistRecommendationRepo.createRecommendation(questions);
-    this.generateRecommendedArtists(data.id);
+    await this.generateRecommendedArtists(data.id);
     return data;
   }
 
