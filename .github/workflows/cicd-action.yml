@@ -88,6 +88,12 @@ jobs:
     - name: Install dependencies
       run: |
         npm install
+    - name: create env file
+      run: |
+        touch .env
+        echo DB_HOST=${{ secrets.DB_HOST }} >> .env
+        echo DB_PASS=${{ secrets.DB_PASS }} >> .env
+        echo DB_USER=${{ secrets.DB_USER }} >> .env
     - name: Run Migration
       run: |
         npm run migration-run
@@ -96,7 +102,7 @@ jobs:
     if: github.ref == 'refs/heads/master'
     name: Deploy on ECS
     runs-on: ubuntu-18.04
-    needs: [build]
+    needs: [run-migration]
     env:
       REPO: ${{ secrets.DOCKER_REPO }}
       ECR_REGISTRY: ${{ secrets.ECR_URI }}
