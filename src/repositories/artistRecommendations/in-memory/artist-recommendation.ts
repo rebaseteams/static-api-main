@@ -130,6 +130,15 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
       logo: 'string',
       website: 'string',
       contact: 'string',
+      bowie_brand_id: '1',
+      demographics: { age: 1, gender: 'm', location: 'abc' },
+      media_handles: [{
+        handleName: 'v', url: 'vf', logo: 'vf', followers: 1,
+      }],
+      industry: ['abc'],
+      comments: 'abc',
+      last_updated_by: 'abc',
+      last_modified_at: new Date(),
     }));
     const unwantedBrands = questions.unwantedBrands.map((id) => ({
       id,
@@ -137,6 +146,15 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
       logo: 'string',
       website: 'string',
       contact: 'string',
+      bowie_brand_id: '1',
+      demographics: { age: 1, gender: 'm', location: 'abc' },
+      media_handles: [{
+        handleName: 'v', url: 'vf', logo: 'vf', followers: 1,
+      }],
+      industry: ['abc'],
+      comments: 'abc',
+      last_updated_by: 'abc',
+      last_modified_at: new Date(),
     }));
     const recommendation : ArtistRecommendation = {
       concertData: {

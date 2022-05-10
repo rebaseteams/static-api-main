@@ -2,7 +2,7 @@
 import { Connection, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import PgBrandEntity from '../../../models/entities/pg-brand';
-import { Brand } from '../../../models/types/brand';
+import { Brand, demographics as Demo, media_handles as Media } from '../../../models/types/brand';
 import { BrandsInterface } from '../../../models/interfaces/brand';
 
 export default class BrandRepo implements BrandsInterface {
@@ -12,13 +12,20 @@ export default class BrandRepo implements BrandsInterface {
       this.brandRepository = connection.getRepository(PgBrandEntity);
     }
 
-    async createBrand(name : string, logo : string, website : string, contact : string) : Promise<{brand : Brand}> {
+    async createBrand(name : string, logo : string, website : string, contact : string, bowie_brand_id: string, demographics: Demo, media_handles: Media, industry: string[], comments?: string, userId?: string) : Promise<{brand : Brand}> {
       const brand: PgBrandEntity = {
         id: uuidv4(),
         name,
         logo,
         website,
         contact,
+        bowie_brand_id,
+        demographics,
+        media_handles,
+        industry,
+        comments,
+        last_updated_by: userId,
+        last_modified_at: new Date(),
       };
       await this.brandRepository.save(brand);
       return { brand };

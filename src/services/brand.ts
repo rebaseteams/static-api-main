@@ -1,5 +1,6 @@
 import Brand from '../models/entities/pg-brand';
 import { BrandsInterface } from '../models/interfaces/brand';
+import { demographics as Demo, media_handles as Media } from '../models/types/brand';
 
 export default class BrandsService implements BrandsInterface {
   private brandRepo: BrandsInterface;
@@ -10,8 +11,8 @@ export default class BrandsService implements BrandsInterface {
     this.brandRepo = brandRepo;
   }
 
-  async createBrand(name : string, logo : string, website : string, contact : string) : Promise<{brand : Brand}> {
-    return this.brandRepo.createBrand(name, logo, website, contact);
+  async createBrand(name : string, logo : string, website : string, contact : string, bowie_brand_id: string, demographics: Demo, media_handles: Media, industry: string[], comments?: string, userid?: string) : Promise<{brand : Brand}> {
+    return this.brandRepo.createBrand(name, logo, website, contact, bowie_brand_id, demographics, media_handles, industry, comments, userid);
   }
 
   async editBrand(id : string, name : string, logo : string, website : string, contact : string) : Promise<{success : boolean}> {
