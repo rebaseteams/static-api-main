@@ -11,7 +11,8 @@ export default class BrandsRoutes {
 
     this.router.post('/', createBrandValidator, async (req, res, next) => {
       try {
-        const data = await brandsService.createBrand(req.body.name, req.body.logo, req.body.website, req.body.contact);
+        const userId: string = req.headers.userId ? String(req.headers.userId) : '';
+        const data = await brandsService.createBrand(req.body.name, req.body.logo, req.body.website, req.body.contact, req.body.bowie_brands_id, req.body.demographics, req.body.media_handles, req.body.industry, req.body.comments, userId);
         res.send({ success: true, data });
       } catch (error) {
         next(error);
