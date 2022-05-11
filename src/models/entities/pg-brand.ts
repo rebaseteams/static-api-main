@@ -36,6 +36,6 @@ export default class PgBrandEntity {
   @Column({ type: 'varchar', nullable: true, default: '' })
   last_updated_by?: string;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'timestamp', nullable: true })
   last_modified_at?: Date;
 }

@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class updateBrandTable1652252218593 implements MigrationInterface {
-    name = 'updateBrandTable1652252218593'
+export class updateBrandTable1652261661070 implements MigrationInterface {
+    name = 'updateBrandTable1652261661070'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
       await queryRunner.query(`
@@ -30,7 +30,7 @@ export class updateBrandTable1652252218593 implements MigrationInterface {
         `);
       await queryRunner.query(`
             ALTER TABLE "brand"
-            ADD "last_modified_at" TIMESTAMP NOT NULL
+            ADD "last_modified_at" TIMESTAMP
         `);
     }
 
