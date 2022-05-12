@@ -29,5 +29,5 @@ export type Brand = {
   industry: string[];
   comments?: string;
   last_updated_by?: string;
-  last_modified_at?: Date;
+  last_modified_at: Date;
 }
