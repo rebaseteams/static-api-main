@@ -1,6 +1,8 @@
 /* eslint-disable no-console */
 import path from 'path';
 
+require('dotenv').config();
+
 export const getDbConfig = async (): Promise<any> => {
   const env = process.env.ENV || 'dev';
 
