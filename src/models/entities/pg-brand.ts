@@ -18,7 +18,7 @@ export default class PgBrandEntity {
   @Column()
   contact: string;
 
-  @Column({ type: 'uuid', nullable: true })
+  @Column({ type: 'varchar', default: '' })
   bowie_brand_id: string;
 
   @Column({ type: 'jsonb', nullable: true })
