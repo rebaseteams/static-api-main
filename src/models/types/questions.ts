@@ -1,5 +1,5 @@
 import { ArtistBudget } from './artist-budget';
-import { Brand } from './brand';
+import { ShortBrand } from './brand';
 import { EventsType } from './events-type';
 import { TargetAudience } from './target-audience';
 import { Venue } from './venue';
@@ -13,8 +13,8 @@ export type Questions = {
         venue: Array<Venue>;
         artistBudget: ArtistBudget;
         sponsorshipType: string,
-        wantedBrands: Array<Brand>;
-        unwantedBrands: Array<Brand>;
+        wantedBrands: Array<ShortBrand>;
+        unwantedBrands: Array<ShortBrand>;
         targetAudience: TargetAudience;
         whatSellsMost: WhatSellsMost;
         dateCreated: string;

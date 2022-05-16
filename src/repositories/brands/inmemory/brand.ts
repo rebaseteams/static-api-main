@@ -1,6 +1,9 @@
 /* eslint-disable no-console */
 import { v4 as uuidv4 } from 'uuid';
-import { Brand, demographics as Demo, media_handles as Media } from '../../../models/types/brand';
+import {
+  Brand,
+  demographics as Demo, media_handles as Media, ShortBrand,
+} from '../../../models/types/brand';
 import { BrandsInterface } from '../../../models/interfaces/brand';
 import { FileManagerInterface } from '../../../models/interfaces/file-manager';
 
@@ -15,7 +18,13 @@ export default class BrandRepo implements BrandsInterface {
     throw new Error('Method not implemented.');
   }
 
-  async createBrand(name: string, logo: string, website: string, contact: string, bowie_brand_id: string, demographics: Demo, media_handles: Media, industry: string[], comments?: string, userId?: string): Promise<{ brand: Brand }> {
+  async createBrand(name: string,
+    logo: string,
+    website: string,
+    contact: string,
+    bowie_brand_id: string, demographics: Demo,
+    media_handles: Media, industry: string[],
+    comments?: string, userId?: string): Promise<{ brand: ShortBrand }> {
     const brand = {
       id: uuidv4(),
       name,
