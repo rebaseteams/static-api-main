@@ -1,8 +1,14 @@
-export type demographics = {
-  age: number,
-  gender: string,
-  location: string,
-}
+export type demographics = Array<
+  {
+    demographicName: string,
+    fields: Array<
+      {
+        name: string,
+        value: number
+      }
+    >
+  }
+>;
 
 export type media_handles = Array<
     {
