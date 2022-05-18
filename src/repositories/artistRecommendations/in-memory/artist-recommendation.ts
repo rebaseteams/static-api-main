@@ -131,7 +131,16 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
       website: 'string',
       contact: 'string',
       bowie_brand_id: '1',
-      demographics: { age: 1, gender: 'm', location: 'abc' },
+      demographics: [
+        {
+          demographicName: 'gender',
+          fields: [{ name: 'female', value: 0.3680914252323973 }],
+        },
+        {
+          demographicName: 'age group',
+          fields: [{ name: '25 - 34', value: 0.07215251363240327 }],
+        },
+      ],
       media_handles: [{
         handleName: 'v', url: 'vf', logo: 'vf', followers: 1,
       }],
@@ -147,7 +156,16 @@ export default class InMemoryArtistRecommendationRepo implements ArtistRecommend
       website: 'string',
       contact: 'string',
       bowie_brand_id: '1',
-      demographics: { age: 1, gender: 'm', location: 'abc' },
+      demographics: [
+        {
+          demographicName: 'gender',
+          fields: [{ name: 'female', value: 0.3680914252323973 }],
+        },
+        {
+          demographicName: 'age group',
+          fields: [{ name: '25 - 34', value: 0.07215251363240327 }],
+        },
+      ],
       media_handles: [{
         handleName: 'v', url: 'vf', logo: 'vf', followers: 1,
       }],
