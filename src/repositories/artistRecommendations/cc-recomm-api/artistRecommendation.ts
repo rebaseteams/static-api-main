@@ -33,7 +33,7 @@ export default class ArtistRecommendationRepo implements ArtistRecommendationInt
     this.venueRepository = connection.getRepository(PgVenueEntity);
     this.brandsRepository = connection.getRepository(PgBrandEntity);
     this.userRepository = connection.getRepository(PgUserEntity);
-    this.ccRecommendation = new CCRecommendationRepo(process.env.CC_RECOMM_SERVER);
+    this.ccRecommendation = new CCRecommendationRepo();
   }
 
   // eslint-disable-next-line no-unused-vars
