@@ -55,11 +55,13 @@ export default class MainServer {
           actionService,
           eventsTypeService,
           advancedSearchService,
+          ccRecommendationService,
         } = server.config.services;
 
         const { auth0 } = server.config.providers;
 
         setPoll(() => auth0.generateToken(), 1 * 60 * 60 * 1000);
+        setPoll(() => ccRecommendationService.updateRecommendationStatus(), 30 * 1000);
         this.expressApp = express();
         this.app = Router();
         this.expressApp.use('/cc-bff', this.app);
