@@ -5,6 +5,7 @@ import ArtistRecommendationRepo from './repositories/artistRecommendations/cc-re
 import ArtistsRepo from './repositories/artists/postgres/artists';
 import { Auth0 } from './repositories/auth0/http/auth0';
 import BrandRepo from './repositories/brands/postgres/brand';
+import CCRecommendationRepo from './repositories/ccRecommendation/postgres';
 import DocumentsRepo from './repositories/documents/postgres/documents';
 import { DocusignRepo } from './repositories/docusign/http/docusign';
 import EventsTypeRepo from './repositories/eventsType/postgres/eventsType';
@@ -19,6 +20,7 @@ import ActionsService from './services/actions';
 import AdvancedSearchService from './services/advancedSearch';
 import ArtistService from './services/artist';
 import BrandsService from './services/brand';
+import CCRecommendationService from './services/ccRecommendation';
 import DocumentsService from './services/documents';
 import { DocusignService } from './services/docusign';
 import EventsTypeService from './services/events-type';
@@ -72,6 +74,7 @@ export class ProdServer {
         const actionsRepo = new ActionsRepo(connection);
         const eventsTypeRepo = new EventsTypeRepo(connection);
         const advacedSearchRepo = new AdvancedSearchProvider(desiredSearchRepos);
+        const ccRecommendationRepo = new CCRecommendationRepo(connection);
 
         this.config = {
           constants: configConstants,
@@ -91,6 +94,7 @@ export class ProdServer {
             actionService: new ActionsService(actionsRepo),
             eventsTypeService: new EventsTypeService(eventsTypeRepo),
             advancedSearchService: new AdvancedSearchService(advacedSearchRepo),
+            ccRecommendationService: new CCRecommendationService(ccRecommendationRepo),
 
           },
           providers: {

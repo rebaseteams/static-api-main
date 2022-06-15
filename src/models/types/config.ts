@@ -4,6 +4,7 @@ import ArtistService from '../../services/artist';
 // eslint-disable-next-line no-unused-vars
 import AuthService from '../../services/auth';
 import BrandsService from '../../services/brand';
+import CCRecommendationService from '../../services/ccRecommendation';
 import DocumentsService from '../../services/documents';
 import { DocusignService } from '../../services/docusign';
 import EventsTypeService from '../../services/events-type';
@@ -42,6 +43,7 @@ export type ConfigServices = {
   actionService: ActionsService;
   eventsTypeService: EventsTypeService;
   advancedSearchService: AdvancedSearchService;
+  ccRecommendationService: CCRecommendationService;
 }
 
 export type ConfigProviders = {
