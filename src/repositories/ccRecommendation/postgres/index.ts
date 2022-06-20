@@ -15,7 +15,7 @@ export default class CCRecommendationRepo implements CCRecommendationInterface {
       AWS.config.update({
         accessKeyId: process.env.AWS_ACCESS_KEY,
         secretAccessKey: process.env.AWS_SECRET_KEY,
-        region: process.env.aws_region,
+        region: process.env.AWS_REGION_US,
       });
       this.sns = new AWS.SNS({ apiVersion: '2010-03-31' });
       this.sqs = new AWS.SQS({ apiVersion: '2012-11-05' });
@@ -23,11 +23,11 @@ export default class CCRecommendationRepo implements CCRecommendationInterface {
     }
 
     generateRecommendation = async (id: string): Promise<{ success: boolean; }> => {
-      console.log(`Setting region ${process.env.aws_region}`);
+      console.log(`Setting region ${process.env.AWS_REGION_US}`);
       AWS.config.update({
         accessKeyId: process.env.AWS_ACCESS_KEY,
         secretAccessKey: process.env.AWS_SECRET_KEY,
-        region: process.env.aws_region,
+        region: process.env.AWS_REGION_US,
       });
       const params: AWS.SNS.PublishInput = {
         Message: JSON.stringify({ id }),
