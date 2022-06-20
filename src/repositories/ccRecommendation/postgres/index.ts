@@ -22,24 +22,29 @@ export default class CCRecommendationRepo implements CCRecommendationInterface {
       this.artistRecommendationRepository = connection.getRepository(PgArtistRecommendationEntity);
     }
 
-    generateRecommendation = async (id: string): Promise<{ success: boolean; }> => new Promise(() => {
-      const params = {
+    generateRecommendation = async (id: string): Promise<{ success: boolean; }> => {
+      const params: AWS.SNS.PublishInput = {
         Message: JSON.stringify({ id }),
         TopicArn: process.env.TopicArn_SNS_Generate_Recommendation,
       };
-      const publishTextPromise = this.sns.publish(params).promise();
+      console.log(params);
 
-      publishTextPromise.then(
-        (data) => {
+      try {
+        const data = await this.sns.publish(params).promise();
+
+        if (data) {
           console.log(`Message ${params.Message} sent to the topic ${params.TopicArn}`);
           console.log(`MessageID is ${data.MessageId}`);
-        },
-      ).catch(
-        (err) => {
-          console.error(err, err.stack);
-        },
-      );
-    });
+
+          return { success: true };
+        }
+
+        return { success: false };
+      } catch (err) {
+        console.error(err, err.stack);
+        return { success: false };
+      }
+    };
 
     updateRecommendationStatus = async (sleepTime : string): Promise<{ success: boolean; }> => new Promise(() => {
       const queueURL = process.env.SQS_Recommendation_Processed_QUEUE_URL;
