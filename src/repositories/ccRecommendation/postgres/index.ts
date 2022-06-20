@@ -23,6 +23,12 @@ export default class CCRecommendationRepo implements CCRecommendationInterface {
     }
 
     generateRecommendation = async (id: string): Promise<{ success: boolean; }> => {
+      console.log(`Setting region ${process.env.aws_region}`);
+      AWS.config.update({
+        accessKeyId: process.env.AWS_ACCESS_KEY,
+        secretAccessKey: process.env.AWS_SECRET_KEY,
+        region: process.env.aws_region,
+      });
       const params: AWS.SNS.PublishInput = {
         Message: JSON.stringify({ id }),
         TopicArn: process.env.TopicArn_SNS_Generate_Recommendation,
