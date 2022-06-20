@@ -16,10 +16,10 @@ import RolesRoutes from './routes/role/roleRoute';
 import ResourcesRoutes from './routes/resource/resourceRoute';
 import { Environment } from './models/types/config';
 import { ProdServer } from './config.production';
-import setPoll from './utils/setPoll';
 import ActionsRoutes from './routes/actions/actionsRoutes';
 import EventsTypeRoute from './routes/eventsType/eventeTypeRoute';
 import AdvancedSearchRoute from './routes/advancedSearch/advancedSearchRoute';
+import { setupBackgroundTasks } from './background-tasks';
 
 // to use .environment variable in the project
 require('dotenv').config();
@@ -55,13 +55,10 @@ export default class MainServer {
           actionService,
           eventsTypeService,
           advancedSearchService,
-          ccRecommendationService,
         } = server.config.services;
 
         const { auth0 } = server.config.providers;
 
-        setPoll(() => auth0.generateToken(), 1 * 60 * 60 * 1000);
-        setPoll(() => ccRecommendationService.updateRecommendationStatus(), 30 * 1000);
         this.expressApp = express();
         this.app = Router();
         this.expressApp.use('/cc-bff', this.app);
@@ -84,6 +81,7 @@ export default class MainServer {
         this.app.use('/search', new AdvancedSearchRoute(advancedSearchService).router);
         this.app.use(errorHandler);
         clearTimeout(timeout);
+        setupBackgroundTasks(server.config);
       }
     }, 3000);
   }

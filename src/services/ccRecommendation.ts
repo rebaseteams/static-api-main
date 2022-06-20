@@ -13,7 +13,7 @@ export default class CCRecommendationService implements CCRecommendationInterfac
     return this.ccRecommendationRepo.generateRecommendation(id);
   }
 
-  async updateRecommendationStatus(): Promise<{ success: boolean; }> {
-    return this.ccRecommendationRepo.updateRecommendationStatus();
+  async updateRecommendationStatus(sleepTime: string): Promise<{ success: boolean; }> {
+    return this.ccRecommendationRepo.updateRecommendationStatus(sleepTime);
   }
 }
