@@ -41,7 +41,7 @@ export default class CCRecommendationRepo implements CCRecommendationInterface {
       );
     });
 
-    updateRecommendationStatus = async (): Promise<{ success: boolean; }> => new Promise(() => {
+    updateRecommendationStatus = async (sleepTime : string): Promise<{ success: boolean; }> => new Promise(() => {
       const queueURL = process.env.SQS_Recommendation_Processed_QUEUE_URL;
       const params = {
         AttributeNames: [
@@ -57,41 +57,43 @@ export default class CCRecommendationRepo implements CCRecommendationInterface {
       this.sqs.receiveMessage(params, async (err, data) => {
         if (err) {
           console.log('Error', err);
-        } else {
-          const messages = data.Messages;
-          if (messages) {
-            const response = messages[0].Body;
-            const body = JSON.parse(response);
-            const msgStr = body.Message;
-            const msg = JSON.parse(msgStr);
-            const msg_id = msg.id;
-            const msg_status = msg.status;
+          return;
+        }
 
-            const updatedRecommendation = {
-              id: msg_id,
-              status: msg_status,
-            };
+        const messages = data.Messages;
 
-            const updated = await this.artistRecommendationRepository.save(updatedRecommendation);
-            console.log('Updated id', updated.id);
-            console.log('Updated status', updated.status);
+        if (!messages || messages.length === 0) {
+          console.log(`No recommendations job response found. Sleeping for ${sleepTime}`);
+          return;
+        }
+        const response = messages[0].Body;
+        const body = JSON.parse(response);
+        const msgStr = body.Message;
+        const msg = JSON.parse(msgStr);
+        const msg_id = msg.id;
+        const msg_status = msg.status;
 
-            if (updated) {
-              const deleteParams = {
-                QueueUrl: queueURL,
-                ReceiptHandle: data.Messages[0].ReceiptHandle,
-              };
-              this.sqs.deleteMessage(deleteParams, (e, res) => {
-                if (e) {
-                  console.log('Delete Error', e);
-                } else {
-                  console.log('Message Deleted', res);
-                }
-              });
+        const updatedRecommendation = {
+          id: msg_id,
+          status: msg_status,
+        };
+
+        const updated = await this.artistRecommendationRepository.save(updatedRecommendation);
+        console.log('Updated id', updated.id);
+        console.log('Updated status', updated.status);
+
+        if (updated) {
+          const deleteParams = {
+            QueueUrl: queueURL,
+            ReceiptHandle: data.Messages[0].ReceiptHandle,
+          };
+          this.sqs.deleteMessage(deleteParams, (e, res) => {
+            if (e) {
+              console.log('Delete Error', e);
+            } else {
+              console.log('Message Deleted', res);
             }
-          } else {
-            console.log('Checking for messages');
-          }
+          });
         }
       });
     })
