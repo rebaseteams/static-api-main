@@ -24,6 +24,7 @@ import { PgEventPerformers } from '../models/entities/pg-event-performers';
 import { PgArtistGenre } from '../models/entities/pg-artist-genre';
 import { PgArtistAffinity } from '../models/entities/pg-artist-affinity';
 import { PgBrandArtist } from '../models/entities/pg-brand-artist';
+import { PgArtistArchetypes } from '../models/entities/pg-artist-archetypes';
 
 export type ConnectionInfo = OmitStrict<DbConfig, 'password'>;
 
@@ -118,6 +119,7 @@ export async function createPgConnection(
         PgEventPerformers,
         PgArtistAffinity,
         PgBrandArtist,
+        PgArtistArchetypes,
       ],
       migrations,
       database,
