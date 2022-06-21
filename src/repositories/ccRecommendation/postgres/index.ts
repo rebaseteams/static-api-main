@@ -84,13 +84,15 @@ export default class CCRecommendationRepo implements CCRecommendationInterface {
         const msg_id = msg.id;
         const msg_status = msg.status;
 
+        const fetchRecommendation = await this.artistRecommendationRepository.findOne(msg_id);
+        console.log('Updated id', fetchRecommendation.id);
+
         const updatedRecommendation = {
-          id: msg_id,
+          ...fetchRecommendation,
           status: msg_status,
         };
 
         const updated = await this.artistRecommendationRepository.save(updatedRecommendation);
-        console.log('Updated id', updated.id);
         console.log('Updated status', updated.status);
 
         if (updated) {
