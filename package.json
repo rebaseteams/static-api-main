@@ -13,7 +13,7 @@
     "presubmit": "npm run lint && npm run build-and-test",
     "setup": "docker-compose -f docker-compose.yml up -d",
     "tear-down": "docker-compose -f docker-compose.yml rm --force --stop",
-    "migration-generate": "ts-node postgres-db/scripts/cli.ts migration:generate -n add-brand-artist-table --pretty",
+    "migration-generate": "ts-node postgres-db/scripts/cli.ts migration:generate -n add-artist-archetypes-table --pretty",
     "migration-run": "ts-node postgres-db/scripts/cli.ts migration:run"
   },
   "keywords": [],
