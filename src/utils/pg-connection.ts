@@ -23,6 +23,7 @@ import { PgArtistPopularity } from '../models/entities/pg-artist-popularity';
 import { PgEventPerformers } from '../models/entities/pg-event-performers';
 import { PgArtistGenre } from '../models/entities/pg-artist-genre';
 import { PgArtistAffinity } from '../models/entities/pg-artist-affinity';
+import { PgBrandArtist } from '../models/entities/pg-brand-artist';
 
 export type ConnectionInfo = OmitStrict<DbConfig, 'password'>;
 
@@ -116,6 +117,7 @@ export async function createPgConnection(
         PgArtistGenre,
         PgEventPerformers,
         PgArtistAffinity,
+        PgBrandArtist,
       ],
       migrations,
       database,
