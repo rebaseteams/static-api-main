@@ -25,6 +25,7 @@ import { PgArtistGenre } from '../models/entities/pg-artist-genre';
 import { PgArtistAffinity } from '../models/entities/pg-artist-affinity';
 import { PgBrandArtist } from '../models/entities/pg-brand-artist';
 import { PgArtistArchetypes } from '../models/entities/pg-artist-archetypes';
+import { PgArtistAudioFeatures } from '../models/entities/pg-artist-audio-features';
 
 export type ConnectionInfo = OmitStrict<DbConfig, 'password'>;
 
@@ -120,6 +121,7 @@ export async function createPgConnection(
         PgArtistAffinity,
         PgBrandArtist,
         PgArtistArchetypes,
+        PgArtistAudioFeatures,
       ],
       migrations,
       database,
