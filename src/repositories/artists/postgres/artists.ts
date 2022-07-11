@@ -7,16 +7,22 @@ import brandAffinity from './addOnData/brandAffinity';
 import popularityOverTime from './addOnData/popularityOverTime';
 import latestReleaseVideos from './addOnData/latestReleaseVideos';
 import { youtubeinsights } from './addOnData/youtubeInsights';
+import { FileManagerInterface } from '../../../models/interfaces/file-manager';
 
 export default class ArtistsRepo implements ArtistInterface {
   private artistRepository : Repository<PgArtistEntity>;
 
-  constructor(connection: Connection) {
+  private artistsProfileFileManagerRepo: FileManagerInterface
+
+  constructor(connection: Connection, artistsProfileFileManagerRepo: FileManagerInterface) {
     this.artistRepository = connection.getRepository(PgArtistEntity);
+    this.artistsProfileFileManagerRepo = artistsProfileFileManagerRepo;
   }
 
   async getArtist(id : string) : Promise<TypeArtist> {
     const artist = await this.artistRepository.findOne({ id });
+    const resp = await this.artistsProfileFileManagerRepo.get(`${id}.json`);
+    const misc = resp.success ? JSON.parse(resp.data.toString()) : null;
     if (artist) {
       const toSendArtist : TypeArtist = {
         id: artist.id,
@@ -38,6 +44,7 @@ export default class ArtistsRepo implements ArtistInterface {
         popularity_over_time: popularityOverTime,
         latest_youtube_release: latestReleaseVideos,
         youtube_insights: youtubeinsights,
+        misc,
       };
       return toSendArtist;
     }
@@ -53,7 +60,9 @@ export default class ArtistsRepo implements ArtistInterface {
       take: limit,
       skip,
     });
-    const toSendArtists : TypeArtist[] = artists.map((artist) => {
+    const toSendArtists : Promise<TypeArtist>[] = artists.map(async (artist) => {
+      const resp = await this.artistsProfileFileManagerRepo.get(`${artist.id}.json`);
+      const misc = resp.success ? JSON.parse(resp.data.toString()) : null;
       const toSendArtist : TypeArtist = {
         id: artist.id,
         name: artist.name,
@@ -74,9 +83,11 @@ export default class ArtistsRepo implements ArtistInterface {
         popularity_over_time: popularityOverTime,
         latest_youtube_release: latestReleaseVideos,
         youtube_insights: youtubeinsights,
+        misc: misc || null,
+
       };
       return toSendArtist;
     });
-    return toSendArtists;
+    return Promise.all(toSendArtists);
   }
 }

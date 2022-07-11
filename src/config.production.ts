@@ -34,6 +34,8 @@ import VenuesService from './services/venue';
 import { DBConnection } from './utils/createDbConnection';
 import getDesiredSearchRepos from './utils/desiredSearchRepos';
 
+require('dotenv').config();
+
 export class ProdServer {
   config: ConfigInterface;
 
@@ -58,12 +60,12 @@ export class ProdServer {
 
         // Creating objects of repo
         const auth0 = new Auth0(connection, configConstants);
-        const artistRepo = new ArtistsRepo(connection);
+        const artistsProfileFileManagerRepo = new FileManagerAWSS3Repo(process.env.AWS_S3_BUCKET_ARTISTS_PROFILE);
+        const artistRepo = new ArtistsRepo(connection, artistsProfileFileManagerRepo);
         const artistRecommendationRepo = new ArtistRecommendationRepo(connection);
-        const fileManagerRepo = new FileManagerAWSS3Repo();
+        const fileManagerRepo = new FileManagerAWSS3Repo(process.env.AWS_S3_BUCKET);
         const documentsRepo = new DocumentsRepo(connection, fileManagerRepo);
         const docusignRepo = new DocusignRepo(fileManagerRepo);
-
         const templatesRepo = new InMemoryTemplatesRepo(fileManagerRepo);
         const brandRepo = new BrandRepo(connection);
         const venueRepo = new VenueRepo(connection);

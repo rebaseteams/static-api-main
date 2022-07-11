@@ -73,4 +73,5 @@ export type Artist = {
     popularity_over_time: LineChartModel
     latest_youtube_release: Array<LatestReleaseVideo>
     youtube_insights: YoutubeInsights
+    misc: any
 }

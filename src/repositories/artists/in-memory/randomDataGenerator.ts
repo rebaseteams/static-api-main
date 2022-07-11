@@ -157,6 +157,8 @@ const randomDataGenerator = async () => {
       },
       latest_youtube_release: latestReleaseVideos,
       youtube_insights: youtubeinsights,
+      misc: { test: 'helloData' },
+
     };
 
     artistList.push(artistObj);
