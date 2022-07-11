@@ -17,14 +17,17 @@ export class FileManagerAWSS3Repo implements FileManagerInterface {
 
   s3: AWS.S3;
 
-  constructor() {
+  AWS_S3_BUCKET: string
+
+  constructor(AWS_S3_BUCKET: string) {
     AWS.config.update(FileManagerAWSS3Repo.config);
     this.s3 = new AWS.S3(FileManagerAWSS3Repo.config);
+    this.AWS_S3_BUCKET = AWS_S3_BUCKET;
   }
 
   set = async (id: string, data: Buffer): Promise<{ success: boolean, message: string }> => {
     const params = {
-      Bucket: process.env.AWS_S3_BUCKET,
+      Bucket: this.AWS_S3_BUCKET,
       Key: id,
       Body: data,
     };
@@ -44,7 +47,7 @@ export class FileManagerAWSS3Repo implements FileManagerInterface {
     Promise<{ success: boolean, data: Buffer | string }> => new Promise((resolve) => {
     try {
       const options = {
-        Bucket: process.env.AWS_S3_BUCKET,
+        Bucket: this.AWS_S3_BUCKET,
         Key: id,
       };
 
@@ -65,7 +68,7 @@ export class FileManagerAWSS3Repo implements FileManagerInterface {
   delete = async (id: string): Promise<{ success: boolean, message: string }> => new Promise((resolve) => {
     try {
       const params = {
-        Bucket: process.env.AWS_S3_BUCKET,
+        Bucket: this.AWS_S3_BUCKET,
         Key: id,
       };
       this.s3.deleteObject(params, (err, data) => {
@@ -82,7 +85,7 @@ export class FileManagerAWSS3Repo implements FileManagerInterface {
 
   list = async (id: string): Promise<{ success: boolean; data: string[]; }> => {
     const params: AWS.S3.ListObjectsRequest = {
-      Bucket: process.env.AWS_S3_BUCKET,
+      Bucket: this.AWS_S3_BUCKET,
       Prefix: `${id}/`,
     };
 
@@ -102,7 +105,7 @@ export class FileManagerAWSS3Repo implements FileManagerInterface {
 
   exists = async (id: string): Promise<boolean> => {
     const params: AWS.S3.HeadObjectRequest = {
-      Bucket: process.env.AWS_S3_BUCKET,
+      Bucket: this.AWS_S3_BUCKET,
       Key: id,
     };
 
